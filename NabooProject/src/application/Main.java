@@ -11,6 +11,8 @@ public class Main {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(new MyBot());
                         
+            
+            System.out.println("Ciao bello");
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
