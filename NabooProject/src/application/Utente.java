@@ -1,6 +1,7 @@
 package application;
 
-public abstract class  Utente {
+public abstract class  Utente 
+{
 
 	protected String nickName;
 	protected String password;

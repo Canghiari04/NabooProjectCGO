@@ -1,5 +1,7 @@
 package application;
 
-public interface IAmministratore {
+public interface IAmministratore 
+{
+	
 
 }

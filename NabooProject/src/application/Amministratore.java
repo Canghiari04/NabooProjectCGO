@@ -1,6 +1,7 @@
 package application;
 
-public class Amministratore extends Utente implements IAmministratore{
+public class Amministratore extends Utente implements IAmministratore
+{
 
 	
 	public Amministratore(String nickName, String password)
