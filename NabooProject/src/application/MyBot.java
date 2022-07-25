@@ -95,11 +95,17 @@ public class MyBot extends TelegramLongPollingBot
     		
     		try
     		{
-    			response.setText("Inserisci il tuo nick name e la password");
+    			response.setText("Inserisci il tuo nick name e la password, separati da uno spazio");
 	       		execute(response);
+	       		
+	       		// TODO: registrazione che puo' avvenire solamente tramite certi criteri, nickName e password divisi da uno spazio, obv e' possibile il nuovo inserimento
 	       		
 	       		Update updateNickName = new Update();
 	       		Update updatePassword = new Update();
+	       		
+	       		// TODO: meglio farselo dare tutto'uno, per poi separarlo tramite un split con l'opportuno delimitatore
+	       		
+	       		// TODO: dividire nickName e password tramite split
 	       		
 	       		String nickName = updateNickName.getMessage().getText();
 	       		String password = updatePassword.getMessage().getText();
@@ -132,12 +138,14 @@ public class MyBot extends TelegramLongPollingBot
     		
     		try
     		{
-	       		response.setText("Inserisci il tuo nick name");
+	       		response.setText("Inserisci il tuo nick name e la password, separati da uno spazio");
 	       		execute(response);
-	       		String nickName = update.getMessage().getText();
 	       		
-		       	response.setText("Inserisci la password");
-	       		execute(response);
+	       		// TODO: meglio farselo dare tutto'uno, per poi separarlo tramite un split con l'opportuno delimitatore
+	       		
+	       		// TODO: dividire nickName e password tramite split
+	       		
+	       		String nickName = update.getMessage().getText();
 	       		String password = update.getMessage().getText();
 		        	
 	        	if(!dictonaryUtente.containsKey(nickName) || !dictonaryUtente.containsValue(password))
@@ -145,6 +153,7 @@ public class MyBot extends TelegramLongPollingBot
 	        		answer = true;
 	        		response.setText("im in");
 	        		execute(response);
+	        		
 	        		// Visualization of the next function
 		        }
 		       	else
