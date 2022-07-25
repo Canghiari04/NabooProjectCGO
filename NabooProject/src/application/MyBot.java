@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class MyBot extends TelegramLongPollingBot 
 {
+	boolean answer = false;
 	final Scanner scan = new Scanner(System.in);
 	final Map<String, String> dictonaryUtente = new TreeMap<String, String>();
 
@@ -22,29 +23,64 @@ public class MyBot extends TelegramLongPollingBot
 	        	  
 	        // Trovare il modo per equals("differenti funzionalita'") del bot Telegram
 	        
-	        if(response.equals("/accedi"))
+	        String str = update.getMessage().getText();
+	        
+	        switch(str)
 	        {
-	        	response.setText("Inserisci il tuo nick name");
-	        	response.getText();
-	        	
-	        	String nickName = scan.nextLine();
-	        	String password = scan.nextLine();
-	        	
-	        	if(dictonaryUtente.containsValue(password) && dictonaryUtente.containsKey(nickName))
-	        	{
-	        		
-	        	}
-	        	else
-	        	{
-	        		registrazione(nickName, password);
-	        	}
-	        	
-	        }
+		        
+		        case "/registrazione":
+		        	
+		        	do {
+		        		
+			        	response.setText("Inserisci il tuo nick name");
+				       	String nickName = response.getText();
+				 
+				       	response.setText("Inserisci la nuova password");
+				       	String password = response.getText();
+				        	
+			        	if(dictonaryUtente.containsValue(password) || dictonaryUtente.containsKey(nickName))
+			        	{
+			        		response.setText("Attenzione credenziali gia' presenti!");
+				        }
+				       	else
+				       	{
+				       		answer = registrazione(nickName, password);
+				        }
+		        	
+		        	}while(answer == true);
+		        	
+		        	break;
+		        	
+		        case "/accedi":
+		        	
+		        	do {   		
+		        	
+			       		response.setText("Inserisci il tuo nick name");
+				       	response.getText();
+				 
+				       	String nickName = scan.nextLine();
+				       	String password = scan.nextLine();
+				        	
+			        	if(dictonaryUtente.containsValue(password) && dictonaryUtente.containsKey(nickName))
+			        	{
+			        		answer = true;
+			        		// Visualizzazione delle prossime funzioni
+				        }
+				       	else
+				       	{
+				       		response.setText("Credenziali non valide!");
+				        }
+		        	}while(answer == true);	
+		        	
+			        break;	
+	        }	        
 	        
-	        
-	        try {
+	        try 
+	        {
 	            execute(response); // Call method to send the message
-	        } catch (TelegramApiException e) {
+	        }
+	        catch (TelegramApiException e)
+	        {
 	            e.printStackTrace();
 	        }
 	    }
@@ -67,5 +103,7 @@ public class MyBot extends TelegramLongPollingBot
     	Client c = new Client(nickName, password);
     	
     	// Client da aggiungere in qualche struttura dati per la successiva stampa nel file
+    	
+    	return true;
     }
 }

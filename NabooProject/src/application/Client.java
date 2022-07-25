@@ -1,8 +1,8 @@
 package application;
 
-public class Amministratore extends Utente implements IAmministratore
+public class Client extends Utente implements IClient
 {
-	public Amministratore(String nickName, String password)
+	public Client(String nickName, String password)
 	{
 		super(nickName, password);
 	}
