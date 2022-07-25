@@ -9,82 +9,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class MyBot extends TelegramLongPollingBot 
 {
 	boolean answer = false;
-	final Scanner scan = new Scanner(System.in);
+	String function = " ";
 	final Map<String, String> dictonaryUtente = new TreeMap<String, String>();
-
-	@Override
-	public void onUpdateReceived(Update update) {
-	    // We check if the update has a message and the message has text
-	    if (update.hasMessage() && update.getMessage().hasText()) {
-	        SendMessage response = new SendMessage(); // Create a SendMessage object with mandatory fields
-	        
-	        response.setChatId(update.getMessage().getChatId().toString());
-	        response.setText(update.getMessage().getText());
-	        	  
-	        // Trovare il modo per equals("differenti funzionalita'") del bot Telegram
-	        
-	        String str = update.getMessage().getText();
-	        
-	        switch(str)
-	        {
-		        
-		        case "/registrazione":
-		        	
-		        	do {
-		        		
-			        	response.setText("Inserisci il tuo nick name");
-				       	String nickName = response.getText();
-				 
-				       	response.setText("Inserisci la nuova password");
-				       	String password = response.getText();
-				        	
-			        	if(dictonaryUtente.containsValue(password) || dictonaryUtente.containsKey(nickName))
-			        	{
-			        		response.setText("Attenzione credenziali gia' presenti!");
-				        }
-				       	else
-				       	{
-				       		answer = registrazione(nickName, password);
-				        }
-		        	
-		        	}while(answer == true);
-		        	
-		        	break;
-		        	
-		        case "/accedi":
-		        	
-		        	do {   		
-		        	
-			       		response.setText("Inserisci il tuo nick name");
-				       	response.getText();
-				 
-				       	String nickName = scan.nextLine();
-				       	String password = scan.nextLine();
-				        	
-			        	if(dictonaryUtente.containsValue(password) && dictonaryUtente.containsKey(nickName))
-			        	{
-			        		answer = true;
-			        		// Visualizzazione delle prossime funzioni
-				        }
-				       	else
-				       	{
-				       		response.setText("Credenziali non valide!");
-				        }
-		        	}while(answer == true);	
-		        	
-			        break;	
-	        }	        
-	        
-	        try 
-	        {
-	            execute(response); // Call method to send the message
-	        }
-	        catch (TelegramApiException e)
-	        {
-	            e.printStackTrace();
-	        }
-	    }
-	}
 
     public String getBotUsername() {
         // TODO
@@ -96,14 +22,141 @@ public class MyBot extends TelegramLongPollingBot
         return "5471762884:AAGeRCek_JkVklyP7kYtTYwKL2Xio0ZtpfI";
     }
     
-    public boolean registrazione(String nickName, String password)
+    public void onUpdateReceived(Update update)
     {
-    	dictonaryUtente.put(nickName, password);
+    	if (update.hasMessage() && update.getMessage().hasText()) 
+    	{
+  	        
+	        String str = update.getMessage().getText();
+	        long chatId = update.getMessage().getChatId();
+	        
+	        SendMessage response = new SendMessage();
+	        response.setChatId(chatId); 
+	        
+	        function(str, response, update);
+	    }
+    }
+    
+    public void function(String str, SendMessage response, Update update)
+    {
+    	char ch = str.charAt(0);
     	
-    	Client c = new Client(nickName, password);
+    	if(ch == '/')
+    	{
+    		function = str;
+    	}
+    	else
+    	{
+    		switch(function)
+		    {
+		    	case "/start":
+		    		
+		    		start(update);
+		    		
+		    		break;
+		        
+		        case "/registrazione":
+		        	
+		        	registrazione(response, update);
+		        	
+		        	break;
+		        	
+		        case "/accedi":
+		        	
+		        	accedi(response, update);
+		        	
+			        break;	
+		    }
+    	}
+    }
+    
+    public void start(Update update) 
+    {
+        SendMessage message = new SendMessage();
+        long chatId = update.getMessage().getChatId();
+        
+        message.setText("Benvenuto nel bot NABOO!");
+        message.setChatId(chatId);
+        
+        try 
+        {
+            execute(message);
+        } 
+        catch (TelegramApiException e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    public void registrazione(SendMessage response, Update update)
+    {
+  	
+    	do {
+    		
+    		try
+    		{
+    			response.setText("Inserisci il tuo nick name e la password");
+	       		execute(response);
+	       		
+	       		Update updateNickName = new Update();
+	       		Update updatePassword = new Update();
+	       		
+	       		String nickName = updateNickName.getMessage().getText();
+	       		String password = updatePassword.getMessage().getText();
+	       		
+	       		System.out.print(nickName + " " + password);
+		        	
+	        	if(dictonaryUtente.containsKey(nickName) || dictonaryUtente.containsValue(password))
+	        	{
+	        		response.setText("Attenzione credenziali gia' presenti!");
+	        		execute(response);
+		        }
+		       	else
+		       	{
+		       		answer = true;
+		       		dictonaryUtente.put(nickName, password);
+		       		Client c = new Client(nickName, password);
+		       	}
+    		}
+    		catch (TelegramApiException e)
+    		{
+    			e.printStackTrace();
+    		}
     	
-    	// Client da aggiungere in qualche struttura dati per la successiva stampa nel file
-    	
-    	return true;
+    	}while(answer != true);
+    }
+    
+    public void accedi(SendMessage response, Update update) 
+    {
+    	do { 
+    		
+    		try
+    		{
+	       		response.setText("Inserisci il tuo nick name");
+	       		execute(response);
+	       		String nickName = update.getMessage().getText();
+	       		
+		       	response.setText("Inserisci la password");
+	       		execute(response);
+	       		String password = update.getMessage().getText();
+		        	
+	        	if(!dictonaryUtente.containsKey(nickName) || !dictonaryUtente.containsValue(password))
+	        	{
+	        		answer = true;
+	        		response.setText("im in");
+	        		execute(response);
+	        		// Visualization of the next function
+		        }
+		       	else
+		       	{
+		       		response.setText("Credenziali non valide!");
+		       		execute(response);
+		        }
+    		}
+    		catch (TelegramApiException e)
+    		{
+    			e.printStackTrace();
+    		}
+    	}while(answer != true);	
     }
 }

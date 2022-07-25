@@ -6,15 +6,16 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 public class Main 
 {
-    public static void main(String[] args) {
-
-        try {
+	
+    public static void main(String[] args) 
+    {
+        try 
+        {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-            botsApi.registerBot(new MyBot());
-                        
-            
-            System.out.println("Ciao bello");
-        } catch (TelegramApiException e) {
+            botsApi.registerBot(new MyBot());            
+        } 
+        catch (TelegramApiException e) 
+        {
             e.printStackTrace();
         }
     }
