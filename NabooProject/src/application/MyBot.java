@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class MyBot extends TelegramLongPollingBot 
 {
-	boolean answer = false, bool = false, access = false;
+	boolean answer = false, bool = false, access = false, reading = false;
 	String nickName = " ", password = " ", function = " ";
 	static Map<String, String> dictionaryUtente = new HashMap<String, String>(); // Always static !
 	final File fileImport = new File("FileImport.txt");
@@ -138,7 +138,7 @@ public class MyBot extends TelegramLongPollingBot
 		        	
 			        break;	
 			     
-		        case "/letturaNotizia":
+		        case "/letturaNotizie":
 		    
 		        	break;
 		    }
@@ -193,11 +193,12 @@ public class MyBot extends TelegramLongPollingBot
 				} 
 				else
 				{
-					answer = true;
 					dictionaryUtente.put(nickName, password);
 
 					response.setText("Registrazione eseguita!");
 					execute(response);
+					
+					reading = true;
 					
 					popolaFile(nickName, password);
 				}
@@ -233,9 +234,10 @@ public class MyBot extends TelegramLongPollingBot
 				
 				if (dictionaryUtente.containsKey(nickName) && dictionaryUtente.containsValue(password)) 
 				{
-					answer = true;
 					response.setText("Accesso eseguito!");
 					execute(response);
+					
+					reading = true;
 				} 
 				else
 				 {
@@ -252,6 +254,22 @@ public class MyBot extends TelegramLongPollingBot
     
     public void letturaNotizie(SendMessage response, Update update)
     {
-    	ControllerNotizie controller = new ControllerNotizie();
+    	if(reading != true)
+    	{
+    		try
+    		{
+    			response.setText("Attenzione devi prima effettura il login!");
+        		execute(response);
+    		}
+    		catch (TelegramApiException e)
+    		{
+    			e.printStackTrace();
+    		}
+    		
+    	}
+    	else
+    	{
+    		ControllerNotizie controller = new ControllerNotizie();
+    	}
     }
 }
