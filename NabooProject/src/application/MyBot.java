@@ -11,10 +11,8 @@ public class MyBot extends TelegramLongPollingBot
 {
 	boolean answer = false, bool = false, access = false;
 	String nickName = " ", password = " ", function = " ";
-	final Map<String, String> dictonaryUtente = new TreeMap<String, String>();
-	final ArrayList<Utente> arrayUtente = new ArrayList<Utente>();
+	static Map<String, String> dictionaryUtente = new HashMap<String, String>();
 	final File fileImport = new File("FileImport.txt");
-
 
     public String getBotUsername() {
         // TODO
@@ -26,22 +24,14 @@ public class MyBot extends TelegramLongPollingBot
         return "5471762884:AAGeRCek_JkVklyP7kYtTYwKL2Xio0ZtpfI";
     }
     
-    public void popolaFile(ArrayList<Utente> arrayUtente)
+    public void popolaFile(String nickName, String password) // TODO: comment of the different function
     {
     	try
     	{
-	    	FileWriter writerImport = new FileWriter(fileImport);
-	    	
-	    	for(Utente u : arrayUtente)
-	    	{
-	    		nickName = u.getNickName();
-	    		password = u.getPassword();
-	    		
-	    		String str = nickName + "," + password + "\n";
-	    		
-	    		writerImport.write(str);
-	    	}
-	    	
+	    	FileWriter writerImport = new FileWriter(fileImport, true);
+			String str = nickName + "," + password + "\n";
+
+			writerImport.write(str);
 	    	writerImport.close();
     	}
     	catch (IOException e)
@@ -63,18 +53,18 @@ public class MyBot extends TelegramLongPollingBot
 				
 				nickName = tokens[0];
 				password = tokens[1];
-				
-				dictonaryUtente.put(nickName, password);
+												
+				dictionaryUtente.put(nickName, password);				
 			}
-			
+						
 			scanFile.close();
     	}
     	catch (IOException e)
     	{
     		e.printStackTrace();
-    	}
+    	}      
     	
-    	// TODO: stamp dictionary
+		System.out.println(dictionaryUtente);
     }
     
     public void onUpdateReceived(Update update)
@@ -88,7 +78,7 @@ public class MyBot extends TelegramLongPollingBot
 	        response.setChatId(chatId); 
 	        	        
 	        function(str, response, update);
-	    }
+	    }    	
     }
     
     public void function(String str, SendMessage response, Update update)
@@ -148,7 +138,7 @@ public class MyBot extends TelegramLongPollingBot
 		        	
 			        break;	
 			     
-		        case "/import":
+		        case "/letturaNotizia":
 		    
 		        	break;
 		    }
@@ -169,7 +159,7 @@ public class MyBot extends TelegramLongPollingBot
 		        	
 			        break;	
 			        
-		        case "/import":
+		        case "/letturaNotizie":
 		        	
 		        	break;
 		    }
@@ -177,7 +167,7 @@ public class MyBot extends TelegramLongPollingBot
     }
     
     public void registrazione(SendMessage response, Update update)
-    {  		
+    {  		    	
 		try 
 		{
 			String str = update.getMessage().getText();
@@ -186,15 +176,15 @@ public class MyBot extends TelegramLongPollingBot
 
 			if (tokens.length != 2) 
 			{
-				response.setText("Attenzione credenziale non corrette riprova!");
+				response.setText("Attenzione credenziali non corrette riprova!");
 				execute(response);
 			} 
 			else
 			{
 				nickName = tokens[0];
 				password = tokens[1];
-
-				if (dictonaryUtente.containsKey(nickName) && dictonaryUtente.containsValue(password)) 
+								
+				if (dictionaryUtente.containsKey(nickName) && dictionaryUtente.containsValue(password)) 
 				{
 					response.setText("Attenzione credenziali gia' presenti!");
 					execute(response);
@@ -202,20 +192,16 @@ public class MyBot extends TelegramLongPollingBot
 				else
 				{
 					answer = true;
-					dictonaryUtente.put(nickName, password);
+					dictionaryUtente.put(nickName, password);
 
 					response.setText("Registrazione eseguita!");
 					execute(response);
-
-					Client c = new Client(nickName, password);
 					
-					arrayUtente.add(c);
-					
-					popolaFile(arrayUtente);
+					popolaFile(nickName, password);
 				}
+				
+				System.out.println(dictionaryUtente);
 			}
-
-			System.out.print(nickName + " " + password);
 		} 
 		catch (TelegramApiException e) 
 		{
@@ -241,7 +227,9 @@ public class MyBot extends TelegramLongPollingBot
 				nickName = tokens[0];
 				password = tokens[1];
 				
-				if (dictonaryUtente.containsKey(nickName) && dictonaryUtente.containsValue(password)) 
+				System.out.print(dictionaryUtente);
+				
+				if (dictionaryUtente.containsKey(nickName) && dictionaryUtente.containsValue(password)) 
 				{
 					answer = true;
 					response.setText("Accesso eseguito!");
