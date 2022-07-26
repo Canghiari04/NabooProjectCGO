@@ -12,7 +12,10 @@ public class Main
         try 
         {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-            botsApi.registerBot(new MyBot());            
+            botsApi.registerBot(new MyBot());  
+            
+            MyBot bot = new MyBot();
+            bot.popolaDictionary();
         } 
         catch (TelegramApiException e) 
         {
