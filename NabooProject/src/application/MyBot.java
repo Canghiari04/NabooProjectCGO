@@ -11,16 +11,16 @@ public class MyBot extends TelegramLongPollingBot
 {
 	boolean answer = false, bool = false, access = false;
 	String nickName = " ", password = " ", function = " ";
-	static Map<String, String> dictionaryUtente = new HashMap<String, String>();
+	static Map<String, String> dictionaryUtente = new HashMap<String, String>(); // Always static !
 	final File fileImport = new File("FileImport.txt");
 
-    public String getBotUsername() {
-        // TODO
+    public String getBotUsername() 
+    {
         return "NabooCGObot";
     }
 
-    public String getBotToken() {
-        // TODO
+    public String getBotToken() 
+    {
         return "5471762884:AAGeRCek_JkVklyP7kYtTYwKL2Xio0ZtpfI";
     }
     
@@ -161,6 +161,8 @@ public class MyBot extends TelegramLongPollingBot
 			        
 		        case "/letturaNotizie":
 		        	
+		        	letturaNotizie(response, update);
+		        	
 		        	break;
 		    }
     	}
@@ -246,5 +248,10 @@ public class MyBot extends TelegramLongPollingBot
 		{
 			e.printStackTrace();
 		}
+    }
+    
+    public void letturaNotizie(SendMessage response, Update update)
+    {
+    	ControllerNotizie controller = new ControllerNotizie();
     }
 }
