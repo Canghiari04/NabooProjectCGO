@@ -217,7 +217,7 @@ public class MyBot extends TelegramLongPollingBot
 					response.setText("Registrazione eseguita!");
 					execute(response);
 					
-					reading = true;
+					reading = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con la propria registrazione
 					
 					popolaFile(nickName, password); // Aggiungo le nuove credenziali all'interno del file, per popolare al prossimo avvio il dictionary
 				}
@@ -239,7 +239,7 @@ public class MyBot extends TelegramLongPollingBot
 
 			String[] tokens = str.split(" ");
 
-			if (tokens.length != 2) 
+			if (tokens.length != 2) // Condizione specificata per evitare scorretti inserimenti delle credenziale
 			{
 				response.setText("Attenzione credenziale non corrette riprova!");
 				execute(response);
@@ -251,12 +251,12 @@ public class MyBot extends TelegramLongPollingBot
 				
 				System.out.print(dictionaryUtente);
 				
-				if (dictionaryUtente.containsKey(nickName) && dictionaryUtente.containsValue(password)) 
+				if (dictionaryUtente.containsKey(nickName) && dictionaryUtente.containsValue(password)) // Condizione per vericare se sia gia' avvenuta la registrazione dell'account
 				{
 					response.setText("Accesso eseguito!");
 					execute(response);
 					
-					reading = true;
+					reading = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con il proprio accesso
 				} 
 				else
 				 {
@@ -274,6 +274,11 @@ public class MyBot extends TelegramLongPollingBot
     public void elimina(SendMessage response, Update update)
     {
     	// TODO: terminare eliminazione dell'account 
+    		
+    	// Leggere il file, trovare il token corretto, eliminare, per poi popolare nuovamente il dictionary
+    	
+    	popolaDictionary();
+    	  
     }
     
     public void letturaNotizie(SendMessage response, Update update)
