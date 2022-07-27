@@ -24,7 +24,7 @@ public class MyBot extends TelegramLongPollingBot
         return "5471762884:AAGeRCek_JkVklyP7kYtTYwKL2Xio0ZtpfI";
     }
     
-    public void popolaFile(String nickName, String password) // TODO: comment of the different function
+    public void popolaFile(String nickName, String password) // Writer del file per individuare in un prossimo start registrazioni di account gia' avvenute
     {
     	try
     	{
@@ -40,8 +40,8 @@ public class MyBot extends TelegramLongPollingBot
     	}
     }
     
-    public void popolaDictionary()
-    {
+    public void popolaDictionary() // Allo start del bot telegram inserisce all'interno del dictionary tutti gli account che abbiano gia'   
+    { 							   // effettuato la registrazione al bot, dato che ad ogni avvio viene inizializzato il dictionary
     	try
     	{
         	Scanner scanFile = new Scanner(fileImport);
@@ -87,8 +87,8 @@ public class MyBot extends TelegramLongPollingBot
     	
     	if(ch == '/')
     	{
-    		function = str;
-    		
+    		function = str; // Salvo temporaneamente quale sia la funzione scelta precedentemente, in maniera tale che possa successivamente
+    						// utilizzare il corretto update
     		switch(function)
 		    {
 		    	case "/start":
@@ -137,6 +137,20 @@ public class MyBot extends TelegramLongPollingBot
 		        	}
 		        	
 			        break;	
+			        
+		        case "/elimina":
+		        	
+		        	try
+		        	{
+		        		response.setText("Inserisci il tuo nick name e la password, separati da uno spazio");
+			       		execute(response);
+		        	}
+		        	catch (TelegramApiException e)
+		        	{
+		        		e.printStackTrace();
+		        	}
+		        	
+			        break;	
 			     
 		        case "/letturaNotizie":
 		    
@@ -158,6 +172,11 @@ public class MyBot extends TelegramLongPollingBot
 		        	accedi(response, update);
 		        	
 			        break;	
+		        case "/elimina":
+		        	
+		        	elimina(response, update);
+		        	
+			        break;
 			        
 		        case "/letturaNotizie":
 		        	
@@ -186,8 +205,8 @@ public class MyBot extends TelegramLongPollingBot
 				nickName = tokens[0];
 				password = tokens[1];
 								
-				if (dictionaryUtente.containsKey(nickName) && dictionaryUtente.containsValue(password)) 
-				{
+				if (dictionaryUtente.containsKey(nickName) && dictionaryUtente.containsValue(password)) // In caso dovesse essere presente un account con le stesse credenziali
+				{																						// verra' richiesto nuovamento l'inserimento
 					response.setText("Attenzione credenziali gia' presenti!");
 					execute(response);
 				} 
@@ -200,7 +219,7 @@ public class MyBot extends TelegramLongPollingBot
 					
 					reading = true;
 					
-					popolaFile(nickName, password);
+					popolaFile(nickName, password); // Aggiungo le nuove credenziali all'interno del file, per popolare al prossimo avvio il dictionary
 				}
 				
 				System.out.println(dictionaryUtente);
@@ -250,6 +269,11 @@ public class MyBot extends TelegramLongPollingBot
 		{
 			e.printStackTrace();
 		}
+    }
+    
+    public void elimina(SendMessage response, Update update)
+    {
+    	// TODO: terminare eliminazione dell'account 
     }
     
     public void letturaNotizie(SendMessage response, Update update)
