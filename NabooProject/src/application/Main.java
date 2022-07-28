@@ -8,7 +8,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 public class Main 
 {
-	static File fileEliminate = new File("fileEliminate.txt");
+	static File fileImport = new File("fileImport.txt");
 	
     public static void main(String[] args) 
     {
@@ -18,7 +18,7 @@ public class Main
             botsApi.registerBot(new MyBot());  
             
             MyBot bot = new MyBot();
-            bot.popolaDictionary(fileEliminate);
+            bot.popolaDictionary(fileImport);
         } 
         catch (TelegramApiException e) 
         {
