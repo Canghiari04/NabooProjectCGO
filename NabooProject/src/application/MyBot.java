@@ -69,7 +69,9 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	catch (IOException e)
     	{
     		e.printStackTrace();
-    	}            	
+    	}         
+    	
+    	System.out.println(dictionaryUtente);
     }
     
     public void popolaArrayList(File f) // Allo start del bot telegram inserisce all'interno dell'arrayList tutti gli account che abbiano gia'
@@ -340,13 +342,15 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 
 			if (tokens.length != 2) // Condizione specificata per evitare scorretti inserimenti delle credenziale
 			{
-				response.setText("Attenzione credenziale non corrette riprova!");
+				response.setText("Attenzione credenziali non corrette riprova!");
 				execute(response);
 			} 
 			else
 			{
 				nickName = tokens[0];
 				password = tokens[1];
+				
+				System.out.println(nickName + " " + password);
 				
 				System.out.print(dictionaryUtente);
 				
@@ -359,7 +363,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 				} 
 				else
 				 {
-					response.setText("Credenziali non valide!");
+					response.setText("Attenzione credenziali errate!");
 					execute(response);
 				}
 			}
@@ -515,10 +519,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     		try
     		{
     			response.setText("Attenzione devi prima effettura il login!");
-        		execute(response);
-        		
-        		ControllerNotizie controller = new ControllerNotizie();
-        	
+        		execute(response);        	
     		}
     		catch (TelegramApiException e)
     		{
@@ -528,7 +529,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	}
     	else
     	{
-    		ControllerNotizie controller = new ControllerNotizie();
+    		// ControllerNotizie controller = new ControllerNotizie();
     	}
     }
 }
