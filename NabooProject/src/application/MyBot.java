@@ -48,7 +48,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	// popolaArrayList(fileImport);
     }
     
-    public void popolaDictionary(File f) // Allo start del bot telegram inserisce all'interno del dictionary tutti gli account che abbiano gia'   
+    public void popolaDictionary(File f) // Allo start del bot telegram inserisce all'interno del dictionary tutti gli account che abbiano gia'    
     { 							     	 // effettuato la registrazione al bot, dato che ad ogni avvio viene inizializzato il dictionary    
     	dictionaryUtente.clear();
     	
@@ -75,8 +75,8 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	}            	
     }
     
-    public void popolaArrayList(File f)
-    {
+    public void popolaArrayList(File f) // Allo start del bot telegram inserisce all'interno dell'arrayList tutti gli account che abbiano gia'
+    {								    // effettuato la registrazione al bot, dato che ad ogni avvio viene inizializzato il dictionary    
     	arrayUtente.clear();
     	
     	try
@@ -157,15 +157,14 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		    {
 		    	case "/start":
 		    		
-		    		SendMessage message = new SendMessage();
-		            long chatId = update.getMessage().getChatId();
+		    		// SendMessage message = new SendMessage();
+		            // long chatId = update.getMessage().getChatId();
 		            
-		            message.setText("Benvenuto nel bot NABOO!");
-		            message.setChatId(chatId);
+		            response.setText("Benvenuto nel bot NABOO!");
 		            
 		            try 
 		            {
-		                execute(message);
+		                execute(response);
 		            } 
 		            catch (TelegramApiException e) 
 		            {
