@@ -43,9 +43,6 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	{
     		e.printStackTrace();
     	}
-    	
-    	// popolaDictionary(fileImport);
-    	// popolaArrayList(fileImport);
     }
     
     public void popolaDictionary(File f) // Allo start del bot telegram inserisce all'interno del dictionary tutti gli account che abbiano gia'    
