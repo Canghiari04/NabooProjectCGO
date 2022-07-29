@@ -16,4 +16,9 @@ public class Amministratore extends Utente implements IAmministratore
 	{
 		return this.password;
 	}
+	
+	public String toString()
+	{
+		return "[Nickname: " + this.nickName + "][Password: " + this.password + "]";
+	}
 }

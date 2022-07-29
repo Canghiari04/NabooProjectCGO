@@ -16,4 +16,9 @@ public class Client extends Utente implements IClient
 	{
 		return this.password;
 	}
+	
+	public String toString()
+	{
+		return "[Nickname: " + this.nickName + "][Password: " + this.password + "]";
+	}
 }

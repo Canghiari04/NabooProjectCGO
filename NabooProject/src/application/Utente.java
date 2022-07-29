@@ -14,4 +14,6 @@ public abstract class  Utente
 	public abstract String getNickName();
 	
 	public abstract String getPassword();
+	
+	public abstract String toString();
 }
