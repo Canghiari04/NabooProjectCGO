@@ -22,13 +22,13 @@ public class MyDataBase
         }      
 	}
 	
-	public void InsertTable(String table, String nickName, String password)
+	public void InsertTable(String table, String nickName, String password, String sub)
 	{
 		Connection conn = ConnectionDB();
 		
 		try
 		{
-			String insert = "INSERT INTO " + table + " VALUES (null, '" + nickName + "', '" + password + "')"; // Variabile table per rendere maggiormente dinamico l'inserimento, evitando di scrivere codice ridondante
+			String insert = "INSERT INTO " + table + " VALUES (null, '" + nickName + "', '" + password + "', '" + sub + "')"; // Variabile table per rendere maggiormente dinamico l'inserimento, evitando di scrivere codice ridondante
 			PreparedStatement preparedStmt = conn.prepareStatement(insert); // TODO: cercare a cosa serve concretamente
 
 		    preparedStmt.execute();
@@ -44,13 +44,13 @@ public class MyDataBase
 		}
 	}
 	
-	public void deleteTable(String table, String nickName, String password)
+	public void deleteTable(String table, String nickName, String password, String sub)
 	{
 		Connection conn = ConnectionDB();
 		
 		try
 		{
-			String insert = "DELETE FROM " + table + " WHERE  Nickname = '" + nickName + "' AND Password = '" + password + "'"; // Variabile table per rendere maggiormente dinamico l'inserimento, evitando di scrivere codice ridondante
+			String insert = "DELETE FROM " + table + " WHERE  Nickname = '" + nickName + "' AND Password = '" + password + "' AND Sub = '" + sub + "'"; // Variabile table per rendere maggiormente dinamico l'inserimento, evitando di scrivere codice ridondante
 			PreparedStatement preparedStmt = conn.prepareStatement(insert); // TODO: cercare a cosa serve concretamente
 
 		    preparedStmt.execute();
