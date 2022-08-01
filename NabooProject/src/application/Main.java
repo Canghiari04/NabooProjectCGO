@@ -17,7 +17,7 @@ public class Main
             botsApi.registerBot(new MyBot());  
             
             MyBot bot = new MyBot();
-            bot.popolaDictionary(fileImport);
+            bot.populateDictionary(fileImport);
         } 
         catch (TelegramApiException e) 
         {

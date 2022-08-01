@@ -6,18 +6,16 @@ import javax.swing.*;
 
 public class MyDataBase 
 {
-	// TODO: implementare le risorse necessarie, video su YouTube
 	static String url = "jdbc:mysql://localhost:3306/naboocgo", username = "root", password = "2905192704";
 	
 	public Connection ConnectionDB()
 	{
-        System.out.println("Connecting database...");
-
         try 
         {
-            Connection connection = DriverManager.getConnection(url, username, password);
+            Connection connection = DriverManager.getConnection(url, username, password);            
             return connection;
-        } catch (SQLException e) 
+        }
+        catch (SQLException e) 
         {
             JOptionPane.showMessageDialog(null, e);
             return null;
@@ -30,8 +28,7 @@ public class MyDataBase
 		
 		try
 		{
-			String insert = "Insert into " + table + " values (null, '" + nickName + "', '" + password + "')"; // Variabile table per rendere maggiormente dinamico l'inserimento, evitando di scrivere codice ridondante
-			
+			String insert = "INSERT INTO " + table + " VALUES (null, '" + nickName + "', '" + password + "')"; // Variabile table per rendere maggiormente dinamico l'inserimento, evitando di scrivere codice ridondante
 			PreparedStatement preparedStmt = conn.prepareStatement(insert); // TODO: cercare a cosa serve concretamente
 
 		    preparedStmt.execute();
@@ -45,6 +42,27 @@ public class MyDataBase
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public void deleteTable(String table, String nickName, String password)
+	{
+		Connection conn = ConnectionDB();
 		
+		try
+		{
+			String insert = "DELETE FROM " + table + " WHERE  Nickname = '" + nickName + "' AND Password = '" + password + "'"; // Variabile table per rendere maggiormente dinamico l'inserimento, evitando di scrivere codice ridondante
+			PreparedStatement preparedStmt = conn.prepareStatement(insert); // TODO: cercare a cosa serve concretamente
+
+		    preparedStmt.execute();
+			conn.close();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		catch (HeadlessException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

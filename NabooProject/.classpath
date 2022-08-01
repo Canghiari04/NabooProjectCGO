@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="/Users/macbookpro/Downloads/telegrambots-6.1.0-jar-with-dependencies.jar"/>
 	<classpathentry kind="lib" path="/Users/macbookpro/Downloads/TelegramBots-6.1.0"/>
 	<classpathentry kind="lib" path="/Users/macbookpro/Downloads/slf4j-nop-1.7.5.jar"/>
+	<classpathentry kind="lib" path="/Users/macbookpro/Downloads/mysql-connector-java-8.0.30.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
