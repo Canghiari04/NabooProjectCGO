@@ -44,13 +44,13 @@ public class MyDataBase
 		}
 	}
 	
-	public void deleteTable(String table, String nickName, String password, String sub)
+	public void deleteTable(String table, String nickName, String password)
 	{
 		Connection conn = ConnectionDB();
 		
 		try
 		{
-			String insert = "DELETE FROM " + table + " WHERE  Nickname = '" + nickName + "' AND Password = '" + password + "' AND Sub = '" + sub + "'"; // Variabile table per rendere maggiormente dinamico l'inserimento, evitando di scrivere codice ridondante
+			String insert = "DELETE FROM " + table + " WHERE  Nickname = '" + nickName + "' AND Password = '" + password + "'"; // Variabile table per rendere maggiormente dinamico l'inserimento, evitando di scrivere codice ridondante
 			PreparedStatement preparedStmt = conn.prepareStatement(insert); // TODO: cercare a cosa serve concretamente
 
 		    preparedStmt.execute();

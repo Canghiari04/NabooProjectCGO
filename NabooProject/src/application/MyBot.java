@@ -154,7 +154,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		            }
 		    		
 		    		break;
-		        
+		      
 		        case "/registrazione":
 		        			        	
 		        	try
@@ -365,7 +365,6 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		}
     }
     
-   
     public void modify(SendMessage response, Update update) // Specificata principalmente per permettere la mofica delle proprie credenziali, trovando una correlazione tra
     {														// il metodo delete e il metodo registrazione (specificato per "l'utente stupido")
     	MyDataBase database = new MyDataBase();
@@ -400,7 +399,12 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	    				password = tokens[1];
 	    				sub = tokens[2];
 	    					    			
-	    				if(!marks[0].equals(nickName) && !marks[1].equals(password))
+	    				if(marks[0].equals(nickName) && marks[1].equals(password))
+	    				{
+	    					
+	    			    	database.deleteTable(tabUtente, nickName, password);
+	    				}	
+	    				else
 	    				{
 	    					String str = nickName + " " + password + " " + sub + "\n";
 	    					writerImport.write(str);
@@ -414,9 +418,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					
 					copyFile(fileEliminate, fileImport);
 					populateArray(fileEliminate);
-	    			
-			    	database.deleteTable(tabUtente, nickName, password, sub);
-			    	
+	    						    	
 			    	response.setText("Inserisci le nuove credenziali");
 	    			execute(response);
 				}
@@ -436,7 +438,6 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     		e.printStackTrace();
     	}
     }
-    
     
     public void delete(SendMessage response, Update update)
     {
@@ -472,11 +473,16 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	    				password = tokens[1];
 	    				sub = tokens[2];
 	    					    			
-	    				if(!marks[0].equals(nickName) && !marks[1].equals(password))
+	    				if(marks[0].equals(nickName) && marks[1].equals(password))
+	    				{
+	    					
+	    			    	database.deleteTable(tabUtente, nickName, password);
+	    				}	
+	    				else
 	    				{
 	    					String str = nickName + " " + password + " " + sub + "\n";
 	    					writerImport.write(str);
-	    				}	
+	    				}
 	    			}
 	    			
 		    		scanFile.close();
@@ -484,9 +490,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					
 					copyFile(fileEliminate, fileImport);
 					populateArray(fileEliminate);
-	    			
-			    	database.deleteTable(tabUtente, nickName, password, sub);
-					
+	    								
 					response.setText("Eliminazione eseguita!");
 	    			execute(response);
 				}
@@ -507,7 +511,6 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	}
     }
     
-    
     public void read(SendMessage response, Update update)
     {
     	if(reading != true)
@@ -527,7 +530,6 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     		// ControllerNotizie controller = new ControllerNotizie();
     	}
     }
-    
     
     public void search(SendMessage response, Update update)
     {
