@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sull'update ricevuto dall'utente
 {
-	boolean answer = false, reading = false;
+	boolean answer = false, access = false;
 	String nickName = " ", password = " ", sub = " ", function = " ";
 	String tabUtente = "Utente"; // Specificata per popolare la tabella Utente del database
 	int c = 0; // Contatore utilizzato nel metodo modify
@@ -173,8 +173,9 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		        	
 		        	try
 		        	{
+		        		
 		        		response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
-			       		execute(response);
+				       	execute(response);	
 		        	}
 		        	catch (TelegramApiException e)
 		        	{
@@ -187,8 +188,16 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		        
 		        	try
 		        	{
-		        		response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
-			       		execute(response);
+		        		if(access != true)
+		        		{
+		        			response.setText("Attenzione devi prima eseguire l'accesso al bot NABOO!");
+				       		execute(response);
+		        		}
+		        		else
+		        		{
+		        			response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
+				       		execute(response);	
+		        		}
 		        	}
 		        	catch (TelegramApiException e)
 		        	{
@@ -201,8 +210,16 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		        	
 		        	try
 		        	{
-		        		response.setText("Inserisci il tuo nick name e la password, separati da uno spazio");
-			       		execute(response);
+		        		if(access != true)
+		        		{
+		        			response.setText("Attenzione devi prima eseguire l'accesso al bot NABOO!");
+				       		execute(response);
+		        		}
+		        		else
+		        		{
+		        			response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
+				       		execute(response);	
+		        		}
 		        	}
 		        	catch (TelegramApiException e)
 		        	{
@@ -213,9 +230,45 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			     
 		        case "/leggiNotizie":
 		    
+		        	try
+		        	{
+		        		if(access != true)
+		        		{
+		        			response.setText("Attenzione devi prima eseguire l'accesso al bot NABOO!");
+				       		execute(response);
+		        		}
+		        		else
+		        		{
+		        			response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
+				       		execute(response);	
+		        		}
+		        	}
+		        	catch (TelegramApiException e)
+		        	{
+		        		e.printStackTrace();
+		        	}
+		        	
 		        	break;
 		        	
 		        case "/cercaNotizia":
+		        	
+		        	try
+		        	{
+		        		if(access != true)
+		        		{
+		        			response.setText("Attenzione devi prima eseguire l'accesso al bot NABOO!");
+				       		execute(response);
+		        		}
+		        		else
+		        		{
+		        			response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
+				       		execute(response);	
+		        		}
+		        	}
+		        	catch (TelegramApiException e)
+		        	{
+		        		e.printStackTrace();
+		        	}
 		        	
 		        	break;
 		    }
@@ -238,34 +291,94 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			        	
 		        case "/modifica":
 		        	
-			        if(c == 0) 
-			        {		        		
-			       		modify(response, update);
-			        }
-			        else
-			        {
-			        	c = 0;
-			        	function = "/registrazione";
-			        	registration(response, update); // Richiamo il metodo registration per rendere possibile la modifica delle proprie credenziali
-			       	}
-		        
+		        	try
+		        	{
+		        		if(access != true)
+		        		{
+		        			response.setText("Attenzione devi prima eseguire l'accesso al bot NABOO!");
+				       		execute(response);
+		        		}
+		        		else
+		        		{
+		        			if(c == 0) 
+					        {		        		
+					       		modify(response, update);
+					        }
+					        else
+					        {
+					        	c = 0;
+					        	function = "/registrazione";
+					        	registration(response, update); // Richiamo il metodo registration per rendere possibile la modifica delle proprie credenziali
+					       	}
+		        		}
+		        	}
+		        	catch (TelegramApiException e)
+		        	{
+		        		e.printStackTrace();
+		        	}
+			        
 			        break;		
 			        
 		        case "/elimina":
 		        	
-		        	delete(response, update);
+		        	try
+		        	{
+		        		if(access != true)
+		        		{
+		        			response.setText("Attenzione devi prima eseguire l'accesso al bot NABOO!");
+				       		execute(response);
+		        		}
+		        		else
+		        		{
+				        	delete(response, update);
+		        		}
+		        	}
+		        	catch (TelegramApiException e)
+		        	{
+		        		e.printStackTrace();
+		        	}
 		        	
 			        break;
 			        
 		        case "/leggiNotizie":
 		        	
-		        	read(response, update);
+		        	try
+		        	{
+		        		if(access != true)
+		        		{
+		        			response.setText("Attenzione devi prima eseguire l'accesso al bot NABOO!");
+				       		execute(response);
+		        		}
+		        		else
+		        		{
+				        	read(response, update);
+		        		}
+		        	}
+		        	catch (TelegramApiException e)
+		        	{
+		        		e.printStackTrace();
+		        	}
 		        	
 		        	break;
 		        	
 		        case "/cercaNotizia":
 		        	
-		        	search(response, update);
+		        	try
+		        	{
+		        		if(access != true)
+		        		{
+		        			response.setText("Attenzione devi prima eseguire l'accesso al bot NABOO!");
+				       		execute(response);
+		        		}
+		        		else
+		        		{
+				        	search(response, update);
+		        		}
+		        	}
+		        	catch (TelegramApiException e)
+		        	{
+		        		e.printStackTrace();
+		        	}
 		        	
 		        	break;
 		    }
@@ -296,19 +409,19 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 				
 				answer = getIn(nickName, password);
 												
-				if(answer) // In caso dovesse essere presente un account con le stesse credenziali
-				{		   // verra' richiesto nuovamente l'inserimento
+				if(answer) // In caso dovesse essere presente un account con le stesse credenziali verra' richiesto nuovamente l'inserimento
+				{		 
 					response.setText("Attenzione credenziali gia' presenti!");
 					execute(response);
 				} 
 				else
 				{
-					reading = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con la propria registration
+					access = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con la propria registration
 
 					arrayUtente.add(u);
 					populateFile(nickName, password, sub); // Aggiungo le nuove credenziali all'interno del file, per popolare al prossimo avvio il dictionary	
 					
-					database.InsertTable(tabUtente, nickName, password, sub);
+					database.InsertTable(tabUtente, nickName, password, sub, null);
 					
 					response.setText("Registrazione eseguita!");
 					execute(response);
@@ -324,7 +437,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     }
     
     public void access(SendMessage response, Update update) 
-    {   		
+    {   	
 		try 
 		{
 			String str = update.getMessage().getText();
@@ -345,7 +458,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		
 				if(answer) // Condizione per vericare se sia gia' avvenuta la registration dell'account
 				{
-					reading = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con il proprio accesso
+					access = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con il proprio accesso
 
 					response.setText("Accesso eseguito!");
 					execute(response);					
@@ -354,9 +467,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 				{
 					response.setText("Attenzione credenziali errate!");
 					execute(response);
-				}
-				
-				System.out.print(arrayUtente);
+				}	
 			}
 		}
 		catch (TelegramApiException e) 
@@ -376,58 +487,59 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	
     	try
     	{
-    		Scanner scanFile = new Scanner(fileImport);
+	    	Scanner scanFile = new Scanner(fileImport);
 			FileWriter writerImport = new FileWriter(fileEliminate);
-    		
+	    		
 			if(marks.length != 2)
-    		{
-    			response.setText("Attenzione credenziali non corrette riprova!");
-    			execute(response);
-    		}
+	    	{
+	    		response.setText("Attenzione credenziali non corrette riprova!");
+	    		execute(response);
+	    	}
 			else
 			{
 				answer = getIn(marks[0], marks[1]);
 				
-	    		if(answer)
+		    	if(answer)
 				{
-	    			while(scanFile.hasNext())
-	    			{
-	    				String line = scanFile.nextLine();
-	    				String[] tokens = line.split(" ");
-	    			
-	    				nickName = tokens[0];
-	    				password = tokens[1];
-	    				sub = tokens[2];
-	    					    			
-	    				if(marks[0].equals(nickName) && marks[1].equals(password))
-	    				{
-	    					
-	    			    	database.deleteTable(tabUtente, nickName, password);
-	    				}	
-	    				else
-	    				{
-	    					String str = nickName + " " + password + " " + sub + "\n";
-	    					writerImport.write(str);
-	    				}	
-	    			}
-
-	    			c++; // Contatore utilizzato per rendere possibile la modify delle proprie credenziali, individuando una correlazione con il metodo registration
-	    			
-		    		scanFile.close();
+		    		while(scanFile.hasNext())
+		    		{
+		    			String line = scanFile.nextLine();
+		    			String[] tokens = line.split(" ");
+		    		
+		    			nickName = tokens[0];
+		    			password = tokens[1];
+		    			sub = tokens[2];
+		    				    			
+		    			if(marks[0].equals(nickName) && marks[1].equals(password))
+		    			{
+		    					
+		    			    database.deleteTable(tabUtente, nickName, password);
+		    			}	
+		    			else
+		    			{
+		    				String str = nickName + " " + password + " " + sub + "\n";
+		    				writerImport.write(str);
+		    			}	
+		    		}
+	
+		    		c++; // Contatore utilizzato per rendere possibile la modify delle proprie credenziali, individuando una correlazione con il metodo registration
+		    			
+			    	scanFile.close();
 					writerImport.close();
-					
+						
 					copyFile(fileEliminate, fileImport);
 					populateArray(fileEliminate);
-	    						    	
-			    	response.setText("Inserisci le nuove credenziali");
-	    			execute(response);
+		    						    	
+				    response.setText("Inserisci le nuove credenziali");
+		    		execute(response);
 				}
-	    		else 
-	    		{
-	    			response.setText("Attenzione credenziali errate!");
-	    			execute(response);
-	    		}		    		
-	    	}
+		    	else 
+		    	{
+		    		response.setText("Attenzione credenziali errate!");
+		    		execute(response);
+		    	}		    		
+		    }
+	    	
     	}
     	catch (IOException e)
     	{
@@ -450,56 +562,55 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	
     	try
     	{
-    		Scanner scanFile = new Scanner(fileImport);
+	    	Scanner scanFile = new Scanner(fileImport);
 			FileWriter writerImport = new FileWriter(fileEliminate);
-    		
+	    	
 			if(marks.length != 2)
-    		{
-    			response.setText("Attenzione credenziali non corrette riprova!");
-    			execute(response);
-    		}
+	    	{
+	    		response.setText("Attenzione credenziali non corrette riprova!");
+	    		execute(response);
+	    	}
 			else
 			{
 				answer = getIn(marks[0], marks[1]);
 				
-	    		if(answer)
+		    	if(answer)
 				{
-	    			while(scanFile.hasNext())
-	    			{
-	    				String line = scanFile.nextLine();
-	    				String[] tokens = line.split(" ");
-	    			
-	    				nickName = tokens[0];
-	    				password = tokens[1];
-	    				sub = tokens[2];
-	    					    			
-	    				if(marks[0].equals(nickName) && marks[1].equals(password))
-	    				{
-	    					
-	    			    	database.deleteTable(tabUtente, nickName, password);
-	    				}	
-	    				else
-	    				{
-	    					String str = nickName + " " + password + " " + sub + "\n";
-	    					writerImport.write(str);
-	    				}
-	    			}
-	    			
-		    		scanFile.close();
+		    		while(scanFile.hasNext())
+		    		{
+		    			String line = scanFile.nextLine();
+		    			String[] tokens = line.split(" ");
+		    		
+		    			nickName = tokens[0];
+		    			password = tokens[1];
+		    			sub = tokens[2];
+		    					    			
+		    			if(marks[0].equals(nickName) && marks[1].equals(password))
+		    			{			
+		    		    	database.deleteTable(tabUtente, nickName, password);
+		    			}	
+		    			else
+		    			{
+		    				String str = nickName + " " + password + " " + sub + "\n";
+		    				writerImport.write(str);
+		    			}
+		    		}
+		    			
+			    	scanFile.close();
 					writerImport.close();
-					
+						
 					copyFile(fileEliminate, fileImport);
 					populateArray(fileEliminate);
-	    								
+		    								
 					response.setText("Eliminazione eseguita!");
-	    			execute(response);
+		    		execute(response);
 				}
-	    		else 
-	    		{
-	    			response.setText("Attenzione credenziali errate!");
-	    			execute(response);
-	    		}		    		
-	    	}
+		    	else 
+		    	{
+		    		response.setText("Attenzione credenziali errate!");
+		   			execute(response);
+		   		}		    		
+		   	}
     	}
     	catch (IOException e)
     	{
@@ -513,7 +624,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     
     public void read(SendMessage response, Update update)
     {
-    	if(reading != true)
+    	if(access != true)
     	{
     		try
     		{
@@ -527,13 +638,13 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	}
     	else
     	{
-    		// ControllerNotizie controller = new ControllerNotizie();
+    		
     	}
     }
     
     public void search(SendMessage response, Update update)
     {
-    	if(reading != true)
+    	if(access != true)
     	{
     		try
     		{
@@ -547,7 +658,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	}
     	else
     	{
-    		// ControllerNotizie controller = new ControllerNotizie();
+    		
     	}
     }
 }
