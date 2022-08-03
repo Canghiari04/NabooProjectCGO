@@ -2,7 +2,6 @@ package application;
 
 import java.io.*;
 import java.util.*;
-
 import org.apache.commons.io.FileUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -40,11 +39,17 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	        SendMessage response = new SendMessage();
 	        response.setChatId(chatId); 
 	        	        
-	        function(str, response, update);
+	        Function(str, response, update);
 	    }    	
     }
     
-    public void populateFile(String nickName, String password, String sub) // Writer del file per individuare in un prossimo start registrazioni di account gia' avvenute
+    /*
+	* Metodo PopulateFile che rende la possibilita' di specificare utenti che si siano gia' registrati all'avvio.
+	* 
+	* Prende in considerazione l'utilizzo del file in cui viene salvata ogni modifica.
+	*/
+    
+    public void PopulateFile(String nickName, String password, String sub) 
     {    	
     	try
     	{
@@ -60,8 +65,14 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	}
     }
     
-    public void populateArray(File f) // Allo start del bot telegram inserisce all'interno del dictionary tutti gli account che abbiano gia'    
-    { 							     	   // effettuato la registration al bot, dato che ad ogni avvio viene inizializzato il dictionary    
+    /*
+	* Metodo PopulateArray inserisce all'interno del'arrayList tutti gli account che abbiano gia' effettuato una registrazione al bot Naboo.
+	* 
+	* Questo dovuto poiche' ad ogni avvio la struttura viene inizializzata.
+	*/
+    
+    public void PopulateArray(File f)     
+    { 							         
     	arrayUtente.clear();
     	
     	try
@@ -92,7 +103,13 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	System.out.println(arrayUtente);
     }
     
-    public void clearFile(File f) // Usato principalmente per la pulizia del file di appoggio, (fileEliminate) a (fileImport)
+    /*
+   	* 
+   	* Metodo ClearFile che predispone l'inizializzazione del fileEliminate su cui vengono temporaneamente salvati account che non subiscono alcuna modifica
+   	* 
+   	*/
+    
+    public void ClearFile(File f)
     {
     	try
     	{
@@ -106,7 +123,13 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	}
     }
 
-    public void copyFile(File fileInput, File fileOutput) // Copia del fileEliminate nel fileImport, su cui si base il popolamento del dictionaryUtentes
+    /*
+   	* 
+   	* Metodo CopyFile che permette la copia del fileEliminate nei confronti del fileImport, utilizzato all'avvio del bot.
+   	* 
+   	*/
+    
+    public void CopyFile(File fileInput, File fileOutput) 
     {
     	try
     	{
@@ -118,7 +141,13 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	}
     }
     
-    public boolean getIn(String nickName, String password) // Metodo per individuare la presenza di credenziali gia' inserite
+    /*
+   	* 
+   	* Metodo getIn il quale prevede la medesima funzionalita' del metodo contains(), a discapito del fatto che quest ultimo non puo' essere usato per oggetti.
+   	* 
+   	*/
+    
+    public boolean getIn(String nickName, String password) 
     {
     	for(Utente c : arrayUtente)
     	{
@@ -131,14 +160,20 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	return false;
     }
     
-    public void function(String str, SendMessage response, Update update) //Switch contenente le funzioni principali del bot telegram, individuandone la correlazione con onUpdateReceived
+    /*
+   	* 
+   	* Switch contenente le funzioni principali del bot telegram, individuandone la correlazione con onUpdateReceived
+   	* 
+   	*/
+    
+    public void Function(String str, SendMessage response, Update update)
     {    	
     	char ch = str.charAt(0);    	
     	
     	if(ch == '/')
     	{
-    		function = str; // Salvo temporaneamente quale sia la funzione scelta precedentemente, in maniera tale che possa successivamente
-    						// utilizzare il corretto update
+    		function = str; /* Salvo temporaneamente quale sia la funzione scelta precedentemente, in maniera tale che possa successivamente utilizzare il corretto update */
+    						
     		switch(function)
 		    {
 		    	case "/start":
@@ -279,13 +314,13 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		    {   
 		        case "/registrazione":
 		        	
-		        	registration(response, update);
+		        	Registration(response, update);
 		        	
 		        	break;
 		        	
 		        case "/accedi":
 		        	
-		        	access(response, update);
+		        	Access(response, update);
 		        	
 			        break;	
 			        	
@@ -302,13 +337,13 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		        		{
 		        			if(c == 0) 
 					        {		        		
-					       		modify(response, update);
+					       		Modify(response, update);
 					        }
 					        else
 					        {
 					        	c = 0;
 					        	function = "/registrazione";
-					        	registration(response, update); // Richiamo il metodo registration per rendere possibile la modifica delle proprie credenziali
+					        	Registration(response, update); // Richiamo il metodo registration per rendere possibile la modifica delle proprie credenziali
 					       	}
 		        		}
 		        	}
@@ -330,7 +365,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		        		}
 		        		else
 		        		{
-				        	delete(response, update);
+				        	Delete(response, update);
 		        		}
 		        	}
 		        	catch (TelegramApiException e)
@@ -351,7 +386,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		        		}
 		        		else
 		        		{
-				        	read(response, update);
+				        	Read(response, update);
 		        		}
 		        	}
 		        	catch (TelegramApiException e)
@@ -372,7 +407,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		        		}
 		        		else
 		        		{
-				        	search(response, update);
+				        	Search(response, update);
 		        		}
 		        	}
 		        	catch (TelegramApiException e)
@@ -385,7 +420,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	}
     }
     
-    public void registration(SendMessage response, Update update)
+    public void Registration(SendMessage response, Update update)
     {  		    	
 		try 
 		{
@@ -409,17 +444,17 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 				
 				answer = getIn(nickName, password);
 												
-				if(answer) // In caso dovesse essere presente un account con le stesse credenziali verra' richiesto nuovamente l'inserimento
+				if(answer) /* In caso dovesse essere presente un account con le stesse credenziali verra' richiesto nuovamente l'inserimento */
 				{		 
 					response.setText("Attenzione credenziali gia' presenti!");
 					execute(response);
 				} 
 				else
 				{
-					access = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con la propria registration
+					access = true; /* Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con la propria registration */
 
 					arrayUtente.add(u);
-					populateFile(nickName, password, sub); // Aggiungo le nuove credenziali all'interno del file, per popolare al prossimo avvio il dictionary	
+					PopulateFile(nickName, password, sub); /* Aggiungo le nuove credenziali all'interno del file, per popolare al prossimo avvio il dictionary */
 					
 					database.InsertTable(tabUtente, nickName, password, sub, null);
 					
@@ -436,14 +471,14 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		}
     }
     
-    public void access(SendMessage response, Update update) 
+    public void Access(SendMessage response, Update update) 
     {   	
 		try 
 		{
 			String str = update.getMessage().getText();
 			String[] tokens = str.split(" ");
 			
-			if (tokens.length != 2) // Condizione specificata per evitare scorretti inserimenti delle credenziale
+			if (tokens.length != 2) /* Condizione specificata per evitare scorretti inserimenti delle credenziale */
 			{
 				response.setText("Attenzione credenziali non corrette riprova!");
 				execute(response);
@@ -456,9 +491,9 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 				answer = getIn(nickName, password);
 				System.out.println(answer);
 		
-				if(answer) // Condizione per vericare se sia gia' avvenuta la registration dell'account
+				if(answer) /* Condizione per vericare se sia gia' avvenuta la registration dell'account */
 				{
-					access = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con il proprio accesso
+					access = true; /* Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con il proprio accesso */
 
 					response.setText("Accesso eseguito!");
 					execute(response);					
@@ -475,15 +510,21 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			e.printStackTrace();
 		}
     }
+
+    /*
+   	* Metodo Modify specificato principalmente per permettere la mofica delle proprie credenziali.
+   	* 
+   	* Individuando una correlazione tra il metodo delete e il metodo registrazione (specificato per "l'utente stupido").
+   	*/
     
-    public void modify(SendMessage response, Update update) // Specificata principalmente per permettere la mofica delle proprie credenziali, trovando una correlazione tra
-    {														// il metodo delete e il metodo registrazione (specificato per "l'utente stupido")
+    public void Modify(SendMessage response, Update update) 
+    {														
     	MyDataBase database = new MyDataBase();
     	
     	String lineModify = update.getMessage().getText(); 
     	String[] marks = lineModify.split(" ");
 	
-    	clearFile(fileEliminate);
+    	ClearFile(fileEliminate);
     	
     	try
     	{
@@ -513,7 +554,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		    			if(marks[0].equals(nickName) && marks[1].equals(password))
 		    			{
 		    					
-		    			    database.deleteTable(tabUtente, nickName, password);
+		    			    database.DeleteTable(tabUtente, nickName, password);
 		    			}	
 		    			else
 		    			{
@@ -522,13 +563,13 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		    			}	
 		    		}
 	
-		    		c++; // Contatore utilizzato per rendere possibile la modify delle proprie credenziali, individuando una correlazione con il metodo registration
+		    		c++; /* Contatore utilizzato per rendere possibile la modify delle proprie credenziali, individuando una correlazione con il metodo registration */
 		    			
 			    	scanFile.close();
 					writerImport.close();
 						
-					copyFile(fileEliminate, fileImport);
-					populateArray(fileEliminate);
+					CopyFile(fileEliminate, fileImport);
+					PopulateArray(fileEliminate);
 		    						    	
 				    response.setText("Inserisci le nuove credenziali");
 		    		execute(response);
@@ -551,14 +592,14 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	}
     }
     
-    public void delete(SendMessage response, Update update)
+    public void Delete(SendMessage response, Update update)
     {
     	MyDataBase database = new MyDataBase();
 
     	String lineRemove = update.getMessage().getText(); 
     	String[] marks = lineRemove.split(" ");
     		    	
-    	clearFile(fileEliminate);
+    	ClearFile(fileEliminate);
     	
     	try
     	{
@@ -587,7 +628,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		    					    			
 		    			if(marks[0].equals(nickName) && marks[1].equals(password))
 		    			{			
-		    		    	database.deleteTable(tabUtente, nickName, password);
+		    		    	database.DeleteTable(tabUtente, nickName, password);
 		    			}	
 		    			else
 		    			{
@@ -599,8 +640,8 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			    	scanFile.close();
 					writerImport.close();
 						
-					copyFile(fileEliminate, fileImport);
-					populateArray(fileEliminate);
+					CopyFile(fileEliminate, fileImport);
+					PopulateArray(fileEliminate);
 		    								
 					response.setText("Eliminazione eseguita!");
 		    		execute(response);
@@ -622,7 +663,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	}
     }
     
-    public void read(SendMessage response, Update update)
+    public void Read(SendMessage response, Update update)
     {
     	if(access != true)
     	{
@@ -642,7 +683,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
     	}
     }
     
-    public void search(SendMessage response, Update update)
+    public void Search(SendMessage response, Update update)
     {
     	if(access != true)
     	{
