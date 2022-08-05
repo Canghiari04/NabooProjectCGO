@@ -1,4 +1,4 @@
-package application;
+package botTelegram;
 
 public interface IClient
 {

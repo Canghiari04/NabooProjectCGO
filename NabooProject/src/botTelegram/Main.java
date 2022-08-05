@@ -1,4 +1,4 @@
-package application;
+package botTelegram;
 
 import java.io.File;
 import org.telegram.telegrambots.meta.TelegramBotsApi;

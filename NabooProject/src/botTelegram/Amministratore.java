@@ -1,4 +1,4 @@
-package application;
+package botTelegram;
 
 import javax.ws.rs.core.Link;
 

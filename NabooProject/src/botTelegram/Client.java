@@ -1,4 +1,4 @@
-package application;
+package botTelegram;
 
 public class Client extends Utente implements IClient
 {

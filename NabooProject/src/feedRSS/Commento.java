@@ -1,4 +1,4 @@
-package application;
+package feedRSS;
 
 public class Commento 
 {

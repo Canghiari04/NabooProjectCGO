@@ -1,4 +1,4 @@
-package application;
+package dataBase;
 
 import java.awt.HeadlessException;
 import java.sql.*;
@@ -8,6 +8,14 @@ public class MyDataBase // TODO: Commentare e mettere nominativi in inglese
 {
 	static String url = "jdbc:mysql://localhost:3306/naboocgo", username = "root", password = "2905192704";
 	static String tabUtente = "Utente", tabNotizia = "Notizia", tabCommento = "Commento";
+	
+	public String replace(String str)
+	{
+		String s = str;
+	    s = s.replaceAll("'","\\\\'");
+	   	    
+	    return s;
+	}
 	
 	/*
 	* 
@@ -54,13 +62,15 @@ public class MyDataBase // TODO: Commentare e mettere nominativi in inglese
 					
 				case "Notizia":
 					
-					query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + secondInput + "', '" + thirdInput + "')"; 
+					firstInput = replace(firstInput);
+									
+					query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + secondInput + "')"; 
 					
 					break;
 					
 				case "Commento":
 					
-					query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + secondInput + "', '" + thirdInput + "')"; 
+					query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + secondInput + "', '" + thirdInput + "', '" + fourthInput + "')"; 
 					
 					break;		
 			}
