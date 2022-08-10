@@ -5,13 +5,14 @@ public class Notizia
 	String titolo;
 	String link;
 	
-	
-	public Notizia(String t, String l) {
+	public Notizia(String t, String l)
+	{
 		this.titolo=t;
 		this.link=l;
 	}	
 	
-	public String getTitolo(){
+	public String getTitolo()
+	{
 		return titolo;
 	}
 	
