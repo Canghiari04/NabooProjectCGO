@@ -12,14 +12,14 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 public class Response {
-	private String emojiiNoEntry = "⛔️", emojiiWellDone = "✅";
+	private String emojiiWellDone = "✅";
 
 	public SendMessage setResponse(String titolo, String link, Update update) {
 		SendMessage response = new SendMessage();
 		Long chatId = update.getMessage().getChatId();
 
 		response.setChatId(chatId);
-		response.setText("Titolo : " + titolo + "\n" + "\nLink : " + link);
+		response.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
 
 		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
 		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
@@ -47,7 +47,7 @@ public class Response {
 
 	public EditMessageText setNewResponse(String titolo, String link, Update update) {
 		EditMessageText newResponse = new EditMessageText();
-		newResponse.setText("Titolo : " + titolo + "\n" + "\nLink : " + link);
+		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
 
 		long chatId = update.getCallbackQuery().getMessage().getChatId();
 		newResponse.setChatId(chatId);
@@ -86,7 +86,7 @@ public class Response {
 
 	public EditMessageText setNewResponsePrevious(String titolo, String link, Update update) {
 		EditMessageText newResponse = new EditMessageText();
-		newResponse.setText("Titolo : " + titolo + "\n" + "\nLink : " + link);
+		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
 
 		long chatId = update.getCallbackQuery().getMessage().getChatId();
 		newResponse.setChatId(chatId);
@@ -121,7 +121,7 @@ public class Response {
 
 	public EditMessageText setNewResponseNext(String titolo, String link, Update update) {
 		EditMessageText newResponse = new EditMessageText();
-		newResponse.setText("Titolo : " + titolo + "\n" + "\nLink : " + link);
+		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
 
 		long chatId = update.getCallbackQuery().getMessage().getChatId();
 		newResponse.setChatId(chatId);

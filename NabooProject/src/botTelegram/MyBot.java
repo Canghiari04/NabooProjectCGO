@@ -1,14 +1,9 @@
 package botTelegram;
 
-import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-import org.apache.commons.io.FileUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -27,13 +22,10 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	private boolean answer = false, access = false;
 	private String nickName = " ", password = " ", sub = " ", function = " ", titolo = " ", link = " ";
 	private String emojiiNoEntry = "⛔️", emojiiWellDone = "✅";
-	private String tabUtente = "Utente", tabNotizia = "Notizia", tabCommento = "Commento", idUtente = "UtenteID", idNotizia = "NotiziaID", idCommento = "CommentoID"; // Specificata per popolare la tabella Utente del
-																// database
-	private int c = 0, j = 0, utenteId = 0; // Contatore utilizzato nel metodo modify
+	private String tabUtente = "Utente", tabNotizia = "Notizia", tabCommento = "Commento", idUtente = "UtenteID", idNotizia = "NotiziaID", idCommento = "CommentoID";
+	private int c = 0, j = 0, utenteId = 0, notiziaId = 0; // Contatore utilizzato nel metodo modify
 	private static ArrayList<Utente> arrayUtente = new ArrayList<Utente>();
-	private static File fileImport = new File("FileImport.txt");
-	private static File fileEliminate = new File("fileEliminate.txt");
-	private static ArrayList<Notizia> arrayListNotizia;
+	private static Notizia[] arrayNotizia;
 
 	public String getBotUsername() {
 		return "NabooCGNbot";
@@ -58,85 +50,6 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 
 			ReadSearch(response, update);
 		}
-	}
-
-	/*
-	 * Metodo PopulateFile che rende la possibilita' di specificare utenti che si
-	 * siano gia' registrati all'avvio.
-	 * 
-	 * Prende in considerazione l'utilizzo del file in cui viene salvata ogni
-	 * modifica.
-	 */
-
-	public void PopulateFile(String nickName, String password, String sub) {
-		try {
-			FileWriter writerImport = new FileWriter(fileImport, true);
-			String str = nickName + " " + password + " " + sub + "\n";
-
-			writerImport.write(str);
-			writerImport.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/*
-	 * Metodo ClearFile che predispone l'inizializzazione del fileEliminate su cui
-	 * vengono temporaneamente salvati account che non subiscono alcuna modifica
-	 */
-
-	public void ClearFile(File f) {
-		try {
-			PrintWriter writer = new PrintWriter(f);
-			writer.print("");
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/*
-	 * Metodo CopyFile che permette la copia del fileEliminate nei confronti del
-	 * fileImport, utilizzato all'avvio del bot.
-	 */
-
-	public void CopyFile(File fileInput, File fileOutput) {
-		try {
-			FileUtils.copyFile(fileInput, fileOutput);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/*
-	 * Metodo PopulateArray inserisce all'interno del'arrayList tutti gli account
-	 * che abbiano gia' effettuato una registrazione al bot Naboo.
-	 * 
-	 * Questo dovuto poiche' ad ogni avvio la struttura viene inizializzata.
-	 */
-
-	public void PopulateArray(File f) {
-		arrayUtente.clear();
-
-		try {
-			Scanner scanFile = new Scanner(f);
-
-			while (scanFile.hasNext()) {
-				String line = scanFile.nextLine();
-				String[] tokens = line.split(" ");
-				nickName = tokens[0];
-				password = tokens[1];
-				sub = tokens[2];
-
-				Utente u = new Client(nickName, password, sub);
-				arrayUtente.add(u);
-			}
-
-			scanFile.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println(arrayUtente);
 	}
 
 	/*
@@ -167,10 +80,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		char ch = str.charAt(0);
 
 		if (ch == '/') {
-			function = str; /*
-							 * Salvo temporaneamente quale sia la funzione scelta precedentemente, in
-							 * maniera tale che possa successivamente utilizzare il corretto update
-							 */
+			function = str; // Salvo temporaneamente quale sia la funzione scelta precedentemente, in maniera tale che possa successivamente utilizzare il corretto update
 			switch (function) {
 			case "/start":
 				try {
@@ -203,8 +113,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			case "/modifica":
 				try {
 					if (access != true) {
-						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! "
-								+ emojiiNoEntry);
+						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
 						execute(response);
 					} else {
 						response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
@@ -271,14 +180,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 				break;
 
 			case "/modifica":
-				if (c == 0) {
-					Modify(response, update);
-				} else {
-					c = 0;
-					function = "/registrazione";
-					Registration(response, update); // Richiamo il metodo registration per rendere possibile la modifica
-													// delle proprie credenziali
-				}
+				Modify(response, update);
 				break;
 
 			case "/elimina":
@@ -313,37 +215,19 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 				password = tokens[1];
 				sub = tokens[2];
 
-				Utente u = new Client(nickName, password, sub);
+				answer = dataBase.contains(tabUtente, nickName, password);
 
-				answer = getIn(nickName, password);
-
-				if (answer) /*
-							 * In caso dovesse essere presente un account con le stesse credenziali verra'
-							 * richiesto nuovamente l'inserimento
-							 */
+				if (answer) // In caso dovesse essere presente un account con le stesse credenziali verra' richiesto nuovamente l'inserimento
 				{
 					response.setText(emojiiNoEntry + " Attenzione credenziali gia' presenti! " + emojiiNoEntry);
 					execute(response);
 				} else {
-					access = true; /*
-									 * Evidenzia la possibilita' che la lettura delle notizie possa avvenire
-									 * solamente con la propria registration
-									 */
-
-					arrayUtente.add(u);
-					PopulateFile(nickName, password, sub); /*
-															 * Aggiungo le nuove credenziali all'interno del file, per
-															 * popolare al prossimo avvio il dictionary
-															 */
-
+					access = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con la propria registration
 					dataBase.InsertTable(tabUtente, nickName, password, sub);
-					utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
 
 					response.setText(emojiiWellDone + " Registrazione eseguita! " + emojiiWellDone);
 					execute(response);
 				}
-
-				System.out.println(arrayUtente);
 			}
 		} catch (TelegramApiException e) {
 			e.printStackTrace();
@@ -358,7 +242,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			String str = update.getMessage().getText();
 			String[] tokens = str.split(" ");
 
-			if (tokens.length != 2) /* Condizione specificata per evitare scorretti inserimenti delle credenziale */
+			if (tokens.length != 2) // Condizione specificata per evitare scorretti inserimenti delle credenziale
 			{
 				response.setText(emojiiNoEntry + " Attenzione credenziali non corrette riprova! " + emojiiNoEntry);
 				execute(response);
@@ -366,17 +250,18 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 				nickName = tokens[0];
 				password = tokens[1];
 
-				answer = getIn(nickName, password);
+				answer = dataBase.contains(tabUtente, nickName, password);
 
-				if (answer) /* Condizione per vericare se sia gia' avvenuta la registration dell'account */
+				if (answer) // Condizione per vericare se sia gia' avvenuta la registration dell'account
 				{
-					access = true; /*
-									 * Evidenzia la possibilita' che la lettura delle notizie possa avvenire
-									 * solamente con il proprio accesso
-									 */
-					utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
-
-					response.setText(emojiiWellDone + " Accesso eseguito! " + emojiiWellDone);
+					if (access == true) {
+						response.setText(emojiiWellDone + " Accesso gia' eseguito " + emojiiWellDone);
+						// TODO: cosa puoi fare dopo questo messaggio? 
+					} else {
+						access = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con il proprio accesso
+						response.setText(emojiiWellDone + " Accesso eseguito! " + emojiiWellDone);
+					}
+					
 					execute(response);
 				} else {
 					response.setText(emojiiNoEntry + " Attenzione credenziali errate! " + emojiiNoEntry);
@@ -399,56 +284,47 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	public void Modify(SendMessage response, Update update) {
 		MyDataBase dataBase = new MyDataBase();
 		String lineModify = update.getMessage().getText();
-		String[] marks = lineModify.split(" ");
-
-		ClearFile(fileEliminate);
-
+		String[] tokens = lineModify.split(" ");
+			
 		try {
-			Scanner scanFile = new Scanner(fileImport);
-			FileWriter writerImport = new FileWriter(fileEliminate);
+			if (c == 0) {
+				if (tokens.length != 2) {
+					response.setText(emojiiNoEntry + " Attenzione credenziali non corrette! " + emojiiNoEntry);
+				} else {
+					nickName = tokens[0];
+					password = tokens[1];
+					utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
 
-			if (marks.length != 2) {
-				response.setText(emojiiNoEntry + " Attenzione credenziali non corrette riprova! " + emojiiNoEntry);
-				execute(response);
-			} else {
-				answer = getIn(marks[0], marks[1]);
-
-				if (answer) {
-					while (scanFile.hasNext()) {
-						String line = scanFile.nextLine();
-						String[] tokens = line.split(" ");
-						nickName = tokens[0];
-						password = tokens[1];
-						sub = tokens[2];
-
-						if (marks[0].equals(nickName) && marks[1].equals(password)) {
-							dataBase.DeleteTable(tabUtente, nickName, password);
-						} else {
-							String str = nickName + " " + password + " " + sub + "\n";
-							writerImport.write(str);
-						}
+					if (utenteId != 0) {
+						response.setText(emojiiWellDone + " Inserisci le nuove credenziali" + emojiiWellDone);
+						c++;
 					}
 
-					c++; /*
-							 * Contatore utilizzato per rendere possibile la modify delle proprie
-							 * credenziali, individuando una correlazione con il metodo registration
-							 */
-
-					scanFile.close();
-					writerImport.close();
-
-					CopyFile(fileEliminate, fileImport);
-					PopulateArray(fileEliminate);
-
-					response.setText("Inserisci le nuove credenziali");
-					execute(response);
-				} else {
-					response.setText(emojiiNoEntry + " Attenzione credenziali errate! " + emojiiNoEntry);
 					execute(response);
 				}
+			} 
+			else {
+				if (tokens.length != 3) {
+					response.setText(emojiiNoEntry + " Inserisci correttamente le nuove credenziali! " + emojiiNoEntry);
+				}
+				else {
+					c = 0;
+					
+					nickName = tokens[0];
+					password = tokens[1];
+					sub = tokens[2];
+					
+					if(dataBase.alterRow(tabUtente, idUtente, nickName, password, sub, utenteId)) {
+						response.setText(emojiiWellDone + " Inserimento eseguito! " + emojiiWellDone);
+					}
+					else {
+						response.setText(emojiiNoEntry + " Inserimento non riuscito " + emojiiNoEntry);
+					}
+				}
+				
+				execute(response);
 			}
-
-		} catch (IOException | TelegramApiException e) {
+		} catch (TelegramApiException e) {
 			e.printStackTrace();
 		}
 	}
@@ -457,54 +333,53 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		MyDataBase dataBase = new MyDataBase();
 
 		String lineRemove = update.getMessage().getText();
-		String[] marks = lineRemove.split(" ");
-
-		ClearFile(fileEliminate);
+		String[] tokens = lineRemove.split(" ");
 
 		try {
-			Scanner scanFile = new Scanner(fileImport);
-			FileWriter writerImport = new FileWriter(fileEliminate);
-
-			if (marks.length != 2) {
+			if (tokens.length != 2) {
 				response.setText(emojiiNoEntry + " Attenzione credenziali non corrette riprova! " + emojiiNoEntry);
 				execute(response);
 			} else {
-				answer = getIn(marks[0], marks[1]);
+				nickName = tokens[0];
+				password = tokens[1];
+				answer = dataBase.contains(tabUtente, nickName, password);
 
 				if (answer) {
-					while (scanFile.hasNext()) {
-						String line = scanFile.nextLine();
-						String[] tokens = line.split(" ");
+					utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
+					String utente = Integer.toString(utenteId);
+					int countUtente = dataBase.countUtente(utenteId);
+					dataBase.DeleteTable(tabUtente, nickName, password);
+					notiziaId = dataBase.getID(tabNotizia, idNotizia, titolo, link);
 
-						nickName = tokens[0];
-						password = tokens[1];
-						sub = tokens[2];
+					do {
+						int countNotizia = dataBase.countNotizia(notiziaId);
+						String notizia = Integer.toString(notiziaId);
 
-						if (marks[0].equals(nickName) && marks[1].equals(password)) {
-							dataBase.DeleteTable(tabUtente, nickName, password);
-						} else {
-							String str = nickName + " " + password + " " + sub + "\n";
-							writerImport.write(str);
+						if (countNotizia == 1) {
+							String[] arrayNotizia = dataBase.getNotizia(notiziaId);
+							titolo = arrayNotizia[0];
+							link = arrayNotizia[1];
+
+							dataBase.DeleteTable(tabNotizia, titolo, link);
 						}
-					}
 
-					scanFile.close();
-					writerImport.close();
-
-					CopyFile(fileEliminate, fileImport);
-					PopulateArray(fileEliminate);
+						dataBase.DeleteTable(tabCommento, utente, notizia);
+						countUtente--;
+						notiziaId--;
+					} while (countUtente != 0);
 
 					response.setText(emojiiWellDone + " Eliminazione eseguita! " + emojiiWellDone);
-					execute(response);
 				} else {
 					response.setText(emojiiNoEntry + " Attenzione credenziali errate! " + emojiiNoEntry);
-					execute(response);
 				}
+
+				execute(response);
 			}
-		} catch (IOException | TelegramApiException e) {
+		} catch (TelegramApiException e) {
 			e.printStackTrace();
 		}
 	}
+	
 
 	public void ReadSearch(SendMessage response, Update update) {
 		Response res = new Response();
@@ -514,9 +389,10 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 				switch (callData) {
 				case "NEXT":
 					j++;
-					titolo = arrayListNotizia.get(j).getTitolo();
-					link = arrayListNotizia.get(j).getLink();
-					if (j >= (arrayListNotizia.size() - 1)) {
+					titolo = arrayNotizia[j].getTitolo();
+					link = arrayNotizia[j].getLink();
+
+					if (j >= (arrayNotizia.length - 1)) {
 						EditMessageText newResponseNext = res.setNewResponseNext(titolo, link, update);
 						execute(newResponseNext);
 					} else {
@@ -527,8 +403,8 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 
 				case "PREVIOUS":
 					j--;
-					titolo = arrayListNotizia.get(j).getTitolo();
-					link = arrayListNotizia.get(j).getLink();
+					titolo = arrayNotizia[j].getTitolo();
+					link = arrayNotizia[j].getLink();
 					if (j <= 0) {
 						EditMessageText newResponsePrevious = res.setNewResponsePrevious(titolo, link, update);
 						execute(newResponsePrevious);
@@ -546,32 +422,19 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					break;
 				}
 			} else {
-				FeedReader reader = new FeedReader();
-				reader.run();
-
-				Gson g = new GsonBuilder().setPrettyPrinting().create();
-				Notizia[] arrayNotizia = g.fromJson(new FileReader("GsonImport.json"), Notizia[].class);
-				arrayListNotizia = new ArrayList<Notizia>();
 				String search = update.getMessage().getText();
 				search.toLowerCase();
 
-				if (search.equals("tutto")) {
-					for (Notizia x : arrayNotizia) {
-						arrayListNotizia.add(x);
-					}
-				} else {
-					for (Notizia x : arrayNotizia) {
-						link = x.getLink();
+				FeedReader reader = new FeedReader();
+				reader.run(search);
 
-						if (link.contains(search)) {
-							arrayListNotizia.add(x);
-						}
-					}
-				}
+				Gson g = new GsonBuilder().setPrettyPrinting().create();
+				arrayNotizia = g.fromJson(new FileReader("GsonImport.json"), Notizia[].class);
+
 				j = 0;
 
-				titolo = arrayListNotizia.get(j).getTitolo();
-				link = arrayListNotizia.get(j).getLink();
+				titolo = arrayNotizia[j].getTitolo();
+				link = arrayNotizia[j].getLink();
 
 				response = res.setResponse(titolo, link, update);
 				execute(response);
@@ -583,13 +446,16 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 
 	public void Comment(SendMessage response, Update update) {
 		MyDataBase dataBase = new MyDataBase();
-		int notiziaId = dataBase.getID(tabNotizia, idNotizia, titolo, link);
 
 		if (dataBase.contains(tabNotizia, titolo, link)) {
 			System.out.println("Notizia gia' contenuta");
 		} else {
 			dataBase.InsertTable(tabNotizia, titolo, link, null);
 		}
+
+		int notiziaId = dataBase.getID(tabNotizia, idNotizia, titolo, link);
+		int utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
+		System.out.println(utenteId);
 
 		String comment = update.getMessage().getText();
 		String strUtente = Integer.toString(utenteId);
