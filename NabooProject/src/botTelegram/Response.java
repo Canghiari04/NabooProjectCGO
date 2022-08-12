@@ -12,7 +12,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 public class Response {
-	private String emojiiWellDone = "✅";
+	private String emojiiNext = "🔜", emojiiBack = "🔙";
+	
 
 	public SendMessage setResponse(String titolo, String link, Update update) {
 		SendMessage response = new SendMessage();
@@ -27,15 +28,20 @@ public class Response {
 		List<InlineKeyboardButton> rowInlineComment = new ArrayList<>();
 
 		InlineKeyboardButton nextBtn = new InlineKeyboardButton();
-		nextBtn.setText("Next " + emojiiWellDone);
+		nextBtn.setText("Next " + emojiiNext);
 		nextBtn.setCallbackData("NEXT");
 
 		InlineKeyboardButton commentBtn = new InlineKeyboardButton();
-		commentBtn.setText(emojiiWellDone + " Commento " + emojiiWellDone);
+		commentBtn.setText(" Commento ");
 		commentBtn.setCallbackData("COMMENT");
+
+		InlineKeyboardButton viewCommentBtn = new InlineKeyboardButton();
+		viewCommentBtn.setText(" Visualizza commenti ");
+		viewCommentBtn.setCallbackData("VIEW");
 
 		rowInline.add(nextBtn);
 		rowInlineComment.add(commentBtn);
+		rowInlineComment.add(viewCommentBtn);
 		rowsInline.add(rowInline);
 		rowsInline.add(rowInlineComment);
 
@@ -59,22 +65,28 @@ public class Response {
 		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
 		List<InlineKeyboardButton> rowInline = new ArrayList<>();
 		List<InlineKeyboardButton> rowInlineComment = new ArrayList<>();
+
 		InlineKeyboardButton previousBtn = new InlineKeyboardButton();
 		InlineKeyboardButton nextBtn = new InlineKeyboardButton();
 		InlineKeyboardButton commentBtn = new InlineKeyboardButton();
 
 		previousBtn.setCallbackData("PREVIOUS");
-		previousBtn.setText("Prev " + emojiiWellDone);
+		previousBtn.setText(emojiiBack + " Back");
 
 		nextBtn.setCallbackData("NEXT");
-		nextBtn.setText("Next " + emojiiWellDone);
+		nextBtn.setText("Next " + emojiiNext);
 
-		commentBtn.setText(emojiiWellDone + " Commento " + emojiiWellDone);
+		commentBtn.setText(" Commento ");
 		commentBtn.setCallbackData("COMMENT");
+
+		InlineKeyboardButton viewCommentBtn = new InlineKeyboardButton();
+		viewCommentBtn.setText(" Visualizza commenti ");
+		viewCommentBtn.setCallbackData("VIEW");
 
 		rowInline.add(previousBtn);
 		rowInline.add(nextBtn);
 		rowInlineComment.add(commentBtn);
+		rowInlineComment.add(viewCommentBtn);
 		rowsInline.add(rowInline);
 		rowsInline.add(rowInlineComment);
 
@@ -90,7 +102,6 @@ public class Response {
 
 		long chatId = update.getCallbackQuery().getMessage().getChatId();
 		newResponse.setChatId(chatId);
-		System.out.println(chatId);
 
 		long messageId = update.getCallbackQuery().getMessage().getMessageId();
 		newResponse.setMessageId(toIntExact(messageId));
@@ -101,15 +112,20 @@ public class Response {
 		List<InlineKeyboardButton> rowInlineComment = new ArrayList<>();
 
 		InlineKeyboardButton nextBtn = new InlineKeyboardButton();
-		nextBtn.setText("Next " + emojiiWellDone);
+		nextBtn.setText("Next " + emojiiNext);
 		nextBtn.setCallbackData("NEXT");
 
 		InlineKeyboardButton commentBtn = new InlineKeyboardButton();
-		commentBtn.setText(emojiiWellDone + " Commento " + emojiiWellDone);
+		commentBtn.setText(" Commento ");
 		commentBtn.setCallbackData("COMMENT");
+
+		InlineKeyboardButton viewCommentBtn = new InlineKeyboardButton();
+		viewCommentBtn.setText(" Visualizza commenti ");
+		viewCommentBtn.setCallbackData("VIEW");
 
 		rowInline.add(nextBtn);
 		rowInlineComment.add(commentBtn);
+		rowInlineComment.add(viewCommentBtn);
 		rowsInline.add(rowInline);
 		rowsInline.add(rowInlineComment);
 
@@ -135,15 +151,20 @@ public class Response {
 		List<InlineKeyboardButton> rowInlineComment = new ArrayList<>();
 
 		InlineKeyboardButton previousBtn = new InlineKeyboardButton();
-		previousBtn.setText("Prev " + emojiiWellDone);
+		previousBtn.setText(emojiiBack + " Back");
 		previousBtn.setCallbackData("PREVIOUS");
 
 		InlineKeyboardButton commentBtn = new InlineKeyboardButton();
-		commentBtn.setText(emojiiWellDone + " Commento " + emojiiWellDone);
+		commentBtn.setText(" Commento ");
 		commentBtn.setCallbackData("COMMENT");
+
+		InlineKeyboardButton viewCommentBtn = new InlineKeyboardButton();
+		viewCommentBtn.setText(" Visualizza commenti ");
+		viewCommentBtn.setCallbackData("VIEW");
 
 		rowInline.add(previousBtn);
 		rowInlineComment.add(commentBtn);
+		rowInlineComment.add(viewCommentBtn);
 		rowsInline.add(rowInline);
 		rowsInline.add(rowInlineComment);
 

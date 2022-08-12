@@ -19,11 +19,11 @@ import feedRSS.Notizia;
 
 public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sull'update ricevuto dall'utente
 {
-	private boolean answer = false, access = false;
-	private String nickName = " ", password = " ", sub = " ", function = " ", titolo = " ", link = " ";
-	private String emojiiNoEntry = "⛔️", emojiiWellDone = "✅";
-	private String tabUtente = "Utente", tabNotizia = "Notizia", tabCommento = "Commento", idUtente = "UtenteID", idNotizia = "NotiziaID", idCommento = "CommentoID";
+	private boolean answer = false, access = false, subscription = false, feedBack = false;
 	private int c = 0, j = 0, utenteId = 0, notiziaId = 0; // Contatore utilizzato nel metodo modify
+	private String nickName = " ", password = " ", sub = " ", function = " ", titolo = " ", link = " ";
+	private String emojiiNoEntry = "⛔️", emojiiWellDone = "✅", emojiiNoFeed = "😢";
+	private String tabUtente = "Utente", tabNotizia = "Notizia", tabCommento = "Commento", idUtente = "UtenteID", idNotizia = "NotiziaID", idCommento = "CommentoID";
 	private static ArrayList<Utente> arrayUtente = new ArrayList<Utente>();
 	private static Notizia[] arrayNotizia;
 
@@ -43,7 +43,8 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			response.setChatId(chatId);
 
 			Function(str, response, update);
-		} else if (update.hasCallbackQuery()) {
+		} 
+		else if (update.hasCallbackQuery()) {
 			long chatId = update.getCallbackQuery().getMessage().getChatId();
 			SendMessage response = new SendMessage();
 			response.setChatId(chatId);
@@ -82,118 +83,144 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		if (ch == '/') {
 			function = str; // Salvo temporaneamente quale sia la funzione scelta precedentemente, in maniera tale che possa successivamente utilizzare il corretto update
 			switch (function) {
-			case "/start":
-				try {
-					response.setText("Benvenuto nel bot NABOO!");
-					execute(response);
-				} catch (TelegramApiException e) {
-					e.printStackTrace();
-				}
-				break;
-
-			case "/registrazione":
-				try {
-					response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
-					execute(response);
-				} catch (TelegramApiException e) {
-					e.printStackTrace();
-				}
-				break;
-
-			case "/accedi":
-				try {
-
-					response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
-					execute(response);
-				} catch (TelegramApiException e) {
-					e.printStackTrace();
-				}
-				break;
-
-			case "/modifica":
-				try {
-					if (access != true) {
-						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
+				case "/start":
+					try {
+						response.setText("Benvenuto nel bot NABOO!");
 						execute(response);
-					} else {
+					} catch (TelegramApiException e) {
+						e.printStackTrace();
+					}
+					break;
+	
+				case "/registrazione":
+					try {
+						response.setText( "Inserisci il tuo nickname e la password, separati da uno spazio, oltre alla tipologia di abbonamento.\n " 
+						                + "Modalita' di inserimento ('chaz27' 'rossetto12' '1')");
+						execute(response);
+					} catch (TelegramApiException e) {
+						e.printStackTrace();
+					}
+					break;
+	
+				case "/accedi":
+					try {
+	
 						response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
 						execute(response);
+					} catch (TelegramApiException e) {
+						e.printStackTrace();
 					}
-				} catch (TelegramApiException e) {
-					e.printStackTrace();
-				}
-				break;
-
-			case "/elimina":
-				try {
-					if (access != true) {
-						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! "
-								+ emojiiNoEntry);
-						execute(response);
-					} else {
-						response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
-						execute(response);
+					break;
+	
+				case "/modifica":
+					try {
+						if (access != true) {
+							response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
+							execute(response);
+						} 
+						else {
+							response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
+							execute(response);
+						}
+					} catch (TelegramApiException e) {
+						e.printStackTrace();
 					}
-				} catch (TelegramApiException e) {
-					e.printStackTrace();
-				}
-				break;
-
-			case "/leggiNotizie":
-				try {
-					if (access != true) {
-						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! "
-								+ emojiiNoEntry);
-						execute(response);
-					} else {
-						response.setText("Inserisci una parola chiave");
-						execute(response);
+					break;
+	
+				case "/elimina":
+					try {
+						if (access != true) {
+							response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
+							execute(response);
+						} 
+						else {
+							response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
+							execute(response);
+						}
+					} catch (TelegramApiException e) {
+						e.printStackTrace();
 					}
-				} catch (TelegramApiException e) {
-					e.printStackTrace();
-				}
-				break;
-
-			case "/commento":
-				try {
-					if (access != true) {
-						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! "
-								+ emojiiNoEntry);
-						execute(response);
-					} else {
-						response.setText("Inserisci un commento alla notizia");
-						execute(response);
+					break;
+	
+				case "/leggiNotizie":
+					try {
+						if (access != true) {
+							response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
+							execute(response);
+						} 
+						else {
+							response.setText("Inserisci una parola chiave");
+							execute(response);
+						}
+					} catch (TelegramApiException e) {
+						e.printStackTrace();
 					}
-				} catch (TelegramApiException e) {
-					e.printStackTrace();
-				}
-				break;
+					break;
+	
+				case "/commento":
+					try {
+						if (access != true) {
+							response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
+						} 
+						else {
+							if (subscription != true) {
+								response.setText(emojiiNoEntry + " Attenzione la tua tipologia di abbonamento non permette questa funzione! " + emojiiNoEntry);
+							} 
+							else {
+								response.setText("Inserisci un commento");
+							}
+						}
+						execute(response);
+					} catch (TelegramApiException e) {
+						e.printStackTrace();
+					}
+					break;
+	
+				case "/visualizzaCommenti":
+					try {
+						if (access != true) {
+							response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
+							execute(response);
+						} 
+						else {
+							if (subscription != true) {
+								response.setText(emojiiNoEntry + " Attenzione la tua tipologia di abbonamento non permette questa funzione! " + emojiiNoEntry);
+								execute(response);
+							} 
+							else {
+								ViewComment(response, update);
+							}
+						}
+					} catch (TelegramApiException e) {
+						e.printStackTrace();
+					}
+					break;
 			}
 		} else {
 			switch (function) {
-			case "/registrazione":
-				Registration(response, update);
-				break;
-
-			case "/accedi":
-				Access(response, update);
-				break;
-
-			case "/modifica":
-				Modify(response, update);
-				break;
-
-			case "/elimina":
-				Delete(response, update);
-				break;
-
-			case "/leggiNotizie":
-				ReadSearch(response, update);
-				break;
-
-			case "/commento":
-				Comment(response, update);
-				break;
+				case "/registrazione":
+					Registration(response, update);
+					break;
+	
+				case "/accedi":
+					Access(response, update);
+					break;
+	
+				case "/modifica":
+					Modify(response, update);
+					break;
+	
+				case "/elimina":
+					Delete(response, update);
+					break;
+	
+				case "/leggiNotizie":
+					ReadSearch(response, update);
+					break;
+	
+				case "/commento":
+					Comment(response, update);
+					break;
 			}
 		}
 	}
@@ -210,7 +237,8 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			{
 				response.setText(emojiiNoEntry + " Attenzione credenziali non corrette riprova! " + emojiiNoEntry);
 				execute(response);
-			} else {
+			} 
+			else {
 				nickName = tokens[0];
 				password = tokens[1];
 				sub = tokens[2];
@@ -221,10 +249,19 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 				{
 					response.setText(emojiiNoEntry + " Attenzione credenziali gia' presenti! " + emojiiNoEntry);
 					execute(response);
-				} else {
+				} 
+				else {
 					access = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con la propria registration
-					dataBase.InsertTable(tabUtente, nickName, password, sub);
-
+					
+					if(sub.equals("1")) {
+						dataBase.InsertTable(tabUtente, nickName, password, "true");
+					}
+					else {
+						dataBase.InsertTable(tabUtente, nickName, password, "false");
+					}
+					
+					subscription = dataBase.getSubscription(tabUtente, nickName, password);
+					function = " ";
 					response.setText(emojiiWellDone + " Registrazione eseguita! " + emojiiWellDone);
 					execute(response);
 				}
@@ -246,24 +283,29 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			{
 				response.setText(emojiiNoEntry + " Attenzione credenziali non corrette riprova! " + emojiiNoEntry);
 				execute(response);
-			} else {
+			} 
+			else {
 				nickName = tokens[0];
 				password = tokens[1];
 
 				answer = dataBase.contains(tabUtente, nickName, password);
+				subscription = dataBase.getSubscription(tabUtente, nickName, password);
 
 				if (answer) // Condizione per vericare se sia gia' avvenuta la registration dell'account
 				{
 					if (access == true) {
 						response.setText(emojiiWellDone + " Accesso gia' eseguito " + emojiiWellDone);
 						// TODO: cosa puoi fare dopo questo messaggio? 
-					} else {
+					} 
+					else {
 						access = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con il proprio accesso
+						function = " ";
 						response.setText(emojiiWellDone + " Accesso eseguito! " + emojiiWellDone);
 					}
 					
 					execute(response);
-				} else {
+				} 
+				else {
 					response.setText(emojiiNoEntry + " Attenzione credenziali errate! " + emojiiNoEntry);
 					execute(response);
 				}
@@ -274,11 +316,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	}
 
 	/*
-	 * Metodo Modify specificato principalmente per permettere la mofica delle
-	 * proprie credenziali.
-	 * 
-	 * Individuando una correlazione tra il metodo delete e il metodo registrazione
-	 * (specificato per "l'utente stupido").
+	 * Metodo Modify specificato principalmente per permettere la mofica delle proprie credenziali. 
 	 */
 
 	public void Modify(SendMessage response, Update update) {
@@ -315,6 +353,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					sub = tokens[2];
 					
 					if(dataBase.alterRow(tabUtente, idUtente, nickName, password, sub, utenteId)) {
+						function = " ";
 						response.setText(emojiiWellDone + " Inserimento eseguito! " + emojiiWellDone);
 					}
 					else {
@@ -368,6 +407,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 						notiziaId--;
 					} while (countUtente != 0);
 
+					function = " ";
 					response.setText(emojiiWellDone + " Eliminazione eseguita! " + emojiiWellDone);
 				} else {
 					response.setText(emojiiNoEntry + " Attenzione credenziali errate! " + emojiiNoEntry);
@@ -383,60 +423,76 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 
 	public void ReadSearch(SendMessage response, Update update) {
 		Response res = new Response();
+		
 		try {
 			if (update.hasCallbackQuery()) {
 				String callData = update.getCallbackQuery().getData();
 				switch (callData) {
-				case "NEXT":
-					j++;
-					titolo = arrayNotizia[j].getTitolo();
-					link = arrayNotizia[j].getLink();
-
-					if (j >= (arrayNotizia.length - 1)) {
-						EditMessageText newResponseNext = res.setNewResponseNext(titolo, link, update);
-						execute(newResponseNext);
-					} else {
-						EditMessageText newResponseNext = res.setNewResponse(titolo, link, update);
-						execute(newResponseNext);
-					}
-					break;
-
-				case "PREVIOUS":
-					j--;
-					titolo = arrayNotizia[j].getTitolo();
-					link = arrayNotizia[j].getLink();
-					if (j <= 0) {
-						EditMessageText newResponsePrevious = res.setNewResponsePrevious(titolo, link, update);
-						execute(newResponsePrevious);
-					} else {
-						EditMessageText newResponsePrevious = res.setNewResponse(titolo, link, update);
-						execute(newResponsePrevious);
-					}
-					break;
-
-				case "COMMENT":
-					SendMessage newResponseComm = new SendMessage();
-					long chatId = update.getCallbackQuery().getMessage().getChatId();
-					newResponseComm.setChatId(chatId);
-					Function("/commento", newResponseComm, update);
-					break;
+					case "NEXT":
+						j++;
+						titolo = arrayNotizia[j].getTitolo();
+						link = arrayNotizia[j].getLink();
+	
+						if (j >= (arrayNotizia.length - 1)) {
+							EditMessageText newResponseNext = res.setNewResponseNext(titolo, link, update);
+							execute(newResponseNext);
+						} 
+						else {
+							EditMessageText newResponseNext = res.setNewResponse(titolo, link, update);
+							execute(newResponseNext);
+						}
+						break;
+	
+					case "PREVIOUS":
+						j--;
+						titolo = arrayNotizia[j].getTitolo();
+						link = arrayNotizia[j].getLink();
+						if (j <= 0) {
+							EditMessageText newResponsePrevious = res.setNewResponsePrevious(titolo, link, update);
+							execute(newResponsePrevious);
+						} 
+						else {
+							EditMessageText newResponsePrevious = res.setNewResponse(titolo, link, update);
+							execute(newResponsePrevious);
+						}
+						break;
+	
+					case "COMMENT":
+							SendMessage newResponseComm = new SendMessage();
+							long chatId = update.getCallbackQuery().getMessage().getChatId();
+							newResponseComm.setChatId(chatId);
+							Function("/commento", newResponseComm, update);
+						break;
+						
+					case "VIEW":
+							SendMessage newResponseViewComm = new SendMessage();
+							long chatViewId = update.getCallbackQuery().getMessage().getChatId();
+							newResponseViewComm.setChatId(chatViewId);
+							Function("/visualizzaCommenti", newResponseViewComm, update);
+						break;
 				}
-			} else {
+			} 
+			else {
 				String search = update.getMessage().getText();
 				search.toLowerCase();
 
 				FeedReader reader = new FeedReader();
-				reader.run(search);
+				feedBack = reader.run(search);
+				
+				if (feedBack != true) {
+					response.setText(emojiiNoFeed + " Non possediamo alcun feed in grado di rispondere alla tua richiesta " + emojiiNoFeed);
+				}
+				else {
+					Gson g = new GsonBuilder().setPrettyPrinting().create();
+					arrayNotizia = g.fromJson(new FileReader("GsonImport.json"), Notizia[].class);
 
-				Gson g = new GsonBuilder().setPrettyPrinting().create();
-				arrayNotizia = g.fromJson(new FileReader("GsonImport.json"), Notizia[].class);
+					j = 0;
+					titolo = arrayNotizia[j].getTitolo();
+					link = arrayNotizia[j].getLink();
 
-				j = 0;
-
-				titolo = arrayNotizia[j].getTitolo();
-				link = arrayNotizia[j].getLink();
-
-				response = res.setResponse(titolo, link, update);
+					response = res.setResponse(titolo, link, update);
+				}
+				
 				execute(response);
 			}
 		} catch (IllegalArgumentException | IOException | TelegramApiException e) {
@@ -446,16 +502,16 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 
 	public void Comment(SendMessage response, Update update) {
 		MyDataBase dataBase = new MyDataBase();
-
+		
 		if (dataBase.contains(tabNotizia, titolo, link)) {
 			System.out.println("Notizia gia' contenuta");
-		} else {
+		} 
+		else {
 			dataBase.InsertTable(tabNotizia, titolo, link, null);
 		}
 
 		int notiziaId = dataBase.getID(tabNotizia, idNotizia, titolo, link);
 		int utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
-		System.out.println(utenteId);
 
 		String comment = update.getMessage().getText();
 		String strUtente = Integer.toString(utenteId);
@@ -465,11 +521,53 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			System.out.println("Commento gia' contenuto");
 			String dataBaseComment = dataBase.getRecensione(tabCommento, strUtente, strNotizia);
 			response.setText("Recensione gia' presente: " + dataBaseComment);
-		} else {
+		} 
+		else {
 			dataBase.InsertTable(tabCommento, comment, strUtente, strNotizia);
 			response.setText("Recensione inserita: " + comment);
 		}
 
+		try {
+			execute(response);
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void ViewComment(SendMessage response, Update update) {
+		MyDataBase dataBase = new MyDataBase();
+		ArrayList<String> arrayRecensione = new ArrayList<>();
+
+		if (update.hasCallbackQuery()) {
+			response.setText("I commenti di questa notizia risultano: \n");
+			int notiziaId = dataBase.getID(tabNotizia, idNotizia, titolo, link);
+			String notizia = Integer.toString(notiziaId);
+			arrayRecensione = dataBase.getRecensioni(tabCommento, notizia, "comment");
+
+			if (arrayRecensione.size() > 0) {
+				for (String str : arrayRecensione) {
+					response.setText(response.getText() + str + "\n");
+				}
+			} 
+			else {
+				response.setText("Non e' presente alcun commento di questa notizia!");
+			}
+		} 
+		else {
+			response.setText("I tuoi commenti risultano: \n");
+			int utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
+			String utente = Integer.toString(utenteId);
+			arrayRecensione = dataBase.getRecensioni(tabCommento, utente, "mineComment");
+
+			if (arrayRecensione.size() > 0) {
+				for (String str : arrayRecensione) {
+					response.setText(response.getText() + str + "\n");
+				}
+			} 
+			else {
+				response.setText("Non e' presente alcun commento di questa notizia!");
+			}
+		}
 		try {
 			execute(response);
 		} catch (TelegramApiException e) {
