@@ -78,125 +78,106 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	 */
 
 	public void Function(String str, SendMessage response, Update update) {
+		MyDataBase dataBase = new MyDataBase();
 		char ch = str.charAt(0);
 
 		if (ch == '/') {
 			function = str; // Salvo temporaneamente quale sia la funzione scelta precedentemente, in maniera tale che possa successivamente utilizzare il corretto update
-			switch (function) {
+			try {
+				switch (function) {
 				case "/start":
-					try {
-						response.setText("Benvenuto nel bot NABOO!");
-						execute(response);
-					} catch (TelegramApiException e) {
-						e.printStackTrace();
-					}
+					response.setText("Benvenuto nel bot NABOO!");
+					execute(response);
 					break;
-	
+
 				case "/registrazione":
-					try {
-						response.setText( "Inserisci il tuo nickname e la password, separati da uno spazio, oltre alla tipologia di abbonamento.\n " 
-						                + "Modalita' di inserimento ('chaz27' 'rossetto12' '1')");
-						execute(response);
-					} catch (TelegramApiException e) {
-						e.printStackTrace();
-					}
+					response.setText("Inserisci il tuo nickname e la password, separati da uno spazio, oltre alla tipologia di abbonamento.\n"
+									 + "Modalita' di inserimento ('chaz27' 'rossetto12' '1')");
+					execute(response);
 					break;
-	
+
 				case "/accedi":
-					try {
-	
+					response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
+					execute(response);
+					break;
+
+				case "/modifica":
+					if (access != true) {
+						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
+						execute(response);
+					} 
+					else {
 						response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
 						execute(response);
-					} catch (TelegramApiException e) {
-						e.printStackTrace();
 					}
 					break;
-	
-				case "/modifica":
-					try {
-						if (access != true) {
-							response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
-							execute(response);
-						} 
-						else {
-							response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
-							execute(response);
-						}
-					} catch (TelegramApiException e) {
-						e.printStackTrace();
-					}
-					break;
-	
+
 				case "/elimina":
-					try {
-						if (access != true) {
-							response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
-							execute(response);
-						} 
-						else {
-							response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
-							execute(response);
-						}
-					} catch (TelegramApiException e) {
-						e.printStackTrace();
-					}
-					break;
-	
-				case "/leggiNotizie":
-					try {
-						if (access != true) {
-							response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
-							execute(response);
-						} 
-						else {
-							response.setText("Inserisci una parola chiave");
-							execute(response);
-						}
-					} catch (TelegramApiException e) {
-						e.printStackTrace();
-					}
-					break;
-	
-				case "/commento":
-					try {
-						if (access != true) {
-							response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
-						} 
-						else {
-							if (subscription != true) {
-								response.setText(emojiiNoEntry + " Attenzione la tua tipologia di abbonamento non permette questa funzione! " + emojiiNoEntry);
-							} 
-							else {
-								response.setText("Inserisci un commento");
-							}
-						}
+					if (access != true) {
+						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! "
+								+ emojiiNoEntry);
 						execute(response);
-					} catch (TelegramApiException e) {
-						e.printStackTrace();
+					} 
+					else {
+						response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
+						execute(response);
 					}
 					break;
-	
+
+				case "/leggiNotizie":
+					if (access != true) {
+						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
+						execute(response);
+					} 
+					else {
+						response.setText("Inserisci una parola chiave");
+						execute(response);
+					}
+					break;
+
+				case "/commento":
+					if (access != true) {
+						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
+					} 
+					else {
+						subscription = dataBase.getSubscription(tabUtente, nickName, password);
+						if (subscription != true) {
+							response.setText(emojiiNoEntry + " Attenzione la tua tipologia di abbonamento non permette questa funzione! " + emojiiNoEntry);
+						} 
+						else {
+							response.setText("Inserisci un commento");
+						}
+					}
+					execute(response);
+					break;
+
 				case "/visualizzaCommenti":
-					try {
-						if (access != true) {
-							response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
+					if (access != true) {
+						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
+						execute(response);
+					} 
+					else {
+						subscription = dataBase.getSubscription(tabUtente, nickName, password);
+						if (subscription != true) {
+							response.setText(emojiiNoEntry + " Attenzione la tua tipologia di abbonamento non permette questa funzione! " + emojiiNoEntry);
 							execute(response);
 						} 
 						else {
-							if (subscription != true) {
-								response.setText(emojiiNoEntry + " Attenzione la tua tipologia di abbonamento non permette questa funzione! " + emojiiNoEntry);
-								execute(response);
-							} 
-							else {
-								ViewComment(response, update);
-							}
+							ViewComment(response, update);
 						}
-					} catch (TelegramApiException e) {
-						e.printStackTrace();
 					}
 					break;
+					
+				default:
+					response.setText("Attenzione il bot non possiede questa funzionalita'");
+					execute(response);
+					break;
+				}
+			} catch (TelegramApiException e) {
+				e.printStackTrace();
 			}
-		} else {
+		} 
+		else {
 			switch (function) {
 				case "/registrazione":
 					Registration(response, update);
@@ -328,7 +309,8 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			if (c == 0) {
 				if (tokens.length != 2) {
 					response.setText(emojiiNoEntry + " Attenzione credenziali non corrette! " + emojiiNoEntry);
-				} else {
+				} 
+				else {
 					nickName = tokens[0];
 					password = tokens[1];
 					utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
@@ -378,7 +360,8 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			if (tokens.length != 2) {
 				response.setText(emojiiNoEntry + " Attenzione credenziali non corrette riprova! " + emojiiNoEntry);
 				execute(response);
-			} else {
+			} 
+			else {
 				nickName = tokens[0];
 				password = tokens[1];
 				answer = dataBase.contains(tabUtente, nickName, password);
@@ -409,7 +392,8 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 
 					function = " ";
 					response.setText(emojiiWellDone + " Eliminazione eseguita! " + emojiiWellDone);
-				} else {
+				} 
+				else {
 					response.setText(emojiiNoEntry + " Attenzione credenziali errate! " + emojiiNoEntry);
 				}
 
@@ -420,7 +404,6 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		}
 	}
 	
-
 	public void ReadSearch(SendMessage response, Update update) {
 		Response res = new Response();
 		
@@ -509,18 +492,16 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		else {
 			dataBase.InsertTable(tabNotizia, titolo, link, null);
 		}
-
+		
 		int notiziaId = dataBase.getID(tabNotizia, idNotizia, titolo, link);
 		int utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
-
-		String comment = update.getMessage().getText();
 		String strUtente = Integer.toString(utenteId);
 		String strNotizia = Integer.toString(notiziaId);
-
+		String comment = update.getMessage().getText();
+		
 		if (dataBase.contains(tabCommento, strUtente, strNotizia)) {
-			System.out.println("Commento gia' contenuto");
-			String dataBaseComment = dataBase.getRecensione(tabCommento, strUtente, strNotizia);
-			response.setText("Recensione gia' presente: " + dataBaseComment);
+			dataBase.setRecensione(tabCommento, comment, strUtente, strNotizia);
+			response.setText("Recensione aggiornata: " + comment);
 		} 
 		else {
 			dataBase.InsertTable(tabCommento, comment, strUtente, strNotizia);

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-public class MyDataBase // TODO: Commentare e mettere nominativi in inglese
+public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in inglese
 {
 	static String url = "jdbc:mysql://localhost:3306/naboocgo", username = "root", password = "2905192704";
 	static String tabUtente = "Utente", tabNotizia = "Notizia", tabCommento = "Commento";
@@ -57,8 +57,8 @@ public class MyDataBase // TODO: Commentare e mettere nominativi in inglese
 		try {
 			switch (table) {
 				case "Utente":
-					boolean sub = Boolean.parseBoolean(thirdInput);
-					query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + secondInput + "', " + sub + ")";
+					boolean subscription = Boolean.parseBoolean(thirdInput);
+					query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + secondInput + "', " + subscription + ")";
 					break;
 	
 				case "Notizia":
@@ -138,7 +138,7 @@ public class MyDataBase // TODO: Commentare e mettere nominativi in inglese
 			switch (table) {
 				case "Utente":
 					query = "UPDATE " + table + " SET  Nickname = '" + firstInput + "', Password = '" + secondInput
-							+ "', Sub = '" + thirdInput + "' WHERE " + idTable + " = " + ID;
+							+ "', Subscription = '" + thirdInput + "' WHERE " + idTable + " = " + ID;
 					break;
 	
 				case "Notizia":
@@ -266,8 +266,7 @@ public class MyDataBase // TODO: Commentare e mettere nominativi in inglese
 		return value;
 	}
 
-	public ArrayList<String> getRecensioni(String table, String firstInput, String str)
-	{
+	public ArrayList<String> getRecensioni(String table, String firstInput, String str) {
 		Connection conn = ConnectionDB();
 		Statement st = null;
 		ResultSet rs = null;
@@ -306,7 +305,6 @@ public class MyDataBase // TODO: Commentare e mettere nominativi in inglese
 		return arrayNotizia;
 	}
 	
-
 	public String[] getNotizia(int idNotizia) {
 		Connection conn = ConnectionDB();
 		Statement st = null;
@@ -425,5 +423,27 @@ public class MyDataBase // TODO: Commentare e mettere nominativi in inglese
 		}
 
 		return value;
+	}
+	
+	public void setRecensione(String table, String firstInput, String secondInput, String thirdInput)
+	{
+		Connection conn = ConnectionDB();
+		PreparedStatement preparedStmt = null;
+
+		String query = " ";
+
+		try {
+
+			int idUtente = Integer.parseInt(secondInput);
+			int idNotizia = Integer.parseInt(thirdInput);
+
+			query = "UPDATE " + table + " SET Recensione = '" + firstInput + "' WHERE  UtenteID = '" + idUtente + "' AND NotiziaID = '" + idNotizia + "'";
+
+			preparedStmt = conn.prepareStatement(query); // TODO: cercare a cosa serve concretamente
+			preparedStmt.execute();
+			conn.close();
+		} catch (SQLException | HeadlessException e) {
+			e.printStackTrace();
+		}
 	}
 }
