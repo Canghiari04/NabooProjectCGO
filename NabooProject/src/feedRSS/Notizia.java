@@ -1,12 +1,12 @@
 package feedRSS;
 
 public class Notizia {
-	String titolo;
-	String link;
+	private String titolo;
+	private String link;
 	
-	public Notizia(String t, String l) {
-		this.titolo = t;
-		this.link = l;
+	public Notizia(String titolo, String link) {
+		this.titolo = titolo;
+		this.link = link;
 	}
 
 	public String getTitolo() {

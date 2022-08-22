@@ -1,6 +1,5 @@
 package botTelegram;
 
-public interface IClient
-{
+public interface IClient{
 	
 }

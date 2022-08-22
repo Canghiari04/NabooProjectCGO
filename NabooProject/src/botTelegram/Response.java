@@ -11,13 +11,15 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import dataBase.MyDataBase;
+
 public class Response {
 	private String emojiiNext = "🔜", emojiiBack = "🔙";
+	private static MyDataBase dataBase = new MyDataBase();
 	
-
 	public SendMessage setResponse(String titolo, String link, Update update) {
 		SendMessage response = new SendMessage();
-		Long chatId = update.getMessage().getChatId();
+		long chatId = update.getMessage().getChatId();
 
 		response.setChatId(chatId);
 		response.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
@@ -96,6 +98,7 @@ public class Response {
 		return newResponse;
 	}
 
+	
 	public EditMessageText setNewResponsePrevious(String titolo, String link, Update update) {
 		EditMessageText newResponse = new EditMessageText();
 		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
@@ -135,6 +138,7 @@ public class Response {
 		return newResponse;
 	}
 
+	
 	public EditMessageText setNewResponseNext(String titolo, String link, Update update) {
 		EditMessageText newResponse = new EditMessageText();
 		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
@@ -172,5 +176,35 @@ public class Response {
 		newResponse.setReplyMarkup(markupInline);
 
 		return newResponse;
+	}
+	
+	
+	public SendMessage setFeedDataResponse(Update update, SendMessage response, String tabUtente, String idUtente, String nickName, String password) {
+		SendMessage feedResponse = new SendMessage();
+		long chatId = update.getMessage().getChatId();
+
+		feedResponse.setChatId(chatId);		
+		feedResponse = dataBase.getResponse(response, tabUtente, idUtente, nickName, password);
+		
+		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+		List<InlineKeyboardButton> rowInline = new ArrayList<>();
+
+		InlineKeyboardButton addBtn = new InlineKeyboardButton();
+		addBtn.setText("Aggiungi");
+		addBtn.setCallbackData("ADD");
+
+		InlineKeyboardButton eliminateBtn = new InlineKeyboardButton();
+		eliminateBtn.setText("Elimina");
+		eliminateBtn.setCallbackData("ELIMINATE");
+
+		rowInline.add(addBtn);
+		rowInline.add(eliminateBtn);
+		rowsInline.add(rowInline);
+
+		markupInline.setKeyboard(rowsInline);
+		feedResponse.setReplyMarkup(markupInline);
+
+		return feedResponse;
 	}
 }

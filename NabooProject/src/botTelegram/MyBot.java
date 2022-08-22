@@ -26,6 +26,8 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	private String tabUtente = "Utente", tabNotizia = "Notizia", tabCommento = "Commento", idUtente = "UtenteID", idNotizia = "NotiziaID", idCommento = "CommentoID";
 	private static ArrayList<Utente> arrayUtente = new ArrayList<Utente>();
 	private static Notizia[] arrayNotizia;
+	private static Response res = new Response();
+
 
 	public String getBotUsername() {
 		return "NabooCGNbot";
@@ -45,11 +47,23 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			Function(str, response, update);
 		} 
 		else if (update.hasCallbackQuery()) {
-			long chatId = update.getCallbackQuery().getMessage().getChatId();
 			SendMessage response = new SendMessage();
+
+			String callData = update.getCallbackQuery().getData();
+			long chatId = update.getCallbackQuery().getMessage().getChatId();
 			response.setChatId(chatId);
 
-			ReadSearch(response, update);
+			switch (callData) {
+				case "ADD":
+					changeFeed(response, update);
+					break;
+				case "ELIMINATE":
+					changeFeed(response, update);
+					break;
+				default:
+					ReadSearch(response, update);
+					break;
+			}
 		}
 	}
 
@@ -69,14 +83,14 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		}
 		return false;
 	}
-
+	
 	/*
 	 * 
 	 * Switch contenente le funzioni principali del bot telegram, individuandone la
 	 * correlazione con onUpdateReceived
 	 * 
 	 */
-
+	
 	public void Function(String str, SendMessage response, Update update) {
 		MyDataBase dataBase = new MyDataBase();
 		char ch = str.charAt(0);
@@ -114,8 +128,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 
 				case "/elimina":
 					if (access != true) {
-						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! "
-								+ emojiiNoEntry);
+						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
 						execute(response);
 					} 
 					else {
@@ -168,6 +181,48 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					}
 					break;
 					
+				case "/modificaFeed":
+					if (access != true) {
+						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
+						execute(response);
+					} 
+					else {
+						changeFeed(response, update);
+					}
+					break;
+					
+				case "/aggiungiFeed": 
+					if (access != true) {
+						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
+					} 
+					else {
+						subscription = dataBase.getSubscription(tabUtente, nickName, password);
+						if (subscription != true) {
+							response.setText(emojiiNoEntry + " Attenzione la tua tipologia di abbonamento non permette questa funzione! " + emojiiNoEntry);
+						} 
+						else {
+							response.setText("Inserisci i feed che vuoi aggiungere");
+						}
+					}
+					execute(response);
+					break;
+					
+				case "/eliminaFeed": 
+					if (access != true) {
+						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
+					} 
+					else {
+						subscription = dataBase.getSubscription(tabUtente, nickName, password);
+						if (subscription != true) {
+							response.setText(emojiiNoEntry + " Attenzione la tua tipologia di abbonamento non permette questa funzione! " + emojiiNoEntry);
+						} 
+						else {
+							response.setText("Inserisci i feed che vuoi eliminare");
+						}
+					}
+					execute(response);
+					break;
+					
 				default:
 					response.setText("Attenzione il bot non possiede questa funzionalita'");
 					execute(response);
@@ -202,6 +257,14 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 				case "/commento":
 					Comment(response, update);
 					break;
+					
+				case "/aggiungiFeed":
+					addFeed(response, update);
+					break;
+					
+				case "/eliminaFeed":
+					eliminateFeed(response, update);
+					break;
 			}
 		}
 	}
@@ -217,7 +280,6 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			if (tokens.length != 3) // TODO: controllo su sub
 			{
 				response.setText(emojiiNoEntry + " Attenzione credenziali non corrette riprova! " + emojiiNoEntry);
-				execute(response);
 			} 
 			else {
 				nickName = tokens[0];
@@ -229,7 +291,6 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 				if (answer) // In caso dovesse essere presente un account con le stesse credenziali verra' richiesto nuovamente l'inserimento
 				{
 					response.setText(emojiiNoEntry + " Attenzione credenziali gia' presenti! " + emojiiNoEntry);
-					execute(response);
 				} 
 				else {
 					access = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con la propria registration
@@ -243,9 +304,11 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					
 					subscription = dataBase.getSubscription(tabUtente, nickName, password);
 					function = " ";
+					utenteId=dataBase.getID(tabUtente, idUtente, nickName, password);
 					response.setText(emojiiWellDone + " Registrazione eseguita! " + emojiiWellDone);
-					execute(response);
 				}
+				
+				execute(response);
 			}
 		} catch (TelegramApiException e) {
 			e.printStackTrace();
@@ -281,6 +344,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					else {
 						access = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con il proprio accesso
 						function = " ";
+						utenteId=dataBase.getID(tabUtente, idUtente, nickName, password);
 						response.setText(emojiiWellDone + " Accesso eseguito! " + emojiiWellDone);
 					}
 					
@@ -404,9 +468,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		}
 	}
 	
-	public void ReadSearch(SendMessage response, Update update) {
-		Response res = new Response();
-		
+	public void ReadSearch(SendMessage response, Update update) {	
 		try {
 			if (update.hasCallbackQuery()) {
 				String callData = update.getCallbackQuery().getData();
@@ -416,28 +478,31 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 						titolo = arrayNotizia[j].getTitolo();
 						link = arrayNotizia[j].getLink();
 	
+						EditMessageText newResponseNext = new EditMessageText();
+						
 						if (j >= (arrayNotizia.length - 1)) {
-							EditMessageText newResponseNext = res.setNewResponseNext(titolo, link, update);
-							execute(newResponseNext);
+							newResponseNext = res.setNewResponseNext(titolo, link, update);
 						} 
 						else {
-							EditMessageText newResponseNext = res.setNewResponse(titolo, link, update);
-							execute(newResponseNext);
+							newResponseNext = res.setNewResponse(titolo, link, update);
 						}
+						execute(newResponseNext);
 						break;
 	
 					case "PREVIOUS":
 						j--;
 						titolo = arrayNotizia[j].getTitolo();
 						link = arrayNotizia[j].getLink();
+						
+						EditMessageText newResponsePrevious = new EditMessageText();
+						
 						if (j <= 0) {
-							EditMessageText newResponsePrevious = res.setNewResponsePrevious(titolo, link, update);
-							execute(newResponsePrevious);
+							newResponsePrevious = res.setNewResponsePrevious(titolo, link, update);
 						} 
 						else {
-							EditMessageText newResponsePrevious = res.setNewResponse(titolo, link, update);
-							execute(newResponsePrevious);
+							newResponsePrevious = res.setNewResponse(titolo, link, update);
 						}
+						execute(newResponsePrevious);
 						break;
 	
 					case "COMMENT":
@@ -460,7 +525,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 				search.toLowerCase();
 
 				FeedReader reader = new FeedReader();
-				feedBack = reader.run(search);
+				feedBack = reader.run(search, utenteId);
 				
 				if (feedBack != true) {
 					response.setText(emojiiNoFeed + " Non possediamo alcun feed in grado di rispondere alla tua richiesta " + emojiiNoFeed);
@@ -486,12 +551,9 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	public void Comment(SendMessage response, Update update) {
 		MyDataBase dataBase = new MyDataBase();
 		
-		if (dataBase.contains(tabNotizia, titolo, link)) {
-			System.out.println("Notizia gia' contenuta");
-		} 
-		else {
+		if (!dataBase.contains(tabNotizia, titolo, link))
 			dataBase.InsertTable(tabNotizia, titolo, link, null);
-		}
+		
 		
 		int notiziaId = dataBase.getID(tabNotizia, idNotizia, titolo, link);
 		int utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
@@ -550,6 +612,71 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			}
 		}
 		try {
+			execute(response);
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void changeFeed(SendMessage response, Update update) { // TODO: da fare come ReadSearch delle notizie		 		
+		try {
+			if(update.hasCallbackQuery()) {
+				String callData = update.getCallbackQuery().getData();
+				long chatId = update.getCallbackQuery().getMessage().getChatId();
+				
+				switch (callData) {
+					case "ADD":
+						SendMessage newResponseAdd = new SendMessage();
+						newResponseAdd.setChatId(chatId);
+						Function("/aggiungiFeed", newResponseAdd, update);
+						break;
+					case "ELIMINATE":
+						SendMessage newResponseEliminate = new SendMessage();
+						newResponseEliminate.setChatId(chatId);
+						Function("/eliminaFeed", newResponseEliminate, update);
+						break;
+				}
+			}
+			else {
+				response = res.setFeedDataResponse(update, response, tabUtente, idUtente, nickName, password);
+			}
+			
+			execute(response);
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void addFeed(SendMessage response, Update update) {
+		MyDataBase dataBase = new MyDataBase();
+		
+		String str = update.getMessage().getText();
+		String[] tokens = str.split(" ");
+		
+		dataBase.setFeed(utenteId, true, tokens);
+		
+		response = res.setFeedDataResponse(update, response, tabUtente, idUtente, nickName, password);
+		
+		try { 
+			execute(response);
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void eliminateFeed(SendMessage response, Update update) {
+		MyDataBase dataBase = new MyDataBase();
+		
+		String str = update.getMessage().getText();
+		String[] tokens = str.split(" ");
+		
+		dataBase.setFeed(utenteId, false, tokens);
+		
+		response = res.setFeedDataResponse(update, response, tabUtente, idUtente, nickName, password);
+		
+		try { 
 			execute(response);
 		} catch (TelegramApiException e) {
 			e.printStackTrace();

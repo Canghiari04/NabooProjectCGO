@@ -1,7 +1,5 @@
 package botTelegram;
 
-import javax.ws.rs.core.Link;
-
 public class Amministratore extends Utente implements IAmministratore {
 	public Amministratore(String nickName, String password) {
 		super(nickName, password);
