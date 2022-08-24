@@ -150,15 +150,16 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 		try {
 			switch (table) {
 				case "Utente":
-					query = "UPDATE " + table + " SET  Nickname = '" + firstInput + "', Password = '" + secondInput + "', Subscription = '" + thirdInput + "' WHERE " + idTable + " = " + ID;
+					boolean subscription = Boolean.parseBoolean(thirdInput);
+					query = "UPDATE " + table + " SET  Nickname = '" + firstInput + "', Password = '" + secondInput + "', Subscription = " + subscription + " WHERE " + idTable + " = '" + ID + "';";
 					break;
 	
 				case "Notizia":
-					query = "UPDATE " + table + " SET  Titolo = '" + firstInput + "', Link = '" + secondInput + "' WHERE " + idTable + " = " + ID;
+					query = "UPDATE " + table + " SET  Titolo = '" + firstInput + "', Link = '" + secondInput + "' WHERE " + idTable + " = '" + ID + "';";
 					break;
 	
 				case "Commento":
-					query = "UPDATE " + table + " SET  UtenteID = '" + firstInput + "', NotiziaID = '" + secondInput + "' WHERE " + idTable + " = " + ID;
+					query = "UPDATE " + table + " SET  UtenteID = '" + firstInput + "', NotiziaID = '" + secondInput + "' WHERE " + idTable + " = '" + ID + "';";
 					break;
 			}
 
@@ -175,7 +176,98 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 		return false;
 	}
 
-	// Introdotti parametri cosi generalizzati per rendere il metodo piu' dinamico possibile
+	/*
+	 * Introdotti parametri cosi generalizzati per rendere il metodo piu' dinamico possibile
+	 */
+	
+	public boolean contains(String table, String firstInput, String secondInput) {
+		Connection conn = ConnectionDB();
+		Statement st = null;
+		ResultSet rs = null;
+
+		String query = "";
+		
+		try {
+			switch (table) {
+			case "Utente":
+				query = "SELECT * FROM " + table + " WHERE  Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'";
+				break;
+
+			case "Notizia":
+				firstInput = replace(firstInput);
+				query = "SELECT * FROM " + table + " WHERE  Titolo = '" + firstInput + "' AND Link = '" + secondInput + "'";
+				break;
+
+			case "Commento":
+				int idUtente = Integer.parseInt(firstInput);
+				int idNotizia = Integer.parseInt(secondInput);
+				query = "SELECT * FROM " + table + " WHERE  UtenteID = '" + idUtente + "' AND NotiziaID = '" + idNotizia + "'";
+				break;
+			}
+
+			st = conn.createStatement();
+			rs = st.executeQuery(query);
+			
+			return rs.next();			
+		} catch (SQLException | HeadlessException e) {
+			e.printStackTrace();
+			return false;
+		}		
+	}
+
+	public int countNotizia(int notiziaId) {
+		Connection conn = ConnectionDB();
+		Statement preparedStmt = null;
+		ResultSet result = null;
+
+		String query = " ";
+		
+		int value = 0;
+
+		try {
+			query = "SELECT COUNT(NotiziaID) AS Count FROM Commento WHERE NotiziaID = '" + notiziaId + "'";
+
+			preparedStmt = conn.createStatement();
+			result = preparedStmt.executeQuery(query);
+
+			while (result.next()) {
+				value = result.getInt("Count");
+			}
+
+			conn.close();
+		} catch (SQLException | HeadlessException e) {
+			e.printStackTrace();
+		}
+
+		return value;
+	}
+
+	public int countUtente(int utenteId) {
+		Connection conn = ConnectionDB();
+		Statement preparedStmt = null;
+		ResultSet result = null;
+
+		String query = " ";
+		
+		int value = 0;
+
+		try {
+			query = "SELECT COUNT(UtenteID) AS Count FROM Commento WHERE UtenteID = '" + utenteId + "'";
+
+			preparedStmt = conn.createStatement();
+			result = preparedStmt.executeQuery(query);
+
+			while (result.next()) {
+				value = result.getInt("Count");
+			}
+
+			conn.close();
+		} catch (SQLException | HeadlessException e) {
+			e.printStackTrace();
+		}
+
+		return value;
+	}
 	
 	public int getID(String table, String idTable, String firstInput, String secondInput) {
 		Connection conn = ConnectionDB();
@@ -444,94 +536,33 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 		return feeds;
 	}
 	
-	public boolean contains(String table, String firstInput, String secondInput) {
-		Connection conn = ConnectionDB();
-		Statement st = null;
-		ResultSet rs = null;
+	public ArrayList<String> getFeedsTot() {
+		ArrayList<String> arrayFeeds = new ArrayList<String>();
 
-		String query = "";
-		
-		try {
-			switch (table) {
-			case "Utente":
-				query = "SELECT * FROM " + table + " WHERE  Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'";
-				break;
-
-			case "Notizia":
-				firstInput = replace(firstInput);
-				query = "SELECT * FROM " + table + " WHERE  Titolo = '" + firstInput + "' AND Link = '" + secondInput + "'";
-				break;
-
-			case "Commento":
-				int idUtente = Integer.parseInt(firstInput);
-				int idNotizia = Integer.parseInt(secondInput);
-				query = "SELECT * FROM " + table + " WHERE  UtenteID = '" + idUtente + "' AND NotiziaID = '" + idNotizia + "'";
-				break;
-			}
-
+		try { 
+			MyDataBase dataBase = new MyDataBase();
+			Connection conn = dataBase.ConnectionDB();
+			Statement st = null;
+			ResultSet rs = null;	
+			
+			String query = "SELECT Tipo FROM Feed;";			
+			String value = " ";
+				
 			st = conn.createStatement();
 			rs = st.executeQuery(query);
+	
+			while (rs.next()) {
+				value = rs.getString("Tipo");
+				arrayFeeds.add(value);					
+			}
 			
-			return rs.next();			
-		} catch (SQLException | HeadlessException e) {
-			e.printStackTrace();
-			return false;
-		}		
-	}
-
-	public int countNotizia(int notiziaId) {
-		Connection conn = ConnectionDB();
-		Statement preparedStmt = null;
-		ResultSet result = null;
-
-		String query = " ";
-		
-		int value = 0;
-
-		try {
-			query = "SELECT COUNT(NotiziaID) AS Count FROM Commento WHERE NotiziaID = '" + notiziaId + "'";
-
-			preparedStmt = conn.createStatement();
-			result = preparedStmt.executeQuery(query);
-
-			while (result.next()) {
-				value = result.getInt("Count");
-			}
-
-			conn.close();
-		} catch (SQLException | HeadlessException e) {
+		} catch (SQLException | IllegalArgumentException | HeadlessException e) {
 			e.printStackTrace();
 		}
-
-		return value;
-	}
-
-	public int countUtente(int utenteId) {
-		Connection conn = ConnectionDB();
-		Statement preparedStmt = null;
-		ResultSet result = null;
-
-		String query = " ";
 		
-		int value = 0;
-
-		try {
-			query = "SELECT COUNT(UtenteID) AS Count FROM Commento WHERE UtenteID = '" + utenteId + "'";
-
-			preparedStmt = conn.createStatement();
-			result = preparedStmt.executeQuery(query);
-
-			while (result.next()) {
-				value = result.getInt("Count");
-			}
-
-			conn.close();
-		} catch (SQLException | HeadlessException e) {
-			e.printStackTrace();
-		}
-
-		return value;
+		return arrayFeeds;
 	}
+	
 	
 	public void setRecensione(String table, String firstInput, String secondInput, String thirdInput) {
 		Connection conn = ConnectionDB();
@@ -553,6 +584,7 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 			e.printStackTrace();
 		}
 	}
+	
 
 	public void setFeed(int utenteId, boolean answer, String[] tokens) {
 		//TODO: inserire messaggi di errore, in caso di feed non esistenti, returnare un booleano

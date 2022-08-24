@@ -17,6 +17,64 @@ public class Response {
 	private String emojiiNext = "🔜", emojiiBack = "🔙";
 	private static MyDataBase dataBase = new MyDataBase();
 	
+	public SendMessage setRegistrationResponse(Update update, SendMessage response) {
+		SendMessage registrationResponse = new SendMessage();
+		long chatId = update.getMessage().getChatId();
+
+		registrationResponse.setChatId(chatId);		
+		registrationResponse.setText("Un ultimo passo, quale tipologia di abbonamento preferisci");
+		
+		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+		List<InlineKeyboardButton> rowInline = new ArrayList<>();
+
+		InlineKeyboardButton premiumBtn = new InlineKeyboardButton();
+		premiumBtn.setText("Premium");
+		premiumBtn.setCallbackData("PREMIUM");
+
+		InlineKeyboardButton baseBtn = new InlineKeyboardButton();
+		baseBtn.setText("Base");
+		baseBtn.setCallbackData("BASE");
+
+		rowInline.add(premiumBtn);
+		rowInline.add(baseBtn);
+		rowsInline.add(rowInline);
+
+		markupInline.setKeyboard(rowsInline);
+		registrationResponse.setReplyMarkup(markupInline);
+
+		return registrationResponse;
+	}
+	
+	public SendMessage setModifyResponse(Update update, SendMessage response) {
+		SendMessage modifyResponse = new SendMessage();
+		long chatId = update.getMessage().getChatId();
+
+		modifyResponse.setChatId(chatId);		
+		modifyResponse.setText("Un ultimo passo, quale tipologia di abbonamento preferisci");
+		
+		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+		List<InlineKeyboardButton> rowInline = new ArrayList<>();
+
+		InlineKeyboardButton premiumBtn = new InlineKeyboardButton();
+		premiumBtn.setText("Premium");
+		premiumBtn.setCallbackData("MODIFYPREMIUM");
+
+		InlineKeyboardButton baseBtn = new InlineKeyboardButton();
+		baseBtn.setText("Base");
+		baseBtn.setCallbackData("MODIFYBASE");
+
+		rowInline.add(premiumBtn);
+		rowInline.add(baseBtn);
+		rowsInline.add(rowInline);
+
+		markupInline.setKeyboard(rowsInline);
+		modifyResponse.setReplyMarkup(markupInline);
+
+		return modifyResponse;
+	}
+	
 	public SendMessage setResponse(String titolo, String link, Update update) {
 		SendMessage response = new SendMessage();
 		long chatId = update.getMessage().getChatId();
@@ -97,7 +155,6 @@ public class Response {
 
 		return newResponse;
 	}
-
 	
 	public EditMessageText setNewResponsePrevious(String titolo, String link, Update update) {
 		EditMessageText newResponse = new EditMessageText();
@@ -137,7 +194,6 @@ public class Response {
 
 		return newResponse;
 	}
-
 	
 	public EditMessageText setNewResponseNext(String titolo, String link, Update update) {
 		EditMessageText newResponse = new EditMessageText();
@@ -177,8 +233,7 @@ public class Response {
 
 		return newResponse;
 	}
-	
-	
+		
 	public SendMessage setFeedDataResponse(Update update, SendMessage response, String tabUtente, String idUtente, String nickName, String password) {
 		SendMessage feedResponse = new SendMessage();
 		long chatId = update.getMessage().getChatId();

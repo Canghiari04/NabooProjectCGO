@@ -3,6 +3,7 @@ package botTelegram;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -12,6 +13,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sun.syndication.feed.synd.SyndFeed;
 
 import dataBase.MyDataBase;
 import feedRSS.FeedReader;
@@ -19,15 +21,16 @@ import feedRSS.Notizia;
 
 public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sull'update ricevuto dall'utente
 {
-	private boolean answer = false, access = false, subscription = false, feedBack = false;
+	private boolean answer = false, access = false, modify = false, subscription = false, feedBack = false;
 	private int c = 0, j = 0, utenteId = 0, notiziaId = 0; // Contatore utilizzato nel metodo modify
 	private String nickName = " ", password = " ", sub = " ", function = " ", titolo = " ", link = " ";
 	private String emojiiNoEntry = "⛔️", emojiiWellDone = "✅", emojiiNoFeed = "😢";
 	private String tabUtente = "Utente", tabNotizia = "Notizia", tabCommento = "Commento", idUtente = "UtenteID", idNotizia = "NotiziaID", idCommento = "CommentoID";
 	private static ArrayList<Utente> arrayUtente = new ArrayList<Utente>();
+	private static ArrayList<String> feeds = new ArrayList<String>();
 	private static Notizia[] arrayNotizia;
 	private static Response res = new Response();
-
+	private static MyDataBase dataBase = new MyDataBase();
 
 	public String getBotUsername() {
 		return "NabooCGNbot";
@@ -54,6 +57,18 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			response.setChatId(chatId);
 
 			switch (callData) {
+				case "BASE":
+					Registration(response, update);
+					break;
+				case "PREMIUM":
+					Registration(response, update);
+					break;
+				case "MODIFYBASE":
+					ModifyRow(response, "false");
+					break;
+				case "MODIFYPREMIUM":
+					ModifyRow(response, "true");
+					break;
 				case "ADD":
 					changeFeed(response, update);
 					break;
@@ -105,8 +120,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					break;
 
 				case "/registrazione":
-					response.setText("Inserisci il tuo nickname e la password, separati da uno spazio, oltre alla tipologia di abbonamento.\n"
-									 + "Modalita' di inserimento ('chaz27' 'rossetto12' '1')");
+					response.setText("Inserisci il tuo nickname e la password, separati da uno spazio.\n" + "Modalita' di inserimento ('chaz27' 'rossetto12')");
 					execute(response);
 					break;
 
@@ -143,7 +157,12 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 						execute(response);
 					} 
 					else {
-						response.setText("Inserisci una parola chiave");
+						response.setText("Inserisci una parola chiave\n\nQui sotto sono riportate le disponibili\n");
+						feeds = dataBase.getFeedsTot();
+						
+						for(String f : feeds) {
+							response.setText(response.getText() + f + "\n");
+						}
 						execute(response);
 					}
 					break;
@@ -270,51 +289,60 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	}
 
 	public void Registration(SendMessage response, Update update) {
-		// TODO: richiedere differenti Update, attraverso condizioni
+		// TODO: richiedere differenti Update, attraverso condizioni, inserire callaBackData per subscription (SendMessage --> "Un ultimo passo...")
+		MyDataBase dataBase = new MyDataBase();
+		
 		try {
-			MyDataBase dataBase = new MyDataBase();
-
-			String str = update.getMessage().getText();
-			String[] tokens = str.split(" ");
-
-			if (tokens.length != 3) // TODO: controllo su sub
-			{
-				response.setText(emojiiNoEntry + " Attenzione credenziali non corrette riprova! " + emojiiNoEntry);
-			} 
-			else {
-				nickName = tokens[0];
-				password = tokens[1];
-				sub = tokens[2];
-
-				answer = dataBase.contains(tabUtente, nickName, password);
-
-				if (answer) // In caso dovesse essere presente un account con le stesse credenziali verra' richiesto nuovamente l'inserimento
-				{
-					response.setText(emojiiNoEntry + " Attenzione credenziali gia' presenti! " + emojiiNoEntry);
-				} 
-				else {
-					access = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con la propria registration
-					
-					if(sub.equals("1")) {
-						dataBase.InsertTable(tabUtente, nickName, password, "true");
-					}
-					else {
-						dataBase.InsertTable(tabUtente, nickName, password, "false");
-					}
-					
-					subscription = dataBase.getSubscription(tabUtente, nickName, password);
-					function = " ";
-					utenteId=dataBase.getID(tabUtente, idUtente, nickName, password);
-					response.setText(emojiiWellDone + " Registrazione eseguita! " + emojiiWellDone);
+			if(update.hasCallbackQuery()) {				
+				String callData = update.getCallbackQuery().getData();
+				
+				switch (callData) {
+					case "BASE":
+						addClient(nickName, password, "false");
+						break;
+					case "PREMIUM":
+						addClient(nickName, password, "true");
+						break;
 				}
 				
-				execute(response);
+				subscription = dataBase.getSubscription(tabUtente, nickName, password);
+				function = " ";
+				utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
+				response.setText(emojiiWellDone + " Registrazione eseguita! " + emojiiWellDone);
 			}
+			else {
+				String str = update.getMessage().getText();
+				String[] tokens = str.split(" ");
+				
+				if (tokens.length != 2) { // TODO: controllo su sub
+					response.setText(emojiiNoEntry + " Attenzione credenziali non corrette riprova! " + emojiiNoEntry);
+				} 
+				else {
+					nickName = tokens[0];
+					password = tokens[1];
+					
+					if(dataBase.contains(tabUtente, nickName, password)) {
+						response.setText(emojiiNoEntry + " Attenzione credenziali gia' presenti! " + emojiiNoEntry);
+					}
+					else {
+						access = true;	
+					}
+					
+					response = res.setRegistrationResponse(update, response);
+				}
+			}
+				
+			execute(response);
 		} catch (TelegramApiException e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void addClient(String nickName, String password, String sub) {
+		MyDataBase dataBase = new MyDataBase();
+		dataBase.InsertTable(tabUtente, nickName, password, sub);
+	}
+	
 	public void Access(SendMessage response, Update update) {
 		// TODO: cercare in accedi le credenziale dell'utente, per stampa "piu' carina"
 		MyDataBase dataBase = new MyDataBase();
@@ -323,8 +351,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			String str = update.getMessage().getText();
 			String[] tokens = str.split(" ");
 
-			if (tokens.length != 2) // Condizione specificata per evitare scorretti inserimenti delle credenziale
-			{
+			if (tokens.length != 2) { // Condizione specificata per evitare scorretti inserimenti delle credenziale
 				response.setText(emojiiNoEntry + " Attenzione credenziali non corrette riprova! " + emojiiNoEntry);
 				execute(response);
 			} 
@@ -335,8 +362,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 				answer = dataBase.contains(tabUtente, nickName, password);
 				subscription = dataBase.getSubscription(tabUtente, nickName, password);
 
-				if (answer) // Condizione per vericare se sia gia' avvenuta la registration dell'account
-				{
+				if (answer) {  // Condizione per vericare se sia gia' avvenuta la registration dell'account
 					if (access == true) {
 						response.setText(emojiiWellDone + " Accesso gia' eseguito " + emojiiWellDone);
 						// TODO: cosa puoi fare dopo questo messaggio? 
@@ -344,7 +370,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					else {
 						access = true; // Evidenzia la possibilita' che la lettura delle notizie possa avvenire solamente con il proprio accesso
 						function = " ";
-						utenteId=dataBase.getID(tabUtente, idUtente, nickName, password);
+						utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
 						response.setText(emojiiWellDone + " Accesso eseguito! " + emojiiWellDone);
 					}
 					
@@ -361,59 +387,61 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	}
 
 	/*
-	 * Metodo Modify specificato principalmente per permettere la mofica delle proprie credenziali. 
+	 * Metodo Modify specificato principalmente per permettere la modifica delle proprie credenziali. 
 	 */
 
 	public void Modify(SendMessage response, Update update) {
 		MyDataBase dataBase = new MyDataBase();
 		String lineModify = update.getMessage().getText();
 		String[] tokens = lineModify.split(" ");
-			
+		
+		nickName = tokens[0];
+		password = tokens[1];
+				
 		try {
-			if (c == 0) {
-				if (tokens.length != 2) {
-					response.setText(emojiiNoEntry + " Attenzione credenziali non corrette! " + emojiiNoEntry);
-				} 
-				else {
-					nickName = tokens[0];
-					password = tokens[1];
+			if(tokens.length != 2) {
+				response.setText(emojiiNoEntry + "Attenzione inserisci correttamente le credeniziali! " + emojiiNoEntry);
+			}
+			else if(modify != true)
+			{
+				if(dataBase.contains(tabUtente, nickName, password)) {
 					utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
-
-					if (utenteId != 0) {
-						response.setText(emojiiWellDone + " Inserisci le nuove credenziali" + emojiiWellDone);
-						c++;
-					}
-
-					execute(response);
-				}
-			} 
-			else {
-				if (tokens.length != 3) {
-					response.setText(emojiiNoEntry + " Inserisci correttamente le nuove credenziali! " + emojiiNoEntry);
-				}
-				else {
-					c = 0;
 					
-					nickName = tokens[0];
-					password = tokens[1];
-					sub = tokens[2];
-					
-					if(dataBase.alterRow(tabUtente, idUtente, nickName, password, sub, utenteId)) {
-						function = " ";
-						response.setText(emojiiWellDone + " Inserimento eseguito! " + emojiiWellDone);
+					if(utenteId != 0) {
+						response.setText("Inserisci le nuove credenziali");
+						modify = true;
 					}
 					else {
-						response.setText(emojiiNoEntry + " Inserimento non riuscito " + emojiiNoEntry);
+						response.setText(emojiiNoEntry + "Attenzione credenziali non corrette! " + emojiiNoEntry);
 					}
 				}
-				
-				execute(response);
 			}
+			else {
+				response = res.setModifyResponse(update, response);
+			}
+				
+			execute(response);	
 		} catch (TelegramApiException e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void ModifyRow(SendMessage response, String sub)
+	{
+		dataBase.alterRow(tabUtente, idUtente, nickName, password, sub, utenteId);
+		response.setText(emojiiWellDone + " Modifica eseguita! " + emojiiWellDone);
+		
+		try {
+			execute(response);
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Metodo Delete da utilizzare solo nel lato Amministratore
+	 */
+	
 	public void Delete(SendMessage response, Update update) {
 		MyDataBase dataBase = new MyDataBase();
 
@@ -647,7 +675,6 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		}
 	}
 	
-	
 	public void addFeed(SendMessage response, Update update) {
 		MyDataBase dataBase = new MyDataBase();
 		
@@ -664,7 +691,6 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			e.printStackTrace();
 		}
 	}
-	
 	
 	public void eliminateFeed(SendMessage response, Update update) {
 		MyDataBase dataBase = new MyDataBase();
