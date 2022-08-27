@@ -3,6 +3,7 @@ package feedRSS;
 import java.awt.HeadlessException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,70 +29,93 @@ public class FeedReader
 	private static List<Notizia> notizie = new ArrayList<Notizia>();
 	private static List<SyndFeed> feeds= new ArrayList<SyndFeed>();
 	
-	public boolean run(String search, int utenteId) 
+	public void run(String search, int utenteId) 
 	{
+		clearAll();		
+
 		try {
 			switch (search) {
 				case "cronaca":
 					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/notizie/cronaca/cronaca_rss.xml")));
 					feedBack = true;
 					break;
+					
 				case "politica":
 					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/notizie/politica/politica_rss.xml")));
 					feedBack = true;
 					break;
+					
 				case "economia":
 					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/notizie/economia/economia_rss.xml")));
 					feedBack = true;
 					break;
+					
 				case "cinema":
 					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/notizie/cultura/cinema/cinema_rss.xml")));
 					feedBack = true;
 					break;
+					
 				case "tecnologia":
 					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/notizie/notizie/tecnologia/tecnologia_rss.xml")));
 					feedBack = true;
 					break;
+					
 				case "cultura":
 					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/notizie/notizie/cultura/cultura_rss.xml")));
 					feedBack = true;
 					break;
+					
 				case "sport":
 					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/notizie/sport/sport_rss.xml")));
 					feedBack = true;
 					break;
+					
 				case "ultimaOra":
 					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/ansait_rss.xml")));
 					feedBack = true;
 					break;
+					
 				case "personalizzata":
 					feeds = dataBase.getFeeds(utenteId, feeds, fetcher);
 					feedBack = true;
-
+					break;
+					
+				default:
+					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/ansait_rss.xml")));
+					break;
+					
 			}
-			 
+
 			for(SyndFeed g : feeds) {
 				for(Object o : g.getEntries()) {
 					SyndEntry entry = (SyndEntry)o;	
-
+					
 					Notizia n = new Notizia(entry.getTitle(), entry.getLink());
-					notizie.add(n);
+					
+					if(feedBack == false) {
+						if(n.getTitolo().contains(search))
+						{
+							notizie.add(n);
+						}
+					}
+					else {
+					
+						notizie.add(n);
+						
+					}
 				}
 			}
 			
 			shuffle(notizie);
 			
-			FileWriter fw = new FileWriter("GsonImport.json");
-			gson.toJson(notizie, fw);
+			PrintWriter writer = new PrintWriter(new FileWriter("GsonImport.json"), true);
+			gson.toJson(notizie, writer);
 			
-			fw.flush();	
-			fw.close();
+			writer.close();
 			
 		} catch(IllegalArgumentException | IOException | FeedException | FetcherException | HeadlessException e) {
 			e.printStackTrace();
-		}	
-		
-		return feedBack;
+		}			
 	}
 	
 	/*
@@ -110,5 +134,10 @@ public class FeedReader
             list.set(i, list.get(j));
             list.set(j, obj);
         }
-    }
+    }	
+	
+	public void clearAll() {
+		feeds.clear();
+		notizie.clear();
+	}
 }

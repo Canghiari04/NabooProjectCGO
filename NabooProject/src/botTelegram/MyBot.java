@@ -21,7 +21,7 @@ import feedRSS.Notizia;
 
 public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sull'update ricevuto dall'utente
 {
-	private boolean answer = false, access = false, modify = false, subscription = false, feedBack = false;
+	private boolean answer = false, access = false, modify = false, subscription = false;
 	private int c = 0, j = 0, utenteId = 0, notiziaId = 0; // Contatore utilizzato nel metodo modify
 	private String nickName = " ", password = " ", sub = " ", function = " ", titolo = " ", link = " ";
 	private String emojiiNoEntry = "⛔️", emojiiWellDone = "✅", emojiiNoFeed = "😢";
@@ -39,9 +39,17 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	public String getBotToken() {
 		return "5480067721:AAGGX2yduLoYjRtek0G0lqppg5H6bu10hlE";
 	}
-
+	
+	public void printPreviewMessage(SendMessage response) {
+		try {
+			execute(response);
+		} catch (TelegramApiException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void onUpdateReceived(Update update) {
-		if (update.hasMessage() && update.getMessage().hasText()) {
+		if(update.hasMessage() && update.getMessage().hasText()) {
 			String str = update.getMessage().getText();
 			long chatId = update.getMessage().getChatId();
 			SendMessage response = new SendMessage();
@@ -49,7 +57,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 
 			Function(str, response, update);
 		} 
-		else if (update.hasCallbackQuery()) {
+		else if(update.hasCallbackQuery()) {
 			SendMessage response = new SendMessage();
 
 			String callData = update.getCallbackQuery().getData();
@@ -110,7 +118,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		MyDataBase dataBase = new MyDataBase();
 		char ch = str.charAt(0);
 
-		if (ch == '/') {
+		if(ch == '/') {
 			function = str; // Salvo temporaneamente quale sia la funzione scelta precedentemente, in maniera tale che possa successivamente utilizzare il corretto update
 			try {
 				switch (function) {
@@ -120,28 +128,27 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					break;
 
 				case "/registrazione":
-					response.setText("Inserisci il tuo nickname e la password, separati da uno spazio.\n" + "Modalita' di inserimento ('chaz27' 'rossetto12')");
+					if(access == true) {
+						response.setText(emojiiWellDone + " Attenzione hai gia' effettuato il login! " + emojiiWellDone);
+					}
+					else {
+						response.setText("Inserisci il tuo nickname e la password, separati da uno spazio.\n" + "Modalita' di inserimento ('chaz27' 'rossetto12')");
+					}
 					execute(response);
 					break;
 
 				case "/accedi":
-					response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
+					if(access == true) {
+						response.setText(emojiiWellDone + " Attenzione hai gia' effettuato il login! " + emojiiWellDone);
+					}
+					else {
+						response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
+					}
 					execute(response);
 					break;
 
 				case "/modifica":
-					if (access != true) {
-						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
-						execute(response);
-					} 
-					else {
-						response.setText("Inserisci il tuo nickname e la password, separati da uno spazio");
-						execute(response);
-					}
-					break;
-
-				case "/elimina":
-					if (access != true) {
+					if(access != true) {
 						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
 						execute(response);
 					} 
@@ -152,7 +159,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					break;
 
 				case "/leggiNotizie":
-					if (access != true) {
+					if(access != true) {
 						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
 						execute(response);
 					} 
@@ -164,11 +171,14 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 							response.setText(response.getText() + f + "\n");
 						}
 						execute(response);
+						
+						for(int i = 0; i < arrayNotizia.length; i++)
+							arrayNotizia[i] = null;
 					}
 					break;
 
 				case "/commento":
-					if (access != true) {
+					if(access != true) {
 						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
 					} 
 					else {
@@ -184,7 +194,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					break;
 
 				case "/visualizzaCommenti":
-					if (access != true) {
+					if(access != true) {
 						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
 						execute(response);
 					} 
@@ -201,22 +211,29 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					break;
 					
 				case "/modificaFeed":
-					if (access != true) {
+					if(access != true) {
 						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
 						execute(response);
 					} 
 					else {
-						changeFeed(response, update);
+						subscription = dataBase.getSubscription(tabUtente, nickName, password);
+						if(subscription != true) {
+							response.setText(emojiiNoEntry + " Attenzione la tua tipologia di abbonamento non permette questa funzione! " + emojiiNoEntry);
+							execute(response);
+						} 
+						else {
+							changeFeed(response, update);
+						}
 					}
 					break;
 					
 				case "/aggiungiFeed": 
-					if (access != true) {
+					if(access != true) {
 						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
 					} 
 					else {
 						subscription = dataBase.getSubscription(tabUtente, nickName, password);
-						if (subscription != true) {
+						if(subscription != true) {
 							response.setText(emojiiNoEntry + " Attenzione la tua tipologia di abbonamento non permette questa funzione! " + emojiiNoEntry);
 						} 
 						else {
@@ -227,12 +244,12 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					break;
 					
 				case "/eliminaFeed": 
-					if (access != true) {
+					if(access != true) {
 						response.setText(emojiiNoEntry + " Attenzione devi prima eseguire l'accesso al bot NABOO! " + emojiiNoEntry);
 					} 
 					else {
 						subscription = dataBase.getSubscription(tabUtente, nickName, password);
-						if (subscription != true) {
+						if(subscription != true) {
 							response.setText(emojiiNoEntry + " Attenzione la tua tipologia di abbonamento non permette questa funzione! " + emojiiNoEntry);
 						} 
 						else {
@@ -263,10 +280,6 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	
 				case "/modifica":
 					Modify(response, update);
-					break;
-	
-				case "/elimina":
-					Delete(response, update);
 					break;
 	
 				case "/leggiNotizie":
@@ -321,14 +334,16 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					nickName = tokens[0];
 					password = tokens[1];
 					
-					if(dataBase.contains(tabUtente, nickName, password)) {
-						response.setText(emojiiNoEntry + " Attenzione credenziali gia' presenti! " + emojiiNoEntry);
+					boolean answer = dataBase.contains(tabUtente, nickName, password);
+					
+					if(answer == true) {
+						response.setText(emojiiNoEntry + " Prova altre credenziali! " + emojiiNoEntry);
 					}
 					else {
 						access = true;	
+						response = res.setRegistrationResponse(update, response);
 					}
 					
-					response = res.setRegistrationResponse(update, response);
 				}
 			}
 				
@@ -551,27 +566,26 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 			else {
 				String search = update.getMessage().getText();
 				search.toLowerCase();
-
 				FeedReader reader = new FeedReader();
-				feedBack = reader.run(search, utenteId);
+				reader.run(search, utenteId);
 				
-				if (feedBack != true) {
-					response.setText(emojiiNoFeed + " Non possediamo alcun feed in grado di rispondere alla tua richiesta " + emojiiNoFeed);
+				Gson g = new GsonBuilder().setPrettyPrinting().create();
+				arrayNotizia = g.fromJson(new FileReader("GsonImport.json"), Notizia[].class);
+
+				j = 0;
+				titolo = arrayNotizia[j].getTitolo();
+				link = arrayNotizia[j].getLink();
+				
+				if(arrayNotizia.length == 1) {
+					response = res.setResponseAlone(titolo, link, update);
 				}
 				else {
-					Gson g = new GsonBuilder().setPrettyPrinting().create();
-					arrayNotizia = g.fromJson(new FileReader("GsonImport.json"), Notizia[].class);
-
-					j = 0;
-					titolo = arrayNotizia[j].getTitolo();
-					link = arrayNotizia[j].getLink();
-
-					response = res.setResponse(titolo, link, update);
+					response = res.setResponse(titolo, link, update);	
 				}
-				
+					
 				execute(response);
 			}
-		} catch (IllegalArgumentException | IOException | TelegramApiException e) {
+		} catch (TelegramApiException | IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -608,6 +622,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	public void ViewComment(SendMessage response, Update update) {
 		MyDataBase dataBase = new MyDataBase();
 		ArrayList<String> arrayRecensione = new ArrayList<>();
+		ArrayList<String> arrayTitolo = new ArrayList<>();
 
 		if (update.hasCallbackQuery()) {
 			response.setText("I commenti di questa notizia risultano: \n");
@@ -626,13 +641,15 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 		} 
 		else {
 			response.setText("I tuoi commenti risultano: \n");
+			
 			int utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
 			String utente = Integer.toString(utenteId);
 			arrayRecensione = dataBase.getRecensioni(tabCommento, utente, "mineComment");
+			arrayTitolo = dataBase.getTitleFromComment(utenteId);
 
 			if (arrayRecensione.size() > 0) {
-				for (String str : arrayRecensione) {
-					response.setText(response.getText() + str + "\n");
+				for (int i = 0; i < arrayRecensione.size(); i++) {
+					response.setText(response.getText() + "Titolo: " + arrayTitolo.get(i) + " Recensione: '" + arrayRecensione.get(i) + "'\n");
 				}
 			} 
 			else {

@@ -494,14 +494,53 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 			}
 						
 			conn.close();
-		} 
-		catch (SQLException | HeadlessException e) {
+		} catch (SQLException | HeadlessException e) {
 			e.printStackTrace();
 		}
 		
 		return response;
 	}
 
+	
+	public ArrayList<String> getTitleFromComment(int utenteId) {
+		Connection conn = ConnectionDB();
+		Statement st = null, newSt = null;
+		ResultSet rs = null, newRs = null;
+		
+		String str = " ";
+		String query = " ";
+		String newQuery = " ";
+		ArrayList<String> arrayTitolo = new ArrayList<String>();
+
+		int value = 0;
+		
+		try { 
+			st = conn.createStatement();
+			newSt = conn.createStatement();
+			
+			query = "SELECT NotiziaID FROM Commento WHERE UtenteID = '" + utenteId + "';";
+			rs = st.executeQuery(query);
+			
+			while(rs.next()) {
+				value = rs.getInt("NotiziaID");
+				
+				newQuery = "SELECT Titolo FROM Notizia WHERE NotiziaID = '" + value + "';";
+				newRs = newSt.executeQuery(newQuery);
+				
+				while(newRs.next()) {
+					str = newRs.getString("Titolo");
+					arrayTitolo.add(str);
+				}
+			}
+			
+			conn.close();
+		} catch (SQLException | HeadlessException e) {
+			e.printStackTrace();
+		}
+	
+		return arrayTitolo;
+	}
+	
 	public List<SyndFeed> getFeeds(int utenteId, List<SyndFeed> feeds, FeedFetcher fetcher) {
 		try { 
 			MyDataBase dataBase = new MyDataBase();

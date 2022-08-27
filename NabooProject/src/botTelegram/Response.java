@@ -111,6 +111,35 @@ public class Response {
 		return response;
 	}
 
+	public SendMessage setResponseAlone(String titolo, String link, Update update) {
+		SendMessage response = new SendMessage();
+		long chatId = update.getMessage().getChatId();
+
+		response.setChatId(chatId);
+		response.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
+
+		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+		List<InlineKeyboardButton> rowInlineComment = new ArrayList<>();
+
+		InlineKeyboardButton commentBtn = new InlineKeyboardButton();
+		commentBtn.setText(" Commento ");
+		commentBtn.setCallbackData("COMMENT");
+
+		InlineKeyboardButton viewCommentBtn = new InlineKeyboardButton();
+		viewCommentBtn.setText(" Visualizza commenti ");
+		viewCommentBtn.setCallbackData("VIEW");
+
+		rowInlineComment.add(commentBtn);
+		rowInlineComment.add(viewCommentBtn);
+		rowsInline.add(rowInlineComment);
+
+		markupInline.setKeyboard(rowsInline);
+		response.setReplyMarkup(markupInline);
+
+		return response;
+	}
+	
 	public EditMessageText setNewResponse(String titolo, String link, Update update) {
 		EditMessageText newResponse = new EditMessageText();
 		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");

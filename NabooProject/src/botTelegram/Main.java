@@ -8,13 +8,10 @@ public class Main
 {	
     public static void main(String[] args) 
     {
-        try 
-        {      
+        try {      
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(new MyBot()); 
-        } 
-        catch (TelegramApiException e) 
-        {
+        } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
