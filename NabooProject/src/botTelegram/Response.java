@@ -2,6 +2,8 @@ package botTelegram;
 
 import static java.lang.Math.toIntExact;
 
+import java.awt.HeadlessException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -263,7 +265,7 @@ public class Response {
 		return newResponse;
 	}
 		
-	public SendMessage setFeedDataResponse(Update update, SendMessage response, String tabUtente, String idUtente, String nickName, String password) {
+	public SendMessage setFeedDataResponse(Update update, SendMessage response, String tabUtente, String idUtente, String nickName, String password) throws HeadlessException, SQLException {
 		SendMessage feedResponse = new SendMessage();
 		long chatId = update.getMessage().getChatId();
 

@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,8 +30,7 @@ public class FeedReader
 	private static List<Notizia> notizie = new ArrayList<Notizia>();
 	private static List<SyndFeed> feeds= new ArrayList<SyndFeed>();
 	
-	public void run(String search, int utenteId) 
-	{
+	public void run(String search, int utenteId) throws SQLException {
 		clearAll();		
 
 		try {
@@ -93,7 +93,9 @@ public class FeedReader
 					Notizia n = new Notizia(entry.getTitle(), entry.getLink());
 					
 					if(feedBack == false) {
-						if(n.getTitolo().contains(search))
+						String title = n.getTitolo().toLowerCase();
+						
+						if(title.contains(search))
 						{
 							notizie.add(n);
 						}
@@ -122,8 +124,7 @@ public class FeedReader
 	 * Metodo shuffle utilizzato per randomizzare le notizie all'interno del file Gson 
 	 */
 	
-	public static<T> void shuffle(List<T> list)
-    {
+	public static<T> void shuffle(List<T> list) {
         Random random = new Random();
 
         for (int i = list.size() - 1; i >= 1; i--)

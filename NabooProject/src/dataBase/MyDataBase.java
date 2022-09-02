@@ -59,38 +59,34 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 	 * considerazione.
 	 */
 
-	public void InsertTable(String table, String firstInput, String secondInput, String thirdInput) {
+	public void InsertTable(String table, String firstInput, String secondInput, String thirdInput) throws SQLException, HeadlessException {
 		Connection conn = ConnectionDB();
 		PreparedStatement preparedStmt = null;
 
 		String query = "";
 
-		try {
-			switch (table) {
-				case "Utente":
-					boolean subscription = Boolean.parseBoolean(thirdInput);
-					query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + secondInput + "', " + subscription + ")";
-					break;
+		switch (table) {
+			case "Utente":
+				boolean subscription = Boolean.parseBoolean(thirdInput);
+				query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + secondInput + "', " + subscription + ")";
+				break;
 	
-				case "Notizia":
-					firstInput = replace(firstInput);
-					query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + secondInput + "')";
-					break;
+			case "Notizia":
+				firstInput = replace(firstInput);
+				query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + secondInput + "')";
+				break;
 	
-				case "Commento":
-					int idUtente = Integer.parseInt(secondInput);
-					int idNotizia = Integer.parseInt(thirdInput);
-					query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + idUtente + "', '" + idNotizia + "')";
-					break;
-			}
-
-			preparedStmt = conn.prepareStatement(query); // TODO: cercare a cosa serve concretamente
-			preparedStmt.execute();
-			
-			conn.close();
-		} catch (SQLException | HeadlessException e) {
-			e.printStackTrace();
+			case "Commento":
+				int idUtente = Integer.parseInt(secondInput);
+				int idNotizia = Integer.parseInt(thirdInput);
+				query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + idUtente + "', '" + idNotizia + "')";
+				break;
 		}
+
+		preparedStmt = conn.prepareStatement(query); // TODO: cercare a cosa serve concretamente
+		preparedStmt.execute();
+			
+		conn.close();
 	}
 
 	/*
@@ -100,38 +96,34 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 	 * Introdotte due variabili in input per scelta organizzativa, dato che
 	 * principalmente le tabelle prevedono due colonne significative ognuna.
 	 */
-
-	public void DeleteTable(String table, String firstInput, String secondInput) {
+	
+	public void DeleteTable(String table, String firstInput, String secondInput) throws SQLException, HeadlessException {
 		Connection conn = ConnectionDB();
 		PreparedStatement preparedStmt = null;
 
 		String query = "";
 
-		try {
-			switch (table) {
-				case "Utente":
-					query = "DELETE FROM " + table + " WHERE Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'";
-					break;
+		switch (table) {
+			case "Utente":
+				query = "DELETE FROM " + table + " WHERE Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'";
+				break;
 	
-				case "Notizia":
-					firstInput = replace(firstInput);
-					query = "DELETE FROM " + table + " WHERE Titolo = '" + firstInput + "' AND Link = '" + secondInput + "'";
-					break;
+			case "Notizia":
+				firstInput = replace(firstInput);
+				query = "DELETE FROM " + table + " WHERE Titolo = '" + firstInput + "' AND Link = '" + secondInput + "'";
+				break;
 	
-				case "Commento":
-					int utenteId = Integer.parseInt(firstInput);
-					int notiziaId = Integer.parseInt(secondInput);
-					query = "DELETE FROM " + table + " WHERE UtenteID = '" + utenteId + "' AND NotiziaID = '" + notiziaId + "'";
-					break;
-			}
-
-			preparedStmt = conn.prepareStatement(query); // TODO: cercare a cosa serve concretamente
-			preparedStmt.execute();
-			
-			conn.close();
-		} catch (SQLException | HeadlessException e) {
-			e.printStackTrace();
+			case "Commento":
+				int utenteId = Integer.parseInt(firstInput);
+				int notiziaId = Integer.parseInt(secondInput);
+				query = "DELETE FROM " + table + " WHERE UtenteID = '" + utenteId + "' AND NotiziaID = '" + notiziaId + "'";
+				break;
 		}
+
+		preparedStmt = conn.prepareStatement(query); // TODO: cercare a cosa serve concretamente
+		preparedStmt.execute();
+			
+		conn.close();
 	}
 
 	/*
@@ -141,177 +133,156 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 	 *
 	 */
 
-	public boolean alterRow(String table, String idTable, String firstInput, String secondInput, String thirdInput, int ID) {
+	public void alterRow(String table, String idTable, String firstInput, String secondInput, String thirdInput, int ID) throws SQLException, HeadlessException {
 		Connection conn = ConnectionDB();
 		PreparedStatement preparedStmt = null;
 
 		String query = " ";
 
-		try {
-			switch (table) {
-				case "Utente":
-					boolean subscription = Boolean.parseBoolean(thirdInput);
-					query = "UPDATE " + table + " SET  Nickname = '" + firstInput + "', Password = '" + secondInput + "', Subscription = " + subscription + " WHERE " + idTable + " = '" + ID + "';";
-					break;
+		switch (table) {
+			case "Utente":
+				boolean subscription = Boolean.parseBoolean(thirdInput);
+				query = "UPDATE " + table + " SET  Nickname = '" + firstInput + "', Password = '" + secondInput + "', Subscription = " + subscription + " WHERE " + idTable + " = '" + ID + "';";
+				break;
 	
-				case "Notizia":
-					query = "UPDATE " + table + " SET  Titolo = '" + firstInput + "', Link = '" + secondInput + "' WHERE " + idTable + " = '" + ID + "';";
-					break;
+			case "Notizia":
+				query = "UPDATE " + table + " SET  Titolo = '" + firstInput + "', Link = '" + secondInput + "' WHERE " + idTable + " = '" + ID + "';";
+				break;
 	
-				case "Commento":
-					query = "UPDATE " + table + " SET  UtenteID = '" + firstInput + "', NotiziaID = '" + secondInput + "' WHERE " + idTable + " = '" + ID + "';";
-					break;
-			}
-
-			preparedStmt = conn.prepareStatement(query); // TODO: cercare a cosa serve concretamente
-			preparedStmt.execute();
-			
-			conn.close();
-			
-			return true;
-		} catch (SQLException | HeadlessException e) {
-			e.printStackTrace();
+			case "Commento":
+				query = "UPDATE " + table + " SET  UtenteID = '" + firstInput + "', NotiziaID = '" + secondInput + "' WHERE " + idTable + " = '" + ID + "';";
+				break;
 		}
 
-		return false;
+		preparedStmt = conn.prepareStatement(query); // TODO: cercare a cosa serve concretamente
+		preparedStmt.execute();
+			
+		conn.close();
 	}
 
 	/*
 	 * Introdotti parametri cosi generalizzati per rendere il metodo piu' dinamico possibile
 	 */
 	
-	public boolean contains(String table, String firstInput, String secondInput) {
+	public boolean contains(String table, String firstInput, String secondInput) throws SQLException, HeadlessException {
 		Connection conn = ConnectionDB();
 		Statement st = null;
 		ResultSet rs = null;
 
 		String query = "";
 		
-		try {
-			switch (table) {
-			case "Utente":
-				query = "SELECT * FROM " + table + " WHERE  Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'";
-				break;
+		switch (table) {
+		case "Utente":
+			query = "SELECT * FROM " + table + " WHERE  Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'";
+			break;
+				
+		case "Amministratore":
+			query = "SELECT * FROM " + table + " WHERE  Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'";
+			break;
 
+		case "Notizia":
+			firstInput = replace(firstInput);
+			query = "SELECT * FROM " + table + " WHERE  Titolo = '" + firstInput + "' AND Link = '" + secondInput + "'";
+			break;
+
+		case "Commento":
+			int idUtente = Integer.parseInt(firstInput);
+			int idNotizia = Integer.parseInt(secondInput);
+			query = "SELECT * FROM " + table + " WHERE  UtenteID = '" + idUtente + "' AND NotiziaID = '" + idNotizia + "'";
+			break;
+		}
+
+		st = conn.createStatement();
+		rs = st.executeQuery(query);
+			
+		return rs.next();			
+	}
+
+	public int countNotizia(int notiziaId)  throws SQLException, HeadlessException{
+		Connection conn = ConnectionDB();
+		Statement preparedStmt = null;
+		ResultSet result = null;
+
+		String query = " ";
+		
+		int value = 0;
+		
+		query = "SELECT COUNT(NotiziaID) AS Count FROM Commento WHERE NotiziaID = '" + notiziaId + "'";
+
+		preparedStmt = conn.createStatement();
+		result = preparedStmt.executeQuery(query);
+
+		while (result.next()) {
+			value = result.getInt("Count");
+		}
+
+		conn.close();
+
+		return value;
+	}
+
+	public int countUtente(int utenteId) throws SQLException, HeadlessException {
+		Connection conn = ConnectionDB();
+		Statement preparedStmt = null;
+		ResultSet result = null;
+
+		String query = " ";
+		
+		int value = 0;
+
+		query = "SELECT COUNT(UtenteID) AS Count FROM Commento WHERE UtenteID = '" + utenteId + "'";
+
+		preparedStmt = conn.createStatement();
+		result = preparedStmt.executeQuery(query);
+
+		while (result.next()) {
+			value = result.getInt("Count");
+		}
+
+		conn.close();
+
+		return value;
+	}
+	
+	public int getID(String table, String idTable, String firstInput, String secondInput) throws SQLException, HeadlessException {
+		Connection conn = ConnectionDB();
+		Statement st = null;
+		ResultSet rs = null;
+
+		String query = "";
+		
+		int value = 0;
+
+		switch (table) {
+			case "Utente":
+				query = "SELECT " + idTable + " FROM " + table + " WHERE  Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'";
+				break;
+	
 			case "Notizia":
 				firstInput = replace(firstInput);
-				query = "SELECT * FROM " + table + " WHERE  Titolo = '" + firstInput + "' AND Link = '" + secondInput + "'";
+				query = "SELECT " + idTable + " FROM " + table + " WHERE  Titolo = '" + firstInput + "' AND Link = '" + secondInput + "'";
 				break;
-
+	
 			case "Commento":
-				int idUtente = Integer.parseInt(firstInput);
-				int idNotizia = Integer.parseInt(secondInput);
-				query = "SELECT * FROM " + table + " WHERE  UtenteID = '" + idUtente + "' AND NotiziaID = '" + idNotizia + "'";
+				int utenteId = Integer.parseInt(firstInput);
+				int notiziaId = Integer.parseInt(secondInput);
+				query = "SELECT " + idTable + " FROM " + table + " WHERE  UtenteID = '" + utenteId + "' AND NotiziaID = '" + notiziaId + "'";
 				break;
-			}
-
-			st = conn.createStatement();
-			rs = st.executeQuery(query);
-			
-			return rs.next();			
-		} catch (SQLException | HeadlessException e) {
-			e.printStackTrace();
-			return false;
-		}		
-	}
-
-	public int countNotizia(int notiziaId) {
-		Connection conn = ConnectionDB();
-		Statement preparedStmt = null;
-		ResultSet result = null;
-
-		String query = " ";
-		
-		int value = 0;
-
-		try {
-			query = "SELECT COUNT(NotiziaID) AS Count FROM Commento WHERE NotiziaID = '" + notiziaId + "'";
-
-			preparedStmt = conn.createStatement();
-			result = preparedStmt.executeQuery(query);
-
-			while (result.next()) {
-				value = result.getInt("Count");
-			}
-
-			conn.close();
-		} catch (SQLException | HeadlessException e) {
-			e.printStackTrace();
 		}
+
+		st = conn.createStatement();
+		rs = st.executeQuery(query);
+
+		while (rs.next()) {
+			value = rs.getInt(idTable);
+		}
+
+		conn.close();
 
 		return value;
 	}
 
-	public int countUtente(int utenteId) {
-		Connection conn = ConnectionDB();
-		Statement preparedStmt = null;
-		ResultSet result = null;
-
-		String query = " ";
-		
-		int value = 0;
-
-		try {
-			query = "SELECT COUNT(UtenteID) AS Count FROM Commento WHERE UtenteID = '" + utenteId + "'";
-
-			preparedStmt = conn.createStatement();
-			result = preparedStmt.executeQuery(query);
-
-			while (result.next()) {
-				value = result.getInt("Count");
-			}
-
-			conn.close();
-		} catch (SQLException | HeadlessException e) {
-			e.printStackTrace();
-		}
-
-		return value;
-	}
-	
-	public int getID(String table, String idTable, String firstInput, String secondInput) {
-		Connection conn = ConnectionDB();
-		Statement st = null;
-		ResultSet rs = null;
-
-		String query = "";
-		
-		int value = 0;
-
-		try {
-			switch (table) {
-				case "Utente":
-					query = "SELECT " + idTable + " FROM " + table + " WHERE  Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'";
-					break;
-	
-				case "Notizia":
-					firstInput = replace(firstInput);
-					query = "SELECT " + idTable + " FROM " + table + " WHERE  Titolo = '" + firstInput + "' AND Link = '" + secondInput + "'";
-					break;
-	
-				case "Commento":
-					int utenteId = Integer.parseInt(firstInput);
-					int notiziaId = Integer.parseInt(secondInput);
-					query = "SELECT " + idTable + " FROM " + table + " WHERE  UtenteID = '" + utenteId + "' AND NotiziaID = '" + notiziaId + "'";
-					break;
-			}
-
-			st = conn.createStatement();
-			rs = st.executeQuery(query);
-
-			while (rs.next()) {
-				value = rs.getInt(idTable);
-			}
-
-			conn.close();
-		} catch (SQLException | HeadlessException e) {
-			e.printStackTrace();
-		}
-
-		return value;
-	}
-
-	public boolean getSubscription(String table, String firstInput, String secondInput) {
+	public boolean getSubscription(String table, String firstInput, String secondInput) throws SQLException, HeadlessException {
 		Connection conn = ConnectionDB();
 		Statement st = null;
 		ResultSet rs = null;
@@ -320,26 +291,21 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 		
 		boolean value = false;
 		
-		try {
-			query = "SELECT Subscription FROM  " + table + " WHERE Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'"; 
+		query = "SELECT Subscription FROM  " + table + " WHERE Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'"; 
 			
-			st = conn.createStatement();
-			rs = st.executeQuery(query);
+		st = conn.createStatement();
+		rs = st.executeQuery(query);
 			
-			while (rs.next()) {
-				value = rs.getBoolean("Subscription");			
-			}
-			
-			conn.close();
-		} catch (SQLException | HeadlessException e)
-		{
-			e.printStackTrace();
+		while (rs.next()) {
+			value = rs.getBoolean("Subscription");			
 		}
+			
+		conn.close();
 		
 		return value;
 	}
 	
-	public String[] getNotizia(int idNotizia) {
+	public String[] getNotizia(int idNotizia) throws SQLException, HeadlessException {
 		Connection conn = ConnectionDB();
 		Statement st = null;
 		ResultSet rs = null;
@@ -349,23 +315,19 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 		String valueTitolo = " ";
 		String valueLink = " ";
 
-		try {
-			query = "SELECT Titolo, Link FROM Notizia WHERE  NotiziaID = '" + idNotizia + "'";
+		query = "SELECT Titolo, Link FROM Notizia WHERE  NotiziaID = '" + idNotizia + "'";
 
-			st = conn.createStatement();
-			rs = st.executeQuery(query);
+		st = conn.createStatement();
+		rs = st.executeQuery(query);
 
-			while (rs.next()) {
-				valueTitolo = rs.getString("Titolo");
-				valueLink = rs.getString("Link");
-			}
-
-			values[0] = valueTitolo;
-			values[1] = valueLink;
-			conn.close();
-		} catch (SQLException | HeadlessException e) {
-			e.printStackTrace();
+		while (rs.next()) {
+			valueTitolo = rs.getString("Titolo");
+			valueLink = rs.getString("Link");
 		}
+
+		values[0] = valueTitolo;
+		values[1] = valueLink;
+		conn.close();
 
 		return values;
 	}
@@ -374,7 +336,7 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 	 * Metodo getRecensione che ritorna un'unica recensione in relazione alla notizia e all'utente
 	 */
 	
-	public String getRecensione(String table, String firstInput, String secondInput) {
+	public String getRecensione(String table, String firstInput, String secondInput) throws SQLException, HeadlessException  {
 		Connection conn = ConnectionDB();
 		Statement st = null;
 		ResultSet rs = null;
@@ -385,20 +347,16 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 		int idUtente = Integer.parseInt(firstInput);
 		int idNotizia = Integer.parseInt(secondInput);
 		
-		try {
-			query = "SELECT Recensione FROM " + table + " WHERE  UtenteID = '" + idUtente + "' AND NotiziaID = '" + idNotizia + "'";
+		query = "SELECT Recensione FROM " + table + " WHERE  UtenteID = '" + idUtente + "' AND NotiziaID = '" + idNotizia + "'";
 
-			st = conn.createStatement();
-			rs = st.executeQuery(query);
+		st = conn.createStatement();
+		rs = st.executeQuery(query);
 
-			while (rs.next()) {
-				value = rs.getString("Recensione");
-			}
-
-			conn.close();
-		} catch (SQLException | HeadlessException e) {
-			e.printStackTrace();
+		while (rs.next()) {
+			value = rs.getString("Recensione");
 		}
+		
+		conn.close();
 
 		return value;
 	}
@@ -407,7 +365,7 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 	 * Metodo getRecensioni specificato per ottenere la visualizzazione delle proprie recensioni rilasciate, oppure di una determinata notizia 
 	 */
 	
-	public ArrayList<String> getRecensioni(String table, String firstInput, String str) {
+	public ArrayList<String> getRecensioni(String table, String firstInput, String str) throws SQLException, HeadlessException {
 		Connection conn = ConnectionDB();
 		Statement st = null;
 		ResultSet rs = null;
@@ -416,36 +374,32 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 		String value = " ";
 		ArrayList<String> arrayNotizia = new ArrayList<String>();
 		
-		int id = Integer.parseInt(firstInput);
+		int ID = Integer.parseInt(firstInput);
 
-		try {
-			switch (str)
-			{
-				case "mineComment":
-					query = "SELECT * FROM Commento WHERE UtenteID = '" + id + "'";
-					break;
-				case "comment":
-					query = "SELECT * FROM Commento WHERE NotiziaID = '" + id + "'";
-					break;
-			}
-			
-			st = conn.createStatement();
-			rs = st.executeQuery(query);
-			
-			while(rs.next()){
-				value = rs.getString("Recensione");
-				arrayNotizia.add(value);
-			}
-			
-			conn.close();
-		} catch (SQLException | HeadlessException e){
-			e.printStackTrace();
+		switch (str)
+		{
+			case "mineComment":
+				query = "SELECT * FROM Commento WHERE UtenteID = '" + ID + "'";
+				break;
+			case "comment":
+				query = "SELECT * FROM Commento WHERE NotiziaID = '" + ID + "'";
+				break;
 		}
+			
+		st = conn.createStatement();
+		rs = st.executeQuery(query);
+		
+		while(rs.next()){
+			value = rs.getString("Recensione");
+			arrayNotizia.add(value);
+		}
+			
+		conn.close();
 		
 		return arrayNotizia;
 	}
 	
-	public SendMessage getResponse(SendMessage response, String tabUtente, String idUtente, String nickName, String password) {
+	public SendMessage getResponse(SendMessage response, String tabUtente, String idUtente, String nickName, String password) throws SQLException, HeadlessException {
 		Connection conn = ConnectionDB();
 		Statement st = null, newSt = null, allSt = null;
 		ResultSet rs = null, newRs = null, allRs = null; 
@@ -455,54 +409,49 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 		int value = 0;
 		int utenteId = getID(tabUtente, idUtente, nickName, password);
 		
+		response.setText("Le feed associate al tuo account sono le seguenti: \n");
 
-		try {
-			response.setText("Le feed associate al tuo account sono le seguenti: \n");
-
-			query = "SELECT FeedID FROM UtenteFeed WHERE UtenteID = '" + utenteId + "';";
-			allQuery = "SELECT Tipo FROM Feed;";
+		query = "SELECT FeedID FROM UtenteFeed WHERE UtenteID = '" + utenteId + "';";
+		allQuery = "SELECT Tipo FROM Feed;";
 			
-			st = conn.createStatement();
-			newSt = conn.createStatement();
-			rs = st.executeQuery(query);
+		st = conn.createStatement();
+		newSt = conn.createStatement();
+		rs = st.executeQuery(query);
 			
-			while (rs.next()) {
-				value = rs.getInt("FeedID");
+		while (rs.next()) {
+			value = rs.getInt("FeedID");
 				
-				newQuery = "SELECT Tipo FROM Feed WHERE FeedID = '" + value + "';";
-				newRs = newSt.executeQuery(newQuery);
+			newQuery = "SELECT Tipo FROM Feed WHERE FeedID = '" + value + "';";
+			newRs = newSt.executeQuery(newQuery);
 				
-				while (newRs.next()) {
-					str = newRs.getString("Tipo");
-					feedUtente.add(str);
-					response.setText(response.getText() + str + "\n");
-				}
+			while (newRs.next()) {
+				str = newRs.getString("Tipo");
+				feedUtente.add(str);
+				response.setText(response.getText() + str + "\n");
 			}
-			
-			response.setText(response.getText() + "\n");
-			response.setText(response.getText() + "Le feed disponibili sono: \n");
-			
-			allSt = conn.createStatement();
-			allRs = allSt.executeQuery(allQuery);
-			
-			while (allRs.next()) {
-				str = allRs.getString("Tipo");
-				feedTot.add(str);
-				if (!feedUtente.contains(str)) {
-					response.setText(response.getText() + str + "\n");
-				}
-			}
-						
-			conn.close();
-		} catch (SQLException | HeadlessException e) {
-			e.printStackTrace();
 		}
+			
+		response.setText(response.getText() + "\n");
+		response.setText(response.getText() + "Le feed disponibili sono: \n");
+			
+		allSt = conn.createStatement();
+		allRs = allSt.executeQuery(allQuery);
+			
+		while (allRs.next()) {
+			str = allRs.getString("Tipo");
+			feedTot.add(str);
+			
+			if (!feedUtente.contains(str)) {
+				response.setText(response.getText() + str + "\n");
+			}
+		}
+						
+		conn.close();
 		
 		return response;
 	}
 
-	
-	public ArrayList<String> getTitleFromComment(int utenteId) {
+	public ArrayList<String> getTitleFromComment(int utenteId) throws SQLException, HeadlessException {
 		Connection conn = ConnectionDB();
 		Statement st = null, newSt = null;
 		ResultSet rs = null, newRs = null;
@@ -514,96 +463,84 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 
 		int value = 0;
 		
-		try { 
-			st = conn.createStatement();
-			newSt = conn.createStatement();
+		st = conn.createStatement();
+		newSt = conn.createStatement();
 			
-			query = "SELECT NotiziaID FROM Commento WHERE UtenteID = '" + utenteId + "';";
-			rs = st.executeQuery(query);
+		query = "SELECT NotiziaID FROM Commento WHERE UtenteID = '" + utenteId + "';";
+		rs = st.executeQuery(query);
 			
-			while(rs.next()) {
-				value = rs.getInt("NotiziaID");
+		while(rs.next()) {
+			value = rs.getInt("NotiziaID");
 				
-				newQuery = "SELECT Titolo FROM Notizia WHERE NotiziaID = '" + value + "';";
-				newRs = newSt.executeQuery(newQuery);
+			newQuery = "SELECT Titolo FROM Notizia WHERE NotiziaID = '" + value + "';";
+			newRs = newSt.executeQuery(newQuery);
 				
-				while(newRs.next()) {
-					str = newRs.getString("Titolo");
-					arrayTitolo.add(str);
-				}
+			while(newRs.next()) {
+				str = newRs.getString("Titolo");
+				arrayTitolo.add(str);
 			}
-			
-			conn.close();
-		} catch (SQLException | HeadlessException e) {
-			e.printStackTrace();
 		}
+			
+		conn.close();
 	
 		return arrayTitolo;
 	}
 	
-	public List<SyndFeed> getFeeds(int utenteId, List<SyndFeed> feeds, FeedFetcher fetcher) {
-		try { 
-			MyDataBase dataBase = new MyDataBase();
-			Connection conn = dataBase.ConnectionDB();
-			Statement st = null, newSt = null;
-			ResultSet rs = null, newRs = null;	
-			
-			String query = "SELECT FeedID FROM UtenteFeed WHERE UtenteID = '" + utenteId + "'";
-			String str = " ";
-			
-			int value = 0;
-				
-			st = conn.createStatement();
-			newSt = conn.createStatement();
-			rs = st.executeQuery(query);
-	
-			while (rs.next()) {
-				value = rs.getInt("FeedID");
-				String newQuery = "SELECT Link FROM Feed WHERE FeedID = '" + value + "'";
-				newRs = newSt.executeQuery(newQuery);
-
-				while (newRs.next()) {
-					str = newRs.getString("Link");
-					feeds.add(fetcher.retrieveFeed(new URL(str)));					
-				}				
-			}
-			
-		} catch (SQLException | IllegalArgumentException | IOException | FeedException | FetcherException | HeadlessException e) {
-			e.printStackTrace();
-		}
+	public List<SyndFeed> getFeeds(int utenteId, List<SyndFeed> feeds, FeedFetcher fetcher) throws SQLException, IllegalArgumentException, IOException, FeedException, FetcherException, HeadlessException {
+		MyDataBase dataBase = new MyDataBase();
 		
+		Connection conn = dataBase.ConnectionDB();
+		Statement st = null, newSt = null;
+		ResultSet rs = null, newRs = null;	
+			
+		String query = "SELECT FeedID FROM UtenteFeed WHERE UtenteID = '" + utenteId + "'";
+		String str = " ";
+			
+		int value = 0;
+				
+		st = conn.createStatement();
+		newSt = conn.createStatement();
+		rs = st.executeQuery(query);
+	
+		while (rs.next()) {
+			value = rs.getInt("FeedID");
+			String newQuery = "SELECT Link FROM Feed WHERE FeedID = '" + value + "'";
+			newRs = newSt.executeQuery(newQuery);
+
+			while (newRs.next()) {
+				str = newRs.getString("Link");
+				feeds.add(fetcher.retrieveFeed(new URL(str)));					
+			}				
+		}
 		return feeds;
 	}
 	
-	public ArrayList<String> getFeedsTot() {
+	public ArrayList<String> getFeedsTot() throws SQLException, IllegalArgumentException, HeadlessException {
+		MyDataBase dataBase = new MyDataBase();
+		
+		Connection conn = dataBase.ConnectionDB();
+		Statement st = null;
+		ResultSet rs = null;	 
+		
 		ArrayList<String> arrayFeeds = new ArrayList<String>();
 
-		try { 
-			MyDataBase dataBase = new MyDataBase();
-			Connection conn = dataBase.ConnectionDB();
-			Statement st = null;
-			ResultSet rs = null;	
-			
-			String query = "SELECT Tipo FROM Feed;";			
-			String value = " ";
+		String query = "SELECT Tipo FROM Feed;";			
+		String value = " ";
 				
-			st = conn.createStatement();
-			rs = st.executeQuery(query);
+		st = conn.createStatement();
+		rs = st.executeQuery(query);
 	
-			while (rs.next()) {
-				value = rs.getString("Tipo");
-				arrayFeeds.add(value);					
-			}
-			
-		} catch (SQLException | IllegalArgumentException | HeadlessException e) {
-			e.printStackTrace();
+		while (rs.next()) {
+			value = rs.getString("Tipo");
+			arrayFeeds.add(value);					
 		}
+		
+		conn.close();
 		
 		return arrayFeeds;
 	}
 	
-	
-	public void setRecensione(String table, String firstInput, String secondInput, String thirdInput) {
+	public void setRecensione(String table, String firstInput, String secondInput, String thirdInput) throws SQLException, HeadlessException {
 		Connection conn = ConnectionDB();
 		PreparedStatement preparedStmt = null;
 
@@ -612,36 +549,26 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 		int idUtente = Integer.parseInt(secondInput);
 		int idNotizia = Integer.parseInt(thirdInput);
 		
-		try {
-			query = "UPDATE " + table + " SET Recensione = '" + firstInput + "' WHERE  UtenteID = '" + idUtente + "' AND NotiziaID = '" + idNotizia + "'";
+		query = "UPDATE " + table + " SET Recensione = '" + firstInput + "' WHERE  UtenteID = '" + idUtente + "' AND NotiziaID = '" + idNotizia + "'";
 
-			preparedStmt = conn.prepareStatement(query); // TODO: cercare a cosa serve concretamente
-			preparedStmt.execute();
+		preparedStmt = conn.prepareStatement(query); 
+		preparedStmt.execute();
 			
-			conn.close();
-		} catch (SQLException | HeadlessException e) {
-			e.printStackTrace();
-		}
+		conn.close();
 	}
-	
 
-	public void setFeed(int utenteId, boolean answer, String[] tokens) {
-		//TODO: inserire messaggi di errore, in caso di feed non esistenti, returnare un booleano
-		
+	public void setFeed(int utenteId, boolean answer, String[] tokens) throws SQLException, HeadlessException {		
 		Connection conn = ConnectionDB();
-		Statement st = null;
 		PreparedStatement preparedStmt = null;
+		Statement st = null;
 		ResultSet rs = null;
 		
 		String query = " ", queryInsert = " ";
 		int feedId = 0;
-		
-		try { 
 			
-			st = conn.createStatement();
+		st = conn.createStatement();
 			
 			for(String str : tokens) {
-				
 				if(answer == true) {
 					if((!feedUtente.contains(str)) && feedTot.contains(str)) {
 						query = "SELECT FeedID FROM Feed WHERE Tipo = '" + str + "';";
@@ -652,14 +579,12 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 						}
 						
 						queryInsert = "INSERT INTO UtenteFeed VALUES (null, '" + utenteId + "', '" + feedId + "');"; 
-						preparedStmt = conn.prepareStatement(queryInsert); // TODO: cercare a cosa serve concretamente
+						preparedStmt = conn.prepareStatement(queryInsert); 
 						preparedStmt.execute();
 					}
 				}
 				else {
-					if(feedUtente.contains(str)) {
-						feedUtente.remove(str);
-						
+					if(feedUtente.contains(str)) {						
 						query = "SELECT FeedID FROM Feed WHERE Tipo = '" + str + "';";
 						rs = st.executeQuery(query);
 						
@@ -668,16 +593,13 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 						}
 						
 						queryInsert = "DELETE FROM UtenteFeed WHERE FeedID = '" + feedId + "';"; 
-						preparedStmt = conn.prepareStatement(queryInsert); // TODO: cercare a cosa serve concretamente
+						preparedStmt = conn.prepareStatement(queryInsert);
 						preparedStmt.execute();
 						
+						feedUtente.remove(str);
 					}
 				}
 			}
-			
-			conn.close();
-		} catch (SQLException | HeadlessException e){
-			e.printStackTrace();
-		}
+		conn.close();
 	}
 }
