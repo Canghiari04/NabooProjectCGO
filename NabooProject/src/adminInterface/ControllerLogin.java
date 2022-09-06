@@ -1,5 +1,6 @@
 package adminInterface;
 
+
 import java.awt.HeadlessException;
 import java.io.IOException;
 import java.net.URL;
@@ -14,10 +15,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -33,19 +32,18 @@ public class ControllerLogin implements Initializable{
 	
     @FXML
     private Button btnLogin;
+    @FXML
+    private Button btnClose;
 
     @FXML
     private TextField txtNickname;
-
     @FXML
     private PasswordField txtPassword;
     
     @FXML
     private Label lblErroreLogin;
-    
     @FXML
     private Label lblErroreNickname;
-    
     @FXML
     private Label lblErrorePassword;
     
@@ -59,14 +57,14 @@ public class ControllerLogin implements Initializable{
 		
 		if(txtNickname.getText().isBlank() && txtPassword.getText().isBlank()) {
 			lblErroreLogin.setText("Esegui prima l'accesso!");
-			lblErroreNickname.setText("[ ! ]");
-			lblErrorePassword.setText("[ ! ]");
+			lblErroreNickname.setText("*");
+			lblErrorePassword.setText("*");
 		}
 		else if(txtNickname.getText().isBlank()) {
-			lblErroreNickname.setText("[ ! ]");
+			lblErroreNickname.setText("*");
 		}
 		else if(txtPassword.getText().isBlank()) {
-			lblErrorePassword.setText("[ ! ]");
+			lblErrorePassword.setText("*");
 		}
 		else {
 			String nickname = txtNickname.getText();
@@ -84,18 +82,21 @@ public class ControllerLogin implements Initializable{
 				stage.setScene(scene);
 				stage.show();
 	
-				Alert alert = new Alert(AlertType.INFORMATION);
+				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 				alert.setTitle("Bentornato " + nickname + "!");
 				alert.setHeaderText("Accesso eseguito correttamente!");
-				alert.showAndWait().ifPresent(rs -> {
-				    if (rs == ButtonType.OK) {
-				        System.out.println("Pressed OK.");
-				    }
-				});		
+				alert.showAndWait();
 			}
 			else {
 				lblErroreLogin.setText("Credenziali errate!");
 			}
+		}
+	}
+	
+	@FXML
+	private void closeButtonClicked(MouseEvent event) {
+		if(event.getSource() == btnClose) {
+			System.exit(0);
 		}
 	}
 	

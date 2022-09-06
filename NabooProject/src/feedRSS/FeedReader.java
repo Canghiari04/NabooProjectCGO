@@ -24,6 +24,7 @@ import dataBase.MyDataBase;
 public class FeedReader  
 {	
 	private boolean feedBack = false;
+		
 	private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	private final MyDataBase dataBase = new MyDataBase();
 	private static FeedFetcher fetcher = new HttpURLFeedFetcher();
@@ -34,42 +35,7 @@ public class FeedReader
 		clearAll();		
 
 		try {
-			switch (search) {
-				case "cronaca":
-					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/notizie/cronaca/cronaca_rss.xml")));
-					feedBack = true;
-					break;
-					
-				case "politica":
-					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/notizie/politica/politica_rss.xml")));
-					feedBack = true;
-					break;
-					
-				case "economia":
-					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/notizie/economia/economia_rss.xml")));
-					feedBack = true;
-					break;
-					
-				case "cinema":
-					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/notizie/cultura/cinema/cinema_rss.xml")));
-					feedBack = true;
-					break;
-					
-				case "tecnologia":
-					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/notizie/notizie/tecnologia/tecnologia_rss.xml")));
-					feedBack = true;
-					break;
-					
-				case "cultura":
-					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/notizie/notizie/cultura/cultura_rss.xml")));
-					feedBack = true;
-					break;
-					
-				case "sport":
-					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/notizie/sport/sport_rss.xml")));
-					feedBack = true;
-					break;
-					
+			switch (search) {	
 				case "ultimaOra":
 					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/ansait_rss.xml")));
 					feedBack = true;
@@ -81,9 +47,11 @@ public class FeedReader
 					break;
 					
 				default:
-					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/ansait_rss.xml")));
+					if(dataBase.contains("Feed", search, null)) {
+						feeds.add(fetcher.retrieveFeed(new URL(dataBase.getLink(search))));
+						feedBack = true;						
+ 					}
 					break;
-					
 			}
 
 			for(SyndFeed g : feeds) {
@@ -101,9 +69,7 @@ public class FeedReader
 						}
 					}
 					else {
-					
 						notizie.add(n);
-						
 					}
 				}
 			}

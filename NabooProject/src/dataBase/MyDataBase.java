@@ -81,6 +81,10 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 				int idNotizia = Integer.parseInt(thirdInput);
 				query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + idUtente + "', '" + idNotizia + "')";
 				break;
+				
+			case "Feed":
+				query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + secondInput + "')";
+				break;
 		}
 
 		preparedStmt = conn.prepareStatement(query); // TODO: cercare a cosa serve concretamente
@@ -97,26 +101,37 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 	 * principalmente le tabelle prevedono due colonne significative ognuna.
 	 */
 	
-	public void DeleteTable(String table, String firstInput, String secondInput) throws SQLException, HeadlessException {
+	public void DeleteTable(String table, int id) throws SQLException, HeadlessException {
 		Connection conn = ConnectionDB();
 		PreparedStatement preparedStmt = null;
+		PreparedStatement newPreparedStmt = null;
 
 		String query = "";
+		String queryCommento = " ";
 
 		switch (table) {
 			case "Utente":
-				query = "DELETE FROM " + table + " WHERE Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'";
+				query = "DELETE FROM " + table + " WHERE UtenteID = '" + id + "'";
+				queryCommento = "DELETE FROM Commento WHERE UtenteID = '" + id + "'";
+				
+				newPreparedStmt = conn.prepareStatement(queryCommento);
+				newPreparedStmt.execute();
 				break;
 	
 			case "Notizia":
-				firstInput = replace(firstInput);
-				query = "DELETE FROM " + table + " WHERE Titolo = '" + firstInput + "' AND Link = '" + secondInput + "'";
+				query = "DELETE FROM " + table + " WHERE NotiziaID = '" + id + "'";
+				queryCommento = "DELETE FROM Commento WHERE NotiziaID = '" + id + "'";
+				
+				newPreparedStmt = conn.prepareStatement(queryCommento);
+				newPreparedStmt.execute();
 				break;
 	
 			case "Commento":
-				int utenteId = Integer.parseInt(firstInput);
-				int notiziaId = Integer.parseInt(secondInput);
-				query = "DELETE FROM " + table + " WHERE UtenteID = '" + utenteId + "' AND NotiziaID = '" + notiziaId + "'";
+				query = "DELETE FROM " + table + " WHERE CommentoID = '" + id + "'";
+				break;
+				
+			case "Feed":
+				query = "DELETE FROM " + table + " WHERE FeedID = '" + id + "'";
 				break;
 		}
 
@@ -133,7 +148,7 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 	 *
 	 */
 
-	public void alterRow(String table, String idTable, String firstInput, String secondInput, String thirdInput, int ID) throws SQLException, HeadlessException {
+	public void alterRow(String table, String firstInput, String secondInput, String thirdInput, int ID) throws SQLException, HeadlessException {
 		Connection conn = ConnectionDB();
 		PreparedStatement preparedStmt = null;
 
@@ -142,15 +157,19 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 		switch (table) {
 			case "Utente":
 				boolean subscription = Boolean.parseBoolean(thirdInput);
-				query = "UPDATE " + table + " SET  Nickname = '" + firstInput + "', Password = '" + secondInput + "', Subscription = " + subscription + " WHERE " + idTable + " = '" + ID + "';";
+				query = "UPDATE " + table + " SET  Nickname = '" + firstInput + "', Password = '" + secondInput + "', Subscription = " + subscription + " WHERE  UtenteID= '" + ID + "';";
 				break;
 	
 			case "Notizia":
-				query = "UPDATE " + table + " SET  Titolo = '" + firstInput + "', Link = '" + secondInput + "' WHERE " + idTable + " = '" + ID + "';";
+				query = "UPDATE " + table + " SET  Titolo = '" + firstInput + "', Link = '" + secondInput + "' WHERE NotiziaID = '" + ID + "';";
 				break;
 	
 			case "Commento":
-				query = "UPDATE " + table + " SET  UtenteID = '" + firstInput + "', NotiziaID = '" + secondInput + "' WHERE " + idTable + " = '" + ID + "';";
+				query = "UPDATE " + table + " SET  UtenteID = '" + firstInput + "', NotiziaID = '" + secondInput + "' WHERE CommentoID = '" + ID + "';";
+				break;
+				
+			case "Feed":
+				query = "UPDATE " + table + " SET  Tipo = '" + firstInput + "', Link = '" + secondInput + "' WHERE FeedID = '" + ID + "';";
 				break;
 		}
 
@@ -172,24 +191,28 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 		String query = "";
 		
 		switch (table) {
-		case "Utente":
-			query = "SELECT * FROM " + table + " WHERE  Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'";
-			break;
-				
-		case "Amministratore":
-			query = "SELECT * FROM " + table + " WHERE  Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'";
-			break;
-
-		case "Notizia":
-			firstInput = replace(firstInput);
-			query = "SELECT * FROM " + table + " WHERE  Titolo = '" + firstInput + "' AND Link = '" + secondInput + "'";
-			break;
-
-		case "Commento":
-			int idUtente = Integer.parseInt(firstInput);
-			int idNotizia = Integer.parseInt(secondInput);
-			query = "SELECT * FROM " + table + " WHERE  UtenteID = '" + idUtente + "' AND NotiziaID = '" + idNotizia + "'";
-			break;
+			case "Utente":
+				query = "SELECT * FROM " + table + " WHERE  Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'";
+				break;
+	
+			case "Amministratore":
+				query = "SELECT * FROM " + table + " WHERE  Nickname = '" + firstInput + "' AND Password = '" + secondInput + "'";
+				break;
+	
+			case "Notizia":
+				firstInput = replace(firstInput);
+				query = "SELECT * FROM " + table + " WHERE  Titolo = '" + firstInput + "' AND Link = '" + secondInput + "'";
+				break;
+	
+			case "Commento":
+				int idUtente = Integer.parseInt(firstInput);
+				int idNotizia = Integer.parseInt(secondInput);
+				query = "SELECT * FROM " + table + " WHERE  UtenteID = '" + idUtente + "' AND NotiziaID = '" + idNotizia + "'";
+				break;
+	
+			case "Feed":
+				query = "SELECT * FROM " + table + " WHERE Tipo = '" + firstInput + "';";
+				break;
 		}
 
 		st = conn.createStatement();
@@ -487,9 +510,7 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 	}
 	
 	public List<SyndFeed> getFeeds(int utenteId, List<SyndFeed> feeds, FeedFetcher fetcher) throws SQLException, IllegalArgumentException, IOException, FeedException, FetcherException, HeadlessException {
-		MyDataBase dataBase = new MyDataBase();
-		
-		Connection conn = dataBase.ConnectionDB();
+		Connection conn = ConnectionDB();
 		Statement st = null, newSt = null;
 		ResultSet rs = null, newRs = null;	
 			
@@ -516,9 +537,7 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 	}
 	
 	public ArrayList<String> getFeedsTot() throws SQLException, IllegalArgumentException, HeadlessException {
-		MyDataBase dataBase = new MyDataBase();
-		
-		Connection conn = dataBase.ConnectionDB();
+		Connection conn = ConnectionDB();
 		Statement st = null;
 		ResultSet rs = null;	 
 		
@@ -538,6 +557,67 @@ public class MyDataBase // TODO: Commentare e mettere nominativi comuni e in ing
 		conn.close();
 		
 		return arrayFeeds;
+	}
+	
+	public String getLink(String tipo) throws SQLException, IllegalArgumentException, HeadlessException {		
+		Connection conn = ConnectionDB();
+		Statement st = null;
+		ResultSet rs = null;	 
+
+		String query = "SELECT Link FROM Feed WHERE Tipo = '" + tipo + "';";			
+		String value = " ";
+				
+		st = conn.createStatement();
+		rs = st.executeQuery(query);
+	
+		while (rs.next()) {
+			value = rs.getString("Link");
+		}
+		
+		conn.close();
+		
+		return value;
+	}
+	
+	public ArrayList<String> getListID(String table) throws SQLException, IllegalArgumentException, HeadlessException {
+		Connection conn = ConnectionDB();
+		Statement st = null;
+		ResultSet rs = null;	 
+		
+		ArrayList<String> array = new ArrayList<String>();
+
+		String query = "SELECT Tipo FROM Feed;";			
+		String value = " ";
+		
+		switch(table) {
+			case "Utente":
+				query = "SELECT UtenteID FROM Utente";
+				
+				st = conn.createStatement();
+				rs = st.executeQuery(query);
+			
+				while (rs.next()) {
+					value = rs.getString("UtenteID");
+					array.add(value);					
+				}
+				break;
+			
+			case "Notizia":
+				query = "SELECT NotiziaID FROM Notizia";
+				
+				st = conn.createStatement();
+				rs = st.executeQuery(query);
+			
+				while (rs.next()) {
+					value = rs.getString("NotiziaID");
+					array.add(value);					
+				}
+				break;
+		}
+		
+		conn.close();
+		
+		return array;
 	}
 	
 	public void setRecensione(String table, String firstInput, String secondInput, String thirdInput) throws SQLException, HeadlessException {

@@ -3,8 +3,6 @@ package botTelegram;
 import java.awt.HeadlessException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -12,7 +10,6 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -26,10 +23,10 @@ import feedRSS.Notizia;
 public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sull'update ricevuto dall'utente
 {
 	private boolean answer = false, access = false, modify = false, subscription = false;
-	private int j = 0, utenteId = 0, notiziaId = 0; // Contatore utilizzato nel metodo modify
-	private String nickName = " ", password = " ", sub = " ", function = " ", titolo = " ", link = " ";
+	private int j = 0, utenteId = 0; // Contatore utilizzato nel metodo modify
+	private String nickName = " ", password = " ", function = " ", titolo = " ", link = " ";
 	private String emojiiNoEntry = "⛔️", emojiiWellDone = "✅";
-	private String tabUtente = "Utente", tabNotizia = "Notizia", tabCommento = "Commento", idUtente = "UtenteID", idNotizia = "NotiziaID", idCommento = "CommentoID";
+	private String tabUtente = "Utente", tabNotizia = "Notizia", tabCommento = "Commento", idUtente = "UtenteID", idNotizia = "NotiziaID";
 	private static Response res = new Response();
 	private static MyDataBase dataBase = new MyDataBase();
 	private static ArrayList<Utente> arrayUtente = new ArrayList<Utente>();
@@ -429,62 +426,9 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	}
 
 	public void ModifyRow(SendMessage response, String sub) throws HeadlessException, SQLException, TelegramApiException {
-		dataBase.alterRow(tabUtente, idUtente, nickName, password, sub, utenteId);
+		dataBase.alterRow(tabUtente, nickName, password, sub, utenteId);
 		response.setText(emojiiWellDone + " Modifica eseguita! " + emojiiWellDone);
 		execute(response);
-	}
-	
-	/*
-	 * Metodo Delete da utilizzare solo nel lato Amministratore
-	 */
-	
-	public void Delete(SendMessage response, Update update) throws HeadlessException, SQLException, TelegramApiException {
-		MyDataBase dataBase = new MyDataBase();
-
-		String lineRemove = update.getMessage().getText();
-		String[] tokens = lineRemove.split(" ");
-
-		if (tokens.length != 2) {
-			response.setText(emojiiNoEntry + " Attenzione credenziali non corrette riprova! " + emojiiNoEntry);
-			execute(response);
-		} 
-		else {
-			nickName = tokens[0];
-			password = tokens[1];
-			answer = dataBase.contains(tabUtente, nickName, password);
-
-			if (answer) {
-				utenteId = dataBase.getID(tabUtente, idUtente, nickName, password);
-				String utente = Integer.toString(utenteId);
-				int countUtente = dataBase.countUtente(utenteId);
-				dataBase.DeleteTable(tabUtente, nickName, password);
-				notiziaId = dataBase.getID(tabNotizia, idNotizia, titolo, link);
-
-				do {
-					int countNotizia = dataBase.countNotizia(notiziaId);
-					String notizia = Integer.toString(notiziaId);
-	
-					if (countNotizia == 1) {
-						String[] arrayNotizia = dataBase.getNotizia(notiziaId);
-						titolo = arrayNotizia[0];
-						link = arrayNotizia[1];
-	
-						dataBase.DeleteTable(tabNotizia, titolo, link);
-					}
-	
-					dataBase.DeleteTable(tabCommento, utente, notizia);
-					countUtente--;
-					notiziaId--;
-				} while (countUtente != 0);
-
-				function = " ";
-				response.setText(emojiiWellDone + " Eliminazione eseguita! " + emojiiWellDone);
-			} 
-			else {
-				response.setText(emojiiNoEntry + " Attenzione credenziali errate! " + emojiiNoEntry);
-			}
-			execute(response);
-		}
 	}
 	
 	public void ReadSearch(SendMessage response, Update update) throws HeadlessException, IllegalArgumentException, SQLException, TelegramApiException, IOException {	
