@@ -164,7 +164,7 @@
       </GridPane>
       <ImageView fitHeight="521.0" fitWidth="534.0" layoutX="-245.0" layoutY="195.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../Downloads/Seal_of_the_University_of_Bologna.svg.png" />
+            <Image url="@../images/logo.png" />
          </image>
       </ImageView>
       <Pane prefHeight="53.0" prefWidth="780.0" style="-fx-background-color: #FF4040;">
@@ -275,7 +275,7 @@
                   <Font name="Futura Medium" size="14.0" />
                </font>
             </TextField>
-            <TextField fx:id="txtRicercaFeed" prefHeight="9.0" prefWidth="182.0" promptText="Ricerca" stylesheets="@../css/styleText.css">
+            <TextField fx:id="txtRicercaFeed" onInputMethodTextChanged="#searchFeed" prefHeight="9.0" prefWidth="182.0" promptText="Ricerca" stylesheets="@../css/styleText.css">
                <font>
                   <Font name="Futura Medium" size="14.0" />
                </font>

@@ -13,6 +13,8 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -101,6 +103,8 @@ public class ControllerSample implements Initializable {
 	private Button btnAddUtente;
 	@FXML
 	private Button btnRefreshUtente;
+	@FXML 
+	private TextField txtRicercaUtente;
 	@FXML
 	private TableView<UtenteTable> tblUtente;
 	@FXML
@@ -196,16 +200,28 @@ public class ControllerSample implements Initializable {
 			pnStatus.setBackground(new Background(new BackgroundFill(Color.rgb(255, 64, 64), CornerRadii.EMPTY, Insets.EMPTY)));
 
 			txtPreview.setText("Notizia");
-
+			
+			txtRicercaNotizia.toFront();
 			tblNotizia.toFront();
 			btnAddNotizia.toFront();
 			btnRefreshNotizia.toFront();
+		}
+		else if(event.getSource() == btnUtente) {
+			pnStatus.setBackground(new Background(new BackgroundFill(Color.rgb(255, 64, 64), CornerRadii.EMPTY, Insets.EMPTY)));
+
+			txtPreview.setText("Utente");
+
+			txtRicercaUtente.toFront();
+			tblUtente.toFront();
+			btnAddUtente.toFront();
+			btnRefreshUtente.toFront();
 		}
 		else if(event.getSource() == btnCommento) {
 			pnStatus.setBackground(new Background(new BackgroundFill(Color.rgb(255, 64, 64), CornerRadii.EMPTY, Insets.EMPTY)));
 
 			txtPreview.setText("Commento");
-
+			
+			txtRicercaCommento.toFront();
 			tblCommento.toFront();
 			btnAddCommento.toFront();
 			btnRefreshCommento.toFront();
@@ -214,19 +230,11 @@ public class ControllerSample implements Initializable {
 			pnStatus.setBackground(new Background(new BackgroundFill(Color.rgb(255, 64, 64), CornerRadii.EMPTY, Insets.EMPTY)));
 
 			txtPreview.setText("Feed");
-
+			
+			txtRicercaFeed.toFront();
 			tblFeed.toFront();
 			btnAddFeed.toFront();
 			btnRefreshFeed.toFront();
-		}
-		else if(event.getSource() == btnUtente) {
-			pnStatus.setBackground(new Background(new BackgroundFill(Color.rgb(255, 64, 64), CornerRadii.EMPTY, Insets.EMPTY)));
-
-			txtPreview.setText("Utente");
-
-			tblUtente.toFront();
-			btnAddUtente.toFront();
-			btnRefreshUtente.toFront();
 		}
 		else {
 			clearAll();
@@ -239,6 +247,35 @@ public class ControllerSample implements Initializable {
 			stage.show();
 		}
 	}
+	
+	@FXML
+	private void searchFeed() {   
+		FilteredList<FeedTable> filteredData = new FilteredList<>(oblistFeed, b -> true);
+
+		txtRicercaFeed.textProperty().addListener((observable, newValue, oldValue) -> {
+			filteredData.setPredicate(fdl -> {
+				if(newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+					return true;
+				}
+				
+				String search = newValue.toLowerCase();
+				
+				if(fdl.getTipo().toLowerCase().indexOf(search) > -1) {
+					return true;
+				}
+				else if(fdl.getLink().toLowerCase().indexOf(search) > -1) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			});
+		});
+		
+		SortedList<FeedTable> sorted = new SortedList<>(filteredData);
+		sorted.comparatorProperty().bind(tblFeed.comparatorProperty());
+		tblFeed.setItems(sorted);
+	}    
 	
 	public void populateNotizia(Connection conn) throws SQLException {
 		ResultSet res = conn.createStatement().executeQuery("SELECT * FROM Notizia");
@@ -288,7 +325,7 @@ public class ControllerSample implements Initializable {
 		switch(object)
 		{
 		case ("Notizia"):
-			cl_idNotizia.setCellValueFactory(new PropertyValueFactory<>("id"));
+		cl_idNotizia.setCellValueFactory(new PropertyValueFactory<>("id"));
 		cl_titoloNotizia.setCellValueFactory(new PropertyValueFactory<>("Titolo"));
 		cl_linkNotizia.setCellValueFactory(new PropertyValueFactory<>("Link"));
 
@@ -296,7 +333,7 @@ public class ControllerSample implements Initializable {
 		break;
 
 		case ("Utente"):
-			cl_idUtente.setCellValueFactory(new PropertyValueFactory<>("id"));
+		cl_idUtente.setCellValueFactory(new PropertyValueFactory<>("id"));
 		cl_nicknameUtente.setCellValueFactory(new PropertyValueFactory<>("Nickname"));
 		cl_passwordUtente.setCellValueFactory(new PropertyValueFactory<>("Password"));
 		cl_subscriptionUtente.setCellValueFactory(new PropertyValueFactory<>("Subscription"));
@@ -305,7 +342,7 @@ public class ControllerSample implements Initializable {
 		break;
 
 		case ("Commento"):
-			cl_idCommento.setCellValueFactory(new PropertyValueFactory<>("id"));
+		cl_idCommento.setCellValueFactory(new PropertyValueFactory<>("id"));
 		cl_recensioneCommento.setCellValueFactory(new PropertyValueFactory<>("Recensione"));
 		cl_utenteIdCommento.setCellValueFactory(new PropertyValueFactory<>("UtenteId"));
 		cl_notiziaIdCommento.setCellValueFactory(new PropertyValueFactory<>("NotiziaId"));
@@ -314,13 +351,36 @@ public class ControllerSample implements Initializable {
 		break;
 
 		case ("Feed"):
-			cl_idFeed.setCellValueFactory(new PropertyValueFactory<>("id"));
+		cl_idFeed.setCellValueFactory(new PropertyValueFactory<>("id"));
 		cl_tipoFeed.setCellValueFactory(new PropertyValueFactory<>("Tipo"));
 		cl_linkFeed.setCellValueFactory(new PropertyValueFactory<>("Link"));
 
 		setCallbackFeed(conn);
 		break;
 		}
+	}
+	
+	@FXML
+	private void getAddView(MouseEvent event) throws IOException {
+		Parent parent = null;
+
+		if(event.getSource() == btnAddNotizia) {
+			parent = FXMLLoader.load(getClass().getResource("/adminInterface/AddNotizia.fxml"));
+		}
+		else if(event.getSource() == btnAddUtente) {
+			parent = FXMLLoader.load(getClass().getResource("/adminInterface/AddUtente.fxml"));
+		}
+		else if(event.getSource() == btnAddCommento) {
+			parent = FXMLLoader.load(getClass().getResource("/adminInterface/AddCommento.fxml"));
+		}
+		else if(event.getSource() == btnAddFeed) {
+			parent = FXMLLoader.load(getClass().getResource("/adminInterface/AddFeed.fxml"));
+		}
+
+		Scene scene = new Scene(parent);
+		Stage stage = new Stage();
+		stage.setScene(scene);
+		stage.show();
 	}
 
 	private void setCallbackNotizia(Connection conn) { // Generics
@@ -647,29 +707,6 @@ public class ControllerSample implements Initializable {
 		cl_actionFeed.setCellFactory(cellFoctory);
 		tblFeed.setItems(oblistFeed);
 	}
-
-	@FXML
-	private void getAddView(MouseEvent event) throws IOException {
-		Parent parent = null;
-
-		if(event.getSource() == btnAddNotizia) {
-			parent = FXMLLoader.load(getClass().getResource("/adminInterface/AddNotizia.fxml"));
-		}
-		else if(event.getSource() == btnAddUtente) {
-			parent = FXMLLoader.load(getClass().getResource("/adminInterface/AddUtente.fxml"));
-		}
-		else if(event.getSource() == btnAddCommento) {
-			parent = FXMLLoader.load(getClass().getResource("/adminInterface/AddCommento.fxml"));
-		}
-		else if(event.getSource() == btnAddFeed) {
-			parent = FXMLLoader.load(getClass().getResource("/adminInterface/AddFeed.fxml"));
-		}
-
-		Scene scene = new Scene(parent);
-		Stage stage = new Stage();
-		stage.setScene(scene);
-		stage.show();
-	}	
 
 	@FXML
 	private void refreshTableNotizia() throws SQLException {

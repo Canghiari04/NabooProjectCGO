@@ -1,6 +1,6 @@
 package botTelegram;
 
-public class Amministratore extends Utente implements IAmministratore {
+public class Amministratore extends Utente {
 	public Amministratore(String nickname, String password) {
 		super(nickname, password);
 	}

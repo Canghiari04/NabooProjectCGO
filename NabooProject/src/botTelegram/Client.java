@@ -1,6 +1,6 @@
 package botTelegram;
 
-public class Client extends Utente implements IClient {
+public class Client extends Utente {
 	private String sub;
 
 	public Client(String nickname, String password, String sub) {
