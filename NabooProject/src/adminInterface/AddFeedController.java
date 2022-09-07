@@ -50,10 +50,10 @@ public class AddFeedController implements Initializable {
 				tipo.toLowerCase();
 
 				if(update == false) {
-					dataBase.InsertTable("Feed", tipo, link, null);
+					dataBase.insertTable("Feed", tipo, link, null);
 				}
 				else {
-					dataBase.alterRow("Feed", tipo, link, null, feedId);
+					dataBase.alterRow("Feed", feedId, tipo, link, null);
 				}
 
 				txtTipo.setText(null);

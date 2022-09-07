@@ -61,7 +61,7 @@
             <FontAwesomeIconView glyphName="CLOSE" />
          </graphic>
       </Button>
-      <Button fx:id="btnClose" layoutX="742.0" layoutY="7.0" mnemonicParsing="false" onMouseClicked="#closeButtonClicked" prefHeight="20.0" prefWidth="20.0" stylesheets="@../css/styleButton.css">
+      <Button fx:id="btnClose" layoutX="742.0" layoutY="7.0" mnemonicParsing="false" onMouseClicked="#closeButtonClicked" prefHeight="30.0" prefWidth="30.0" stylesheets="@../css/styleButton.css">
          <graphic>
             <FontAwesomeIconView glyphName="CLOSE" size="20" text="" wrappingWidth="16.214285850524902">
                <font>

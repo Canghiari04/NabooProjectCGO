@@ -40,8 +40,8 @@ public class AddCommentoController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		try {
-			arrayIdUtente = dataBase.getListID("Utente");
-			arrayIdNotizia = dataBase.getListID("Notizia");
+			arrayIdUtente = dataBase.getListId("Utente");
+			arrayIdNotizia = dataBase.getListId("Notizia");
 		} catch (HeadlessException | IllegalArgumentException | SQLException e) {
 			e.printStackTrace();
 		} 
@@ -70,10 +70,10 @@ public class AddCommentoController implements Initializable {
 				alert.showAndWait();
 			} else {
 				if(update == false) {
-					dataBase.InsertTable("Commento", recensione, utenteId, notiziaId);
+					dataBase.insertTable("Commento", recensione, utenteId, notiziaId);
 				}
 				else {
-					dataBase.alterRow("Commento", recensione, utenteId, notiziaId, commentoId);
+					dataBase.alterRow("Commento", commentoId, recensione, utenteId, notiziaId);
 				}
 
 				txtRecensione.setText(null);

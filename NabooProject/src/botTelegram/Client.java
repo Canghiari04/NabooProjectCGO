@@ -3,13 +3,13 @@ package botTelegram;
 public class Client extends Utente implements IClient {
 	private String sub;
 
-	public Client(String nickName, String password, String sub) {
-		super(nickName, password);
+	public Client(String nickname, String password, String sub) {
+		super(nickname, password);
 		this.sub = sub;
 	}
 
-	public String getNickName() {
-		return this.nickName;
+	public String getNickname() {
+		return this.nickname;
 	}
 
 	public String getPassword() {
@@ -18,9 +18,5 @@ public class Client extends Utente implements IClient {
 
 	public String getSub() {
 		return this.sub;
-	}
-
-	public String toString() {
-		return "[Nickname: " + this.nickName + "][Password: " + this.password + "][Sub: " + this.sub + "]";
 	}
 }

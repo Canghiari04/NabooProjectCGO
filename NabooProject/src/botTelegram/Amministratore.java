@@ -1,12 +1,12 @@
 package botTelegram;
 
 public class Amministratore extends Utente implements IAmministratore {
-	public Amministratore(String nickName, String password) {
-		super(nickName, password);
+	public Amministratore(String nickname, String password) {
+		super(nickname, password);
 	}
 
-	public String getNickName() {
-		return this.nickName;
+	public String getNickname() {
+		return this.nickname;
 	}
 
 	public String getPassword() {
@@ -14,6 +14,6 @@ public class Amministratore extends Utente implements IAmministratore {
 	}
 
 	public String toString() {
-		return "[Nickname: " + this.nickName + "][Password: " + this.password + "]";
+		return "[Nickname: " + this.nickname + "][Password: " + this.password + "]";
 	}
 }

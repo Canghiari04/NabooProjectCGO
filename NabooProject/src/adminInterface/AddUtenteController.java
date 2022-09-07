@@ -45,6 +45,7 @@ public class AddUtenteController  implements Initializable {
 			String nickname = txtNickname.getText();
 			String password = txtPassword.getText();
 			String sub = cmbSubscription.getValue();
+			System.out.println(sub);
 
 			if (nickname.isEmpty() || password.isEmpty() || sub.isEmpty()) {
 				Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -53,10 +54,10 @@ public class AddUtenteController  implements Initializable {
 				alert.showAndWait();
 			} else {		        	
 				if(update == false) {
-					dataBase.InsertTable("Utente", nickname, password, sub);
+					dataBase.insertTable("Utente", nickname, password, sub);
 				}
 				else {
-					dataBase.alterRow("Utente", nickname, password, sub, utenteId);
+					dataBase.alterRow("Utente", utenteId, nickname, password, sub);
 				}
 
 				txtNickname.setText(null);

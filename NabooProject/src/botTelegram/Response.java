@@ -77,7 +77,7 @@ public class Response {
 		return modifyResponse;
 	}
 	
-	public SendMessage setResponse(String titolo, String link, Update update) {
+	public SendMessage setResponse(Update update, String titolo, String link) {
 		SendMessage response = new SendMessage();
 		long chatId = update.getMessage().getChatId();
 
@@ -113,7 +113,7 @@ public class Response {
 		return response;
 	}
 
-	public SendMessage setResponseAlone(String titolo, String link, Update update) {
+	public SendMessage setResponseAlone(Update update, String titolo, String link) {
 		SendMessage response = new SendMessage();
 		long chatId = update.getMessage().getChatId();
 
@@ -142,7 +142,7 @@ public class Response {
 		return response;
 	}
 	
-	public EditMessageText setNewResponse(String titolo, String link, Update update) {
+	public EditMessageText setNewResponse(Update update, String titolo, String link) {
 		EditMessageText newResponse = new EditMessageText();
 		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
 
@@ -187,7 +187,7 @@ public class Response {
 		return newResponse;
 	}
 	
-	public EditMessageText setNewResponsePrevious(String titolo, String link, Update update) {
+	public EditMessageText setNewResponsePrevious(Update update, String titolo, String link) {
 		EditMessageText newResponse = new EditMessageText();
 		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
 
@@ -226,7 +226,7 @@ public class Response {
 		return newResponse;
 	}
 	
-	public EditMessageText setNewResponseNext(String titolo, String link, Update update) {
+	public EditMessageText setNewResponseNext(Update update, String titolo, String link) {
 		EditMessageText newResponse = new EditMessageText();
 		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
 
@@ -270,7 +270,7 @@ public class Response {
 		long chatId = update.getMessage().getChatId();
 
 		feedResponse.setChatId(chatId);		
-		feedResponse = dataBase.getResponse(response, tabUtente, idUtente, nickName, password);
+		feedResponse = dataBase.getFeedUser(response, tabUtente, idUtente, nickName, password);
 		
 		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
 		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();

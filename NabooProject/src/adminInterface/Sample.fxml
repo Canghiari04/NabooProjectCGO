@@ -18,7 +18,7 @@
 
 <AnchorPane fx:id="anpSample" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="780.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminInterface.ControllerSample">
    <children>
-      <Pane fx:id="pnStatus" layoutX="284.0" layoutY="80.0" prefHeight="53.0" prefWidth="496.0" style="-fx-background-color: #FF4040;">
+      <Pane fx:id="pnStatus" layoutX="284.0" layoutY="86.0" prefHeight="53.0" prefWidth="496.0" style="-fx-background-color: #FF4040;">
          <children>
             <Text layoutX="12.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="home/" wrappingWidth="212.0">
                <font>
@@ -251,7 +251,36 @@
             <Insets left="10.0" />
          </padding>
       </Pane>
-			<TextField fx:id="txtFunzione" layoutX="330.0" layoutY="169.0" prefHeight="30.0" prefWidth="201.0" stylesheets="@../css/styleText.css" />
-      <Pane layoutX="331.0" layoutY="197.0" prefHeight="4.0" prefWidth="182.0" style="-fx-background-color: #FF4040;" />
+      <Pane layoutX="330.0" layoutY="198.0" prefHeight="4.0" prefWidth="175.0" style="-fx-background-color: #FF4040;" />
+      <GridPane layoutX="330.0" layoutY="176.0" prefHeight="17.0" prefWidth="184.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <TextField fx:id="txtRicercaNotizia" prefHeight="9.0" prefWidth="182.0" promptText="Ricerca" stylesheets="@../css/styleText.css">
+               <font>
+                  <Font name="Futura Medium" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="txtRicercaUtente" prefHeight="9.0" prefWidth="182.0" promptText="Ricerca" stylesheets="@../css/styleText.css">
+               <font>
+                  <Font name="Futura Medium" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="txtRicercaCommento" prefHeight="9.0" prefWidth="182.0" promptText="Ricerca" stylesheets="@../css/styleText.css">
+               <font>
+                  <Font name="Futura Medium" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="txtRicercaFeed" prefHeight="9.0" prefWidth="182.0" promptText="Ricerca" stylesheets="@../css/styleText.css">
+               <font>
+                  <Font name="Futura Medium" size="14.0" />
+               </font>
+            </TextField>
+         </children>
+      </GridPane>
    </children>
 </AnchorPane>

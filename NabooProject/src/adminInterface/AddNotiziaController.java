@@ -49,10 +49,10 @@ public class AddNotiziaController implements Initializable {
 				titolo.toLowerCase();
 
 				if(update == false) {
-					dataBase.InsertTable("Notizia", titolo, link, null);
+					dataBase.insertTable("Notizia", titolo, link, null);
 				}
 				else {
-					dataBase.alterRow("Notizia", titolo, link, null, notiziaId);
+					dataBase.alterRow("Notizia", notiziaId, titolo, link, null);
 				}
 
 				txtTitolo.setText(null);

@@ -2,18 +2,16 @@ package botTelegram;
 
 public abstract class Utente 
 {
-	protected String nickName;
+	protected String nickname;
 	protected String password;
 	
-	public Utente(String nickName, String password)
+	public Utente(String nickname, String password)
 	{
-		this.nickName = nickName;
+		this.nickname = nickname;
 		this.password = password;
 	}
 	
-	public abstract String getNickName();
+	public abstract String getNickname();
 	
-	public abstract String getPassword();
-		
-	public abstract String toString();
+	public abstract String getPassword();		
 }

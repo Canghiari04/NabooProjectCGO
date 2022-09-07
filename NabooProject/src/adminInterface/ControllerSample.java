@@ -25,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -80,6 +81,8 @@ public class ControllerSample implements Initializable {
 	@FXML
 	private Button btnRefreshNotizia;
 	@FXML
+	private TextField txtRicercaNotizia;
+	@FXML
 	private TableView<NotiziaTable> tblNotizia;
 	@FXML
 	private TableColumn<NotiziaTable, Integer> cl_idNotizia;
@@ -120,6 +123,8 @@ public class ControllerSample implements Initializable {
 	@FXML
 	private Button btnRefreshCommento;
 	@FXML
+    private TextField txtRicercaCommento;
+	@FXML
 	private TableView<CommentoTable> tblCommento;
 	@FXML
 	private TableColumn<CommentoTable, Integer> cl_idCommento;
@@ -131,7 +136,7 @@ public class ControllerSample implements Initializable {
 	private TableColumn<CommentoTable, Boolean> cl_notiziaIdCommento;
 	@FXML
 	private TableColumn<CommentoTable, String> cl_actionCommento;
-
+	
 	@FXML
 	private GridPane gpnFeed;
 	@FXML
@@ -140,6 +145,8 @@ public class ControllerSample implements Initializable {
 	private Button btnAddFeed;
 	@FXML
 	private Button btnRefreshFeed;
+	@FXML
+    private TextField txtRicercaFeed;
 	@FXML
 	private TableView<FeedTable> tblFeed;
 	@FXML
@@ -158,7 +165,7 @@ public class ControllerSample implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {	
 		changeToEditable();
 
-		Connection conn = dataBase.ConnectionDB();
+		Connection conn = dataBase.connectionDB();
 		try {
 			populateNotizia(conn);
 			populateUtente(conn);
@@ -169,6 +176,12 @@ public class ControllerSample implements Initializable {
 		}
 	}
 	
+	public void clearAll() {
+		tblFeed.getItems().clear();
+		tblCommento.getItems().clear();
+		tblUtente.getItems().clear();
+		tblNotizia.getItems().clear();
+	}
 
 	public void changeToEditable() {
 		tblFeed.setEditable(true);
@@ -216,6 +229,8 @@ public class ControllerSample implements Initializable {
 			btnRefreshUtente.toFront();
 		}
 		else {
+			clearAll();
+			
 			root = FXMLLoader.load(getClass().getResource("/adminInterface/Login.fxml"));
 
 			scene = new Scene(root);
@@ -340,7 +355,7 @@ public class ControllerSample implements Initializable {
 							notizia = tblNotizia.getSelectionModel().getSelectedItem();
 							
 							try { 
-								dataBase.DeleteTable("Notizia", notizia.getId());
+								dataBase.deleteTable("Notizia", notizia.getId());
 								refreshTableNotizia();
 								refreshTableCommento();
 							} catch (SQLException e) {
@@ -421,7 +436,7 @@ public class ControllerSample implements Initializable {
 							utente = tblUtente.getSelectionModel().getSelectedItem();
 							
 							try { 
-								dataBase.DeleteTable("Utente", utente.getId());
+								dataBase.deleteTable("Utente", utente.getId());
 								refreshTableUtente();
 								refreshTableCommento();
 							} catch (SQLException e) {
@@ -502,7 +517,7 @@ public class ControllerSample implements Initializable {
 							commento = tblCommento.getSelectionModel().getSelectedItem();
 
 							try { 
-								dataBase.DeleteTable("Commento", commento.getId());
+								dataBase.deleteTable("Commento", commento.getId());
 								refreshTableCommento();
 							} catch (SQLException e) {
 								e.printStackTrace();
@@ -584,7 +599,7 @@ public class ControllerSample implements Initializable {
 							feed = tblFeed.getSelectionModel().getSelectedItem();
 							
 							try { 
-								dataBase.DeleteTable("Feed", feed.getId());
+								dataBase.deleteTable("Feed", feed.getId());
 								refreshTableFeed();
 							} catch (SQLException e) {
 								e.printStackTrace();
@@ -659,7 +674,7 @@ public class ControllerSample implements Initializable {
 	@FXML
 	private void refreshTableNotizia() throws SQLException {
 		oblistNotizia.clear();
-		Connection conn = dataBase.ConnectionDB();
+		Connection conn = dataBase.connectionDB();
 
 		query = "SELECT * FROM Notizia";
 		preparedStatement = conn.prepareStatement(query);
@@ -674,7 +689,7 @@ public class ControllerSample implements Initializable {
 	@FXML
 	private void refreshTableUtente() throws SQLException {
 		oblistUtente.clear();
-		Connection conn = dataBase.ConnectionDB();
+		Connection conn = dataBase.connectionDB();
 
 		query = "SELECT * FROM Utente";
 		preparedStatement = conn.prepareStatement(query);
@@ -689,7 +704,7 @@ public class ControllerSample implements Initializable {
 	@FXML
 	private void refreshTableCommento() throws SQLException {
 		oblistCommento.clear();
-		Connection conn = dataBase.ConnectionDB();
+		Connection conn = dataBase.connectionDB();
 
 		query = "SELECT * FROM Commento";
 		preparedStatement = conn.prepareStatement(query);
@@ -704,7 +719,7 @@ public class ControllerSample implements Initializable {
 	@FXML
 	private void refreshTableFeed() throws SQLException {
 		oblistFeed.clear();
-		Connection conn = dataBase.ConnectionDB();
+		Connection conn = dataBase.connectionDB();
 
 		query = "SELECT * FROM Feed";
 		preparedStatement = conn.prepareStatement(query);
