@@ -1,0 +1,54 @@
+.combo-box {
+	-fx-background-color: white;
+	-fx-border-: 5px;
+	-fx-border-color: #FF4040;
+	-fx-border-radius: 6.4, 4, 5, 3;
+	-fx-border-width: 3 3 3 3;
+	-fx-text-fill: -fx-text-base-color;
+	-fx-font-family: "Futura";
+}
+
+.combo-box-popup .list-view {
+	-fx-background-color: white, white;
+	-fx-background-insets: 0, 1;
+	-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 8, 0.0, 0, 0);
+}
+
+.combo-box-popup .list-view .list-cell {
+	-fx-padding: 4 0 4 5;
+	-fx-background-color: white;
+	-fx-font-family: "Futura";
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected, .combo-box-popup .list-view .list-cell:filled:selected:hover
+	{
+	-fx-background: white;
+	-fx-background-color: white;
+	-fx-text-fill: -fx-selection-bar-text;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover {
+	-fx-background-color: white;
+	-fx-text-fill: -fx-text-inner-color;
+}
+
+.combo-box-base {
+	-fx-background-color: white, white, white, white;
+	-fx-background-radius: 5, 5, 4, 3;
+	-fx-background-insets: 0 0 -1 0, 0, 1, 2;
+	-fx-padding: 0;
+}
+
+.combo-box-base:hover {
+	-fx-color: white;
+}
+
+.combo-box-base:focused {
+	-fx-background-color: white;
+	-fx-background-radius: 6.4, 4, 5, 3;
+	-fx-background-insets: -1.4, 0, 1, 2;
+}
+
+.combo-box-base:disabled {
+	-fx-opacity: .4;
+}

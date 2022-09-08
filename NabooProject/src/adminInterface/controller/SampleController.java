@@ -27,6 +27,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -526,6 +527,8 @@ public class SampleController implements Initializable {
 							} catch (SQLException e) {
 								e.printStackTrace();
 							}
+							
+							alertEliminate();
 						});
 
 						editIcon.setOnMouseClicked((MouseEvent event) -> {
@@ -547,7 +550,7 @@ public class SampleController implements Initializable {
 								stage.show();
 							} catch (IOException e) {
 								e.printStackTrace();
-							}
+							}							
 						});
 
 						HBox managebtn = new HBox(editIcon, deleteIcon);
@@ -607,6 +610,8 @@ public class SampleController implements Initializable {
 							} catch (SQLException e) {
 								e.printStackTrace();
 							}
+							
+							alertEliminate();
 						});
 
 						editIcon.setOnMouseClicked((MouseEvent event) -> {
@@ -628,7 +633,7 @@ public class SampleController implements Initializable {
 								stage.show();
 							} catch (IOException e) {
 								e.printStackTrace();
-							}
+							}							
 						});
 
 						HBox managebtn = new HBox(editIcon, deleteIcon);
@@ -686,7 +691,7 @@ public class SampleController implements Initializable {
 								refreshTableCommento();
 							} catch (SQLException e) {
 								e.printStackTrace();
-							}
+							}							
 						});
 
 						editIcon.setOnMouseClicked((MouseEvent event) -> {
@@ -769,6 +774,8 @@ public class SampleController implements Initializable {
 							} catch (SQLException e) {
 								e.printStackTrace();
 							}
+							
+							alertEliminate();
 						});
 
 						editIcon.setOnMouseClicked((MouseEvent event) -> {
@@ -792,7 +799,6 @@ public class SampleController implements Initializable {
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-
 						});
 
 						HBox managebtn = new HBox(editIcon, deleteIcon);
@@ -811,6 +817,12 @@ public class SampleController implements Initializable {
 
 		cl_actionFeed.setCellFactory(cellFoctory);
 		tblFeed.setItems(oblistFeed);
+	}
+	
+	public void alertEliminate() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setHeaderText("Eliminazione eseguita correttamente!");
+		alert.showAndWait();
 	}
 
 	@FXML

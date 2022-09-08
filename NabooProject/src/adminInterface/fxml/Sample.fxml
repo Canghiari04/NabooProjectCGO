@@ -32,12 +32,12 @@
             </Text>
          </children>
       </Pane>
-      <GridPane layoutX="330.0" layoutY="257.0" prefHeight="200.0" prefWidth="410.0" AnchorPane.topAnchor="237.0">
+      <GridPane layoutX="330.0" layoutY="257.0" prefHeight="200.0" prefWidth="410.0" style="-fx-alignment: CENTER;" stylesheets="@../../css/styleTable.css" AnchorPane.topAnchor="237.0">
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TableView fx:id="tblUtente" prefHeight="214.0" prefWidth="441.0">
+            <TableView fx:id="tblUtente" prefHeight="214.0" prefWidth="441.0" style="-fx-alignment: CENTER;" stylesheets="@../../css/styleTable.css">
                <columns>
                   <TableColumn fx:id="cl_idUtente" prefWidth="75.0" text="ID" />
                   <TableColumn fx:id="cl_nicknameUtente" prefWidth="75.0" text="Nickname" />
@@ -49,7 +49,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <TableView fx:id="tblFeed" prefHeight="214.0" prefWidth="441.0">
+            <TableView fx:id="tblFeed" prefHeight="214.0" prefWidth="441.0" style="-fx-alignment: CENTER;" stylesheets="@../../css/styleTable.css">
                <columns>
                   <TableColumn fx:id="cl_idFeed" prefWidth="75.0" text="ID" />
                   <TableColumn fx:id="cl_tipoFeed" prefWidth="75.0" text="Tipo" />
@@ -60,7 +60,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <TableView fx:id="tblCommento" prefHeight="214.0" prefWidth="441.0">
+            <TableView fx:id="tblCommento" prefHeight="214.0" prefWidth="441.0" style="-fx-alignment: CENTER;" stylesheets="@../../css/styleTable.css">
                <columns>
                   <TableColumn fx:id="cl_idCommento" prefWidth="75.0" text="ID" />
                   <TableColumn fx:id="cl_recensioneCommento" prefWidth="75.0" text="Recensione" />
@@ -72,7 +72,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <TableView fx:id="tblNotizia" prefHeight="195.0" prefWidth="441.0">
+            <TableView fx:id="tblNotizia" prefHeight="195.0" prefWidth="441.0" style="-fx-alignment: CENTER;" stylesheets="@../../css/styleTable.css">
                <columns>
                   <TableColumn fx:id="cl_idNotizia" prefWidth="75.0" text="ID" />
                   <TableColumn fx:id="cl_titoloNotizia" prefWidth="75.0" text="Titolo" />
@@ -96,28 +96,28 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="btnAddNotizia" mnemonicParsing="false" onMouseClicked="#getAddView" prefHeight="235.0" prefWidth="140.0" stylesheets="@../../css/styleButton.css" text="Aggiungi ">
+            <Button fx:id="btnAddNotizia" mnemonicParsing="false" onMouseClicked="#getAddView" prefHeight="163.0" prefWidth="140.0" stylesheets="@../../css/styleButton.css" text="Aggiungi ">
                <graphic>
                   <FontAwesomeIconView glyphName="PLUS" size="16" />
                </graphic>
                <font>
                   <Font name="Futura Medium" size="13.0" />
                </font></Button>
-            <Button fx:id="btnAddUtente" mnemonicParsing="false" onMouseClicked="#getAddView" prefHeight="99.0" prefWidth="140.0" stylesheets="@../../css/styleButton.css" text="Aggiungi ">
+            <Button fx:id="btnAddUtente" mnemonicParsing="false" onMouseClicked="#getAddView" prefHeight="168.0" prefWidth="140.0" stylesheets="@../../css/styleButton.css" text="Aggiungi ">
                <graphic>
                   <FontAwesomeIconView glyphName="PLUS" size="16" />
                </graphic>
                <font>
                   <Font name="Futura Medium" size="13.0" />
                </font></Button>
-            <Button fx:id="btnAddCommento" mnemonicParsing="false" onMouseClicked="#getAddView" prefHeight="47.0" prefWidth="140.0" stylesheets="@../../css/styleButton.css" text="Aggiungi ">
+            <Button fx:id="btnAddCommento" mnemonicParsing="false" onMouseClicked="#getAddView" prefHeight="148.0" prefWidth="140.0" stylesheets="@../../css/styleButton.css" text="Aggiungi ">
                <graphic>
                   <FontAwesomeIconView glyphName="PLUS" size="16" />
                </graphic>
                <font>
                   <Font name="Futura Medium" size="13.0" />
                </font></Button>
-            <Button fx:id="btnAddFeed" mnemonicParsing="false" onMouseClicked="#getAddView" prefHeight="43.0" prefWidth="140.0" stylesheets="@../../css/styleButton.css" text="Aggiungi ">
+            <Button fx:id="btnAddFeed" mnemonicParsing="false" onMouseClicked="#getAddView" prefHeight="44.0" prefWidth="140.0" stylesheets="@../../css/styleButton.css" text="Aggiungi ">
                <graphic>
                   <FontAwesomeIconView glyphName="PLUS" size="16" />
                </graphic>
@@ -134,20 +134,12 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="btnRefreshNotizia" mnemonicParsing="false" onMouseClicked="#refreshTableNotizia" prefHeight="30.0" prefWidth="30.0" stylesheets="@../../css/styleButton.css">
+            <Button fx:id="btnRefreshNotizia" mnemonicParsing="false" onMouseClicked="#refreshTableNotizia" prefHeight="193.0" prefWidth="32.0" stylesheets="@../../css/styleButton.css">
                <graphic>
                   <FontAwesomeIconView glyphName="REPEAT" size="15" text="" wrappingWidth="15.0" />
                </graphic>
             </Button>
-            <Button fx:id="btnRefreshUtente" mnemonicParsing="false" onMouseClicked="#refreshTableUtente" prefHeight="30.0" prefWidth="30.0" stylesheets="@../../css/styleButton.css">
-               <graphic>
-                  <FontAwesomeIconView glyphName="REPEAT" size="15" text="" wrappingWidth="15.0" />
-               </graphic>
-               <font>
-                  <Font name="Futura Medium" size="13.0" />
-               </font>
-            </Button>
-            <Button fx:id="btnRefreshCommento" mnemonicParsing="false" onMouseClicked="#refreshTableCommento" prefHeight="30.0" prefWidth="30.0" stylesheets="@../../css/styleButton.css">
+            <Button fx:id="btnRefreshUtente" mnemonicParsing="false" onMouseClicked="#refreshTableUtente" prefHeight="125.0" prefWidth="32.0" stylesheets="@../../css/styleButton.css">
                <graphic>
                   <FontAwesomeIconView glyphName="REPEAT" size="15" text="" wrappingWidth="15.0" />
                </graphic>
@@ -155,7 +147,15 @@
                   <Font name="Futura Medium" size="13.0" />
                </font>
             </Button>
-            <Button fx:id="btnRefreshFeed" mnemonicParsing="false" onMouseClicked="#refreshTableFeed" prefHeight="50.0" prefWidth="32.0" stylesheets="@../../css/styleButton.css">
+            <Button fx:id="btnRefreshCommento" mnemonicParsing="false" onMouseClicked="#refreshTableCommento" prefHeight="125.0" prefWidth="32.0" stylesheets="@../../css/styleButton.css">
+               <graphic>
+                  <FontAwesomeIconView glyphName="REPEAT" size="15" text="" wrappingWidth="15.0" />
+               </graphic>
+               <font>
+                  <Font name="Futura Medium" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnRefreshFeed" mnemonicParsing="false" onMouseClicked="#refreshTableFeed" prefHeight="72.0" prefWidth="32.0" stylesheets="@../../css/styleButton.css">
                <graphic>
                   <FontAwesomeIconView glyphName="REPEAT" size="15" text="" wrappingWidth="15.0" />
                </graphic>

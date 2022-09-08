@@ -50,9 +50,11 @@ public class AddNotiziaController implements Initializable {
 
 				if(update == false) {
 					dataBase.insertTable("Notizia", titolo, link, null);
+					alertAdd();
 				}
 				else {
 					dataBase.alterRow("Notizia", notiziaId, titolo, link, null);
+					alertModify();
 				}
 
 				txtTitolo.setText(null);
@@ -65,6 +67,18 @@ public class AddNotiziaController implements Initializable {
 		}
 	}
 
+	public void alertAdd() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setHeaderText("Aggiunta eseguita correttamente!");
+		alert.showAndWait();
+	}
+	
+	public void alertModify() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setHeaderText("Modifica eseguita correttamente!");
+		alert.showAndWait();
+	}
+	
 	void setUpdate(boolean b) {
 		this.update = b;
 	}

@@ -55,9 +55,11 @@ public class AddUtenteController  implements Initializable {
 			} else {		        	
 				if(update == false) {
 					dataBase.insertTable("Utente", nickname, password, sub);
+					alertAdd();
 				}
 				else {
 					dataBase.alterRow("Utente", utenteId, nickname, password, sub);
+					alertModify();
 				}
 
 				txtNickname.setText(null);
@@ -70,6 +72,18 @@ public class AddUtenteController  implements Initializable {
 			txtPassword.setText(null);
 			cmbSubscription.setValue(null);
 		}
+	}
+	
+	public void alertAdd() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setHeaderText("Aggiunta eseguita correttamente!");
+		alert.showAndWait();
+	}
+	
+	public void alertModify() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setHeaderText("Modifica eseguita correttamente!");
+		alert.showAndWait();
 	}
 
 	void setUpdate(boolean b) {

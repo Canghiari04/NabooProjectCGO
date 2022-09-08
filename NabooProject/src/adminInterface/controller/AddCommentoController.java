@@ -71,9 +71,11 @@ public class AddCommentoController implements Initializable {
 			} else {
 				if(update == false) {
 					dataBase.insertTable("Commento", recensione, utenteId, notiziaId);
+					alertAdd();
 				}
 				else {
 					dataBase.alterRow("Commento", commentoId, recensione, utenteId, notiziaId);
+					alertModify();
 				}
 
 				txtRecensione.setText(null);
@@ -86,6 +88,18 @@ public class AddCommentoController implements Initializable {
 			cmbIdUtente.setValue(null);
 			cmbIdNotizia.setValue(null);
 		}
+	}
+	
+	public void alertAdd() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setHeaderText("Aggiunta eseguita correttamente!");
+		alert.showAndWait();
+	}
+	
+	public void alertModify() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setHeaderText("Modifica eseguita correttamente!");
+		alert.showAndWait();
 	}
 
 	void setUpdate(boolean b) {

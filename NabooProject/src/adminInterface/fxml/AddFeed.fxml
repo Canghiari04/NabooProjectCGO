@@ -47,11 +47,11 @@
             <Insets left="30.0" />
          </padding>
       </Label>
-      <TextField fx:id="txtTipo" layoutX="191.0" layoutY="151.0" prefHeight="28.0" prefWidth="160.0" stylesheets="@../../css/styleText.css">
+      <TextField fx:id="txtTipo" layoutX="191.0" layoutY="147.0" prefHeight="28.0" prefWidth="160.0" stylesheets="@../../css/styleText.css">
          <font>
             <Font name="Futura Medium" size="14.0" />
          </font></TextField>
-      <TextField fx:id="txtLink" layoutX="191.0" layoutY="197.0" prefHeight="26.0" prefWidth="160.0" stylesheets="@../../css/styleText.css">
+      <TextField fx:id="txtLink" layoutX="191.0" layoutY="193.0" prefHeight="26.0" prefWidth="160.0" stylesheets="@../../css/styleText.css">
          <font>
             <Font name="Futura Medium" size="14.0" />
          </font></TextField>

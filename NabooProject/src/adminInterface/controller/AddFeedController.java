@@ -51,9 +51,11 @@ public class AddFeedController implements Initializable {
 
 				if(update == false) {
 					dataBase.insertTable("Feed", tipo, link, null);
+					alertAdd();
 				}
 				else {
 					dataBase.alterRow("Feed", feedId, tipo, link, null);
+					alertModify();
 				}
 
 				txtTipo.setText(null);
@@ -64,6 +66,18 @@ public class AddFeedController implements Initializable {
 			txtTipo.setText(null);
 			txtLink.setText(null);
 		}
+	}
+	
+	public void alertAdd() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setHeaderText("Aggiunta eseguita correttamente!");
+		alert.showAndWait();
+	}
+	
+	public void alertModify() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setHeaderText("Modifica eseguita correttamente!");
+		alert.showAndWait();
 	}
 
 	void setUpdate(boolean b) {
