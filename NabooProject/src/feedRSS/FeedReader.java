@@ -31,65 +31,64 @@ public class FeedReader
 	private static List<Notizia> notizie = new ArrayList<Notizia>();
 	private static List<SyndFeed> feeds= new ArrayList<SyndFeed>();
 	
-	public void run(String search, int utenteId) throws SQLException {
+	public void run(String search, int userId) throws SQLException, IllegalArgumentException, IOException, FeedException, FetcherException, HeadlessException {
 		clearAll();		
-
-		try {
-			switch (search) {	
-				case "ultimaOra":
+		feedBack = false;
+		
+		switch (search) {	
+			case "ultimaOra":
+				feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/ansait_rss.xml")));
+				feedBack = true;
+				break;
+	
+			case "personalizzata":
+				feeds = dataBase.getFeeds(userId, feeds, fetcher);
+				feedBack = true;
+				break;
+	
+			default:
+				if(dataBase.contains("Feed", search, null)) {
+					feeds.add(fetcher.retrieveFeed(new URL(dataBase.getLink(search))));
+					feedBack = true;						
+				}
+				else
+				{
 					feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/ansait_rss.xml")));
-					feedBack = true;
-					break;
-					
-				case "personalizzata":
-					feeds = dataBase.getFeeds(utenteId, feeds, fetcher);
-					feedBack = true;
-					break;
-					
-				default:
-					if(dataBase.contains("Feed", search, null)) {
-						feeds.add(fetcher.retrieveFeed(new URL(dataBase.getLink(search))));
-						feedBack = true;						
- 					}
-					break;
-			}
+				}
+				break;
+		}
 
-			for(SyndFeed g : feeds) {
-				for(Object o : g.getEntries()) {
-					SyndEntry entry = (SyndEntry)o;	
-					
-					Notizia n = new Notizia(entry.getTitle(), entry.getLink());
-					
-					if(feedBack == false) {
-						String title = n.getTitolo().toLowerCase();
-						
-						if(title.contains(search))
-						{
-							notizie.add(n);
-						}
-					}
-					else {
+		for(SyndFeed g : feeds) {
+			for(Object o : g.getEntries()) {
+				SyndEntry entry = (SyndEntry)o;	
+
+				Notizia n = new Notizia(entry.getTitle(), entry.getLink());
+
+				if(feedBack == false) {
+					String title = n.getTitolo().toLowerCase();
+
+					if(title.contains(search))
+					{
 						notizie.add(n);
 					}
 				}
+				else {
+					notizie.add(n);
+				}
 			}
-			
-			shuffle(notizie);
-			
-			PrintWriter writer = new PrintWriter(new FileWriter("GsonImport.json"), true);
-			gson.toJson(notizie, writer);
-			
-			writer.close();
-			
-		} catch(IllegalArgumentException | IOException | FeedException | FetcherException | HeadlessException e) {
-			e.printStackTrace();
-		}			
+		}
+
+		shuffle(notizie);
+
+		PrintWriter writer = new PrintWriter(new FileWriter("GsonImport.json"), true);
+		gson.toJson(notizie, writer);
+
+		writer.close();	
 	}
 	
 	/*
 	 * Metodo shuffle utilizzato per randomizzare le notizie all'interno del file Gson 
 	 */
-	
 	public static<T> void shuffle(List<T> list) {
         Random random = new Random();
 

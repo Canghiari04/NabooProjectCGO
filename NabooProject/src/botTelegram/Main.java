@@ -32,7 +32,7 @@ public class Main extends Application {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setRoot(new AnchorPane());
 			
-			Parent root = FXMLLoader.load(getClass().getResource("/adminInterface/Sample.fxml"));
+			Parent root = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/Login.fxml"));
 			
 			Scene scene = new Scene(root);
 			

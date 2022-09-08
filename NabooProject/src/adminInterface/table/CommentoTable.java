@@ -1,4 +1,4 @@
-package adminInterface;
+package adminInterface.table;
 
 public class CommentoTable {
 	private int id;

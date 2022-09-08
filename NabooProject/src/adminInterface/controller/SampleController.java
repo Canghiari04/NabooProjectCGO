@@ -1,4 +1,4 @@
-package adminInterface;
+package adminInterface.controller;
 
 import java.io.IOException;
 import java.net.URL;
@@ -8,6 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import adminInterface.table.CommentoTable;
+import adminInterface.table.FeedTable;
+import adminInterface.table.NotiziaTable;
+import adminInterface.table.UtenteTable;
 import dataBase.MyDataBase;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -42,7 +46,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
-public class ControllerSample implements Initializable {
+public class SampleController implements Initializable {
 
 	private static String query = " ";
 
@@ -178,13 +182,18 @@ public class ControllerSample implements Initializable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		txtRicercaNotizia.toFront();
+		tblNotizia.toFront();
+		btnAddNotizia.toFront();
+		btnRefreshNotizia.toFront();
 	}
 	
 	public void clearAll() {
-		tblFeed.getItems().clear();
-		tblCommento.getItems().clear();
-		tblUtente.getItems().clear();
-		tblNotizia.getItems().clear();
+		oblistNotizia.clear();
+		oblistUtente.clear();
+		oblistCommento.clear();
+		oblistFeed.clear();
 	}
 
 	public void changeToEditable() {
@@ -237,45 +246,16 @@ public class ControllerSample implements Initializable {
 			btnRefreshFeed.toFront();
 		}
 		else {
-			clearAll();
+			root = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/Login.fxml"));
 			
-			root = FXMLLoader.load(getClass().getResource("/adminInterface/Login.fxml"));
-
 			scene = new Scene(root);
 			stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 			stage.setScene(scene);
 			stage.show();
+			
+			clearAll();
 		}
 	}
-	
-	@FXML
-	private void searchFeed() {   
-		FilteredList<FeedTable> filteredData = new FilteredList<>(oblistFeed, b -> true);
-
-		txtRicercaFeed.textProperty().addListener((observable, newValue, oldValue) -> {
-			filteredData.setPredicate(fdl -> {
-				if(newValue.isEmpty() || newValue.isBlank() || newValue == null) {
-					return true;
-				}
-				
-				String search = newValue.toLowerCase();
-				
-				if(fdl.getTipo().toLowerCase().indexOf(search) > -1) {
-					return true;
-				}
-				else if(fdl.getLink().toLowerCase().indexOf(search) > -1) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			});
-		});
-		
-		SortedList<FeedTable> sorted = new SortedList<>(filteredData);
-		sorted.comparatorProperty().bind(tblFeed.comparatorProperty());
-		tblFeed.setItems(sorted);
-	}    
 	
 	public void populateNotizia(Connection conn) throws SQLException {
 		ResultSet res = conn.createStatement().executeQuery("SELECT * FROM Notizia");
@@ -365,16 +345,16 @@ public class ControllerSample implements Initializable {
 		Parent parent = null;
 
 		if(event.getSource() == btnAddNotizia) {
-			parent = FXMLLoader.load(getClass().getResource("/adminInterface/AddNotizia.fxml"));
+			parent = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/AddNotizia.fxml"));
 		}
 		else if(event.getSource() == btnAddUtente) {
-			parent = FXMLLoader.load(getClass().getResource("/adminInterface/AddUtente.fxml"));
+			parent = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/AddUtente.fxml"));
 		}
 		else if(event.getSource() == btnAddCommento) {
-			parent = FXMLLoader.load(getClass().getResource("/adminInterface/AddCommento.fxml"));
+			parent = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/AddCommento.fxml"));
 		}
 		else if(event.getSource() == btnAddFeed) {
-			parent = FXMLLoader.load(getClass().getResource("/adminInterface/AddFeed.fxml"));
+			parent = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/AddFeed.fxml"));
 		}
 
 		Scene scene = new Scene(parent);
@@ -382,6 +362,131 @@ public class ControllerSample implements Initializable {
 		stage.setScene(scene);
 		stage.show();
 	}
+	
+	@FXML
+	private void searchNotizia() {   
+		FilteredList<NotiziaTable> filteredData = new FilteredList<>(oblistNotizia, b -> true);
+
+		txtRicercaNotizia.textProperty().addListener((observable, newValue, oldValue) -> {
+			filteredData.setPredicate(info -> {
+				if(newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+					return true;
+				}
+				
+				String search = newValue.toLowerCase();
+				
+				if(info.getTitolo().toLowerCase().indexOf(search) > -1) {
+					return true;
+				}
+				else if(info.getLink().toLowerCase().indexOf(search) > -1) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			});
+		});
+		
+		SortedList<NotiziaTable> sorted = new SortedList<>(filteredData);
+		sorted.comparatorProperty().bind(tblNotizia.comparatorProperty());
+		tblNotizia.setItems(sorted);
+	}  
+	
+	@FXML
+	private void searchUtente() {   
+		FilteredList<UtenteTable> filteredData = new FilteredList<>(oblistUtente, b -> true);
+
+		txtRicercaUtente.textProperty().addListener((observable, newValue, oldValue) -> {
+			filteredData.setPredicate(user -> {
+				if(newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+					return true;
+				}
+				
+				String subscription = String.valueOf(user.getSubscription());
+				String search = newValue.toLowerCase();
+				
+				if(user.getNickname().toLowerCase().indexOf(search) > -1) {
+					return true;
+				}
+				else if(user.getPassword().toLowerCase().indexOf(search) > -1) {
+					return true;
+				}
+				else if(subscription.indexOf(search) > -1) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			});
+		});
+		
+		SortedList<UtenteTable> sorted = new SortedList<>(filteredData);
+		sorted.comparatorProperty().bind(tblUtente.comparatorProperty());
+		tblUtente.setItems(sorted);
+	}  
+	
+	@FXML
+	private void searchCommento() {   
+		FilteredList<CommentoTable> filteredData = new FilteredList<>(oblistCommento, b -> true);
+
+		txtRicercaCommento.textProperty().addListener((observable, newValue, oldValue) -> {
+			filteredData.setPredicate(comment -> {
+				if(newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+					return true;
+				}
+				
+				String idUser = String.valueOf(comment.getUtenteId());
+				String idInfo = String.valueOf(comment.getNotiziaId());
+				String search = newValue.toLowerCase();
+				
+				if(idUser.indexOf(search) > -1) {
+					return true;
+				}
+				else if(idInfo.indexOf(search) > -1) {
+					return true;
+				}
+				else if(comment.getRecensione().toLowerCase().indexOf(search) > -1) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			});
+		});
+		
+		SortedList<CommentoTable> sorted = new SortedList<>(filteredData);
+		sorted.comparatorProperty().bind(tblCommento.comparatorProperty());
+		tblCommento.setItems(sorted);
+	}  
+	
+	@FXML
+	private void searchFeed() {   
+		FilteredList<FeedTable> filteredData = new FilteredList<>(oblistFeed, b -> true);
+
+		txtRicercaFeed.textProperty().addListener((observable, newValue, oldValue) -> {
+			filteredData.setPredicate(fdl -> {
+				if(newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+					return true;
+				}
+				
+				String search = newValue.toLowerCase();
+				
+				if(fdl.getTipo().toLowerCase().indexOf(search) > -1) {
+					return true;
+				}
+				else if(fdl.getLink().toLowerCase().indexOf(search) > -1) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			});
+		});
+		
+		SortedList<FeedTable> sorted = new SortedList<>(filteredData);
+		sorted.comparatorProperty().bind(tblFeed.comparatorProperty());
+		tblFeed.setItems(sorted);
+	}  
 
 	private void setCallbackNotizia(Connection conn) { // Generics
 		Callback<TableColumn<NotiziaTable, String>, TableCell<NotiziaTable, String>> cellFoctory = (TableColumn<NotiziaTable, String> param) -> {
@@ -426,7 +531,7 @@ public class ControllerSample implements Initializable {
 						editIcon.setOnMouseClicked((MouseEvent event) -> {
 							FXMLLoader loader = new FXMLLoader ();
 							notizia = tblNotizia.getSelectionModel().getSelectedItem();
-							loader.setLocation(getClass().getResource("/adminInterface/AddNotizia.fxml"));
+							loader.setLocation(getClass().getResource("/adminInterface/fxml/AddNotizia.fxml"));
 
 							try {		
 								loader.load();
@@ -507,7 +612,7 @@ public class ControllerSample implements Initializable {
 						editIcon.setOnMouseClicked((MouseEvent event) -> {
 							FXMLLoader loader = new FXMLLoader ();
 							utente = tblUtente.getSelectionModel().getSelectedItem();
-							loader.setLocation(getClass().getResource("/adminInterface/AddUtente.fxml"));
+							loader.setLocation(getClass().getResource("/adminInterface/fxml/AddUtente.fxml"));
 
 							try {
 								loader.load();
@@ -587,7 +692,7 @@ public class ControllerSample implements Initializable {
 						editIcon.setOnMouseClicked((MouseEvent event) -> {
 							FXMLLoader loader = new FXMLLoader ();
 							commento = tblCommento.getSelectionModel().getSelectedItem();
-							loader.setLocation(getClass().getResource("/adminInterface/AddCommento.fxml"));
+							loader.setLocation(getClass().getResource("/adminInterface/fxml/AddCommento.fxml"));
 
 							try {
 								loader.load();
@@ -669,7 +774,7 @@ public class ControllerSample implements Initializable {
 						editIcon.setOnMouseClicked((MouseEvent event) -> {
 							FXMLLoader loader = new FXMLLoader ();
 							feed = tblFeed.getSelectionModel().getSelectedItem();
-							loader.setLocation(getClass().getResource("/adminInterface/AddFeed.fxml"));
+							loader.setLocation(getClass().getResource("/adminInterface/fxml/AddFeed.fxml"));
 
 							try {
 								loader.load();

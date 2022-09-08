@@ -15,6 +15,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sun.syndication.fetcher.FetcherException;
+import com.sun.syndication.io.FeedException;
 
 import dataBase.MyDataBase;
 import feedRSS.FeedReader;
@@ -89,7 +91,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 						break;
 				}
 			}
-		} catch (HeadlessException | IllegalArgumentException | SQLException | TelegramApiException | IOException e ) {
+		} catch (HeadlessException | IllegalArgumentException | SQLException | TelegramApiException | IOException | FeedException | FetcherException e ) {
 			e.printStackTrace();
 		}
 	}
@@ -98,7 +100,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	 * Switch contenente le funzioni principali del bot telegram, indivIduandone la
 	 * correlazione con onUpdateReceived
 	 */
-	public void function(String str, SendMessage response, SendVideo SendVideo, Update update) throws HeadlessException, IllegalArgumentException, SQLException, TelegramApiException, IOException {
+	public void function(String str, SendMessage response, SendVideo SendVideo, Update update) throws HeadlessException, IllegalArgumentException, SQLException, TelegramApiException, IOException, FeedException, FetcherException {
 		char character = str.charAt(0);
 
 		if(character == '/') {
@@ -148,7 +150,12 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 					} 
 					else {
 						response.setText("Inserisci una parola chiave\n\nQui sotto sono riportate le disponibili\n");
+						
 						feeds = dataBase.getFeedsTot();
+						
+						if(subscription == true) {
+							response.setText(response.getText() + "personalizzata\n");
+						}
 						
 						for(String f : feeds) {
 							response.setText(response.getText() + f + "\n");
@@ -430,7 +437,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	 * Metodo ReadSearch che permette di visualizzare le differenti notizie
 	 * a seconda di quale preferenza sia stata espressa
 	 */
-	public void readSearch(SendMessage response, Update update) throws HeadlessException, IllegalArgumentException, SQLException, TelegramApiException, IOException {	
+	public void readSearch(SendMessage response, Update update) throws HeadlessException, IllegalArgumentException, SQLException, TelegramApiException, IOException, FeedException, FetcherException {	
 		if (update.hasCallbackQuery()) {
 			String callData = update.getCallbackQuery().getData();
 			switch (callData) {
@@ -581,7 +588,7 @@ public class MyBot extends TelegramLongPollingBot // Classe che si focalizza sul
 	 * Metodo ChangeFeed che permette di modificare la propria feed personalizzata,
 	 * ossia di leggere notizie che riguardano solo argomenti preferiti
 	 */
-	public void changeFeed(SendMessage response, Update update) throws HeadlessException, IllegalArgumentException, SQLException, TelegramApiException, IOException {		 		
+	public void changeFeed(SendMessage response, Update update) throws HeadlessException, IllegalArgumentException, SQLException, TelegramApiException, IOException, FeedException, FetcherException {		 		
 		if(update.hasCallbackQuery()) {
 			String callData = update.getCallbackQuery().getData();
 			long chatId = update.getCallbackQuery().getMessage().getChatId();

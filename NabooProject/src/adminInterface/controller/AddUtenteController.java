@@ -1,4 +1,4 @@
-package adminInterface;
+package adminInterface.controller;
 
 import java.awt.HeadlessException;
 import java.net.URL;

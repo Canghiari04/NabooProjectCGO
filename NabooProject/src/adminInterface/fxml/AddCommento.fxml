@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #FFF;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminInterface.AddCommentoController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #FFF;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminInterface.controller.AddCommentoController">
    <children>
       <Label graphicTextGap="20.0" layoutY="33.0" prefHeight="55.0" prefWidth="400.0" style="-fx-background-color: #FF4040;" text="Dettagli Commento">
          <font>
@@ -24,7 +24,7 @@
          <graphic>
             <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/comment.png" />
+                  <Image url="@../../images/comment.png" />
                </image>
             </ImageView>
          </graphic>
@@ -62,15 +62,15 @@
             <Insets left="30.0" />
          </padding>
       </Label>
-      <TextField fx:id="txtRecensione" layoutX="195.0" layoutY="140.0" stylesheets="@../css/styleText.css" />
-      <Button fx:id="btnSalva" layoutX="64.0" layoutY="298.0" mnemonicParsing="false" onMouseClicked="#setDatabase" prefHeight="26.0" prefWidth="93.0" stylesheets="@../css/styleButton.css" text="Salva">
+      <TextField fx:id="txtRecensione" layoutX="201.0" layoutY="140.0" prefHeight="26.0" prefWidth="146.0" stylesheets="@../../css/styleText.css" />
+      <Button fx:id="btnSalva" layoutX="64.0" layoutY="298.0" mnemonicParsing="false" onMouseClicked="#setDatabase" prefHeight="26.0" prefWidth="93.0" stylesheets="@../../css/styleButton.css" text="Salva">
          <font>
             <Font name="Futura Medium" size="14.0" />
          </font>
          <graphic>
             <FontAwesomeIconView glyphName="SAVE" />
          </graphic></Button>
-      <Button fx:id="btnCancella" layoutX="244.0" layoutY="298.0" mnemonicParsing="false" onMouseClicked="#setDatabase" prefHeight="26.0" prefWidth="93.0" stylesheets="@../css/styleButton.css" text="Cancella">
+      <Button fx:id="btnCancella" layoutX="244.0" layoutY="298.0" mnemonicParsing="false" onMouseClicked="#setDatabase" prefHeight="26.0" prefWidth="93.0" stylesheets="@../../css/styleButton.css" text="Cancella">
          <font>
             <Font name="Futura Medium" size="14.0" />
          </font>

@@ -9,10 +9,10 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="780.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminInterface.ControllerLogin">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="780.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminInterface.controller.LoginController">
    <children>
       <Pane layoutX="392.0" layoutY="49.0" prefHeight="385.0" prefWidth="340.0" style="-fx-background-color: #d3d3d3 #d3d3d3;" />
-      <PasswordField fx:id="txtPassword" layoutX="107.0" layoutY="295.0" prefHeight="26.0" prefWidth="179.0" stylesheets="@../css/styleText.css">
+      <PasswordField fx:id="txtPassword" layoutX="107.0" layoutY="295.0" prefHeight="26.0" prefWidth="179.0" stylesheets="@../../css/styleText.css">
          <font>
             <Font name="Futura Medium" size="13.0" />
          </font></PasswordField>
@@ -27,7 +27,7 @@
             <Font name="Futura Medium" size="44.0" />
          </font>
       </Label>
-      <TextField fx:id="txtNickname" layoutX="107.0" layoutY="208.0" prefHeight="26.0" prefWidth="179.0" stylesheets="@../css/styleText.css">
+      <TextField fx:id="txtNickname" layoutX="107.0" layoutY="208.0" prefHeight="26.0" prefWidth="179.0" stylesheets="@../../css/styleText.css">
          <font>
             <Font name="Futura Medium" size="13.0" />
          </font>
@@ -45,7 +45,7 @@
             <Font name="Futura Medium" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="btnLogin" layoutX="101.0" layoutY="368.0" mnemonicParsing="false" onMouseClicked="#loginClicked" prefHeight="27.0" prefWidth="86.0" stylesheets="@../css/styleButton.css" text="Sign In">
+      <Button fx:id="btnLogin" layoutX="101.0" layoutY="368.0" mnemonicParsing="false" onMouseClicked="#loginClicked" prefHeight="27.0" prefWidth="86.0" stylesheets="@../../css/styleButton.css" text="Sign In">
          <font>
             <Font name="Futura Medium" size="14.0" />
          </font>
@@ -53,7 +53,7 @@
             <FontAwesomeIconView glyphName="SIGN_IN" />
          </graphic>
       </Button>
-      <Button fx:id="btnCancella" layoutX="198.0" layoutY="368.0" mnemonicParsing="false" onMouseClicked="#deleteClicked" stylesheets="@../css/styleButton.css" text="Cancella">
+      <Button fx:id="btnCancella" layoutX="198.0" layoutY="368.0" mnemonicParsing="false" onMouseClicked="#deleteClicked" stylesheets="@../../css/styleButton.css" text="Cancella">
          <font>
             <Font name="Futura Medium" size="14.0" />
          </font>
@@ -61,7 +61,7 @@
             <FontAwesomeIconView glyphName="CLOSE" />
          </graphic>
       </Button>
-      <Button fx:id="btnClose" layoutX="742.0" layoutY="7.0" mnemonicParsing="false" onMouseClicked="#closeButtonClicked" prefHeight="30.0" prefWidth="30.0" stylesheets="@../css/styleButton.css">
+      <Button fx:id="btnClose" layoutX="742.0" layoutY="7.0" mnemonicParsing="false" onMouseClicked="#closeButtonClicked" prefHeight="30.0" prefWidth="30.0" stylesheets="@../../css/styleButton.css">
          <graphic>
             <FontAwesomeIconView glyphName="CLOSE" size="20" text="" wrappingWidth="16.214285850524902">
                <font>

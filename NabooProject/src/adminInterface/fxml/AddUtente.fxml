@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #FFF;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminInterface.AddUtenteController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #FFF;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminInterface.controller.AddUtenteController">
    <children>
       <Label graphicTextGap="20.0" layoutX="-1.0" layoutY="33.0" prefHeight="50.0" prefWidth="406.0" style="-fx-background-color: #FF4040;" text="Dettagli Utente">
          <font>
@@ -24,7 +24,7 @@
          <graphic>
             <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/user.png" />
+                  <Image url="@../../images/user.png" />
                </image>
             </ImageView>
          </graphic>
@@ -59,17 +59,23 @@
             <Insets left="30.0" />
          </padding>
       </Label>
-      <TextField fx:id="txtNickname" layoutX="196.0" layoutY="133.0" prefHeight="26.0" prefWidth="160.0" stylesheets="@../css/styleText.css" />
-      <TextField fx:id="txtPassword" layoutX="196.0" layoutY="177.0" stylesheets="@../css/styleText.css" />
+      <TextField fx:id="txtNickname" layoutX="196.0" layoutY="133.0" prefHeight="26.0" prefWidth="160.0" stylesheets="@../../css/styleText.css">
+         <font>
+            <Font name="Futura Medium" size="14.0" />
+         </font></TextField>
+      <TextField fx:id="txtPassword" layoutX="196.0" layoutY="175.0" prefHeight="28.0" prefWidth="160.0" stylesheets="@../../css/styleText.css">
+         <font>
+            <Font name="Futura Medium" size="14.0" />
+         </font></TextField>
       <ComboBox fx:id="cmbSubscription" layoutX="196.0" layoutY="219.0" prefHeight="26.0" prefWidth="160.0" />
-      <Button fx:id="btnSalva" layoutX="75.0" layoutY="297.0" mnemonicParsing="false" onMouseClicked="#setDatabase" prefHeight="26.0" prefWidth="90.0" stylesheets="@../css/styleButton.css" text="Salva">
+      <Button fx:id="btnSalva" layoutX="75.0" layoutY="297.0" mnemonicParsing="false" onMouseClicked="#setDatabase" prefHeight="26.0" prefWidth="90.0" stylesheets="@../../css/styleButton.css" text="Salva">
          <font>
             <Font name="Futura Medium" size="14.0" />
          </font>
          <graphic>
             <FontAwesomeIconView glyphName="SAVE" text="" />
          </graphic></Button>
-      <Button fx:id="btnCancella" layoutX="228.0" layoutY="297.0" mnemonicParsing="false" onMouseClicked="#setDatabase" prefHeight="26.0" prefWidth="90.0" stylesheets="@../css/styleButton.css" text="Cancella">
+      <Button fx:id="btnCancella" layoutX="228.0" layoutY="297.0" mnemonicParsing="false" onMouseClicked="#setDatabase" prefHeight="26.0" prefWidth="90.0" stylesheets="@../../css/styleButton.css" text="Cancella">
          <font>
             <Font name="Futura Medium" size="14.0" />
          </font>

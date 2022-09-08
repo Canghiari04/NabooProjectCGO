@@ -1,4 +1,4 @@
-package adminInterface;
+package adminInterface.controller;
 
 
 import java.awt.HeadlessException;
@@ -22,7 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-public class ControllerLogin implements Initializable{
+public class LoginController implements Initializable{
 	
 	private static MyDataBase dataBase = new MyDataBase();
 	
@@ -74,7 +74,7 @@ public class ControllerLogin implements Initializable{
 			System.out.println(s);
 			
 			if(dataBase.contains("Amministratore", nickname, password)) {
-				root = FXMLLoader.load(getClass().getResource("/adminInterface/Sample.fxml"));
+				root = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/Sample.fxml"));
 	
 				scene = new Scene(root);
 					

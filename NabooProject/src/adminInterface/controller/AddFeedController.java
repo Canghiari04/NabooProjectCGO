@@ -1,4 +1,4 @@
-package adminInterface;
+package adminInterface.controller;
 
 
 import java.awt.HeadlessException;
@@ -14,9 +14,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
-public class AddNotiziaController implements Initializable {
+public class AddFeedController implements Initializable {
+
 	@FXML
-	private TextField txtTitolo;
+	private TextField txtTipo;
 	@FXML
 	private TextField txtLink;
 
@@ -28,7 +29,7 @@ public class AddNotiziaController implements Initializable {
 	private MyDataBase dataBase = new MyDataBase();
 
 	private boolean update = false;
-	private int notiziaId;
+	private int feedId;
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {}
@@ -37,30 +38,30 @@ public class AddNotiziaController implements Initializable {
 	private void setDatabase(MouseEvent event) throws HeadlessException, SQLException {
 		if(event.getSource() == btnSalva)
 		{
-			String titolo = txtTitolo.getText();
+			String tipo = txtTipo.getText();
 			String link = txtLink.getText();
 
-			if (titolo.isEmpty() || link.isEmpty()){
+			if (tipo.isEmpty() || link.isEmpty()){
 				Alert alert = new Alert(Alert.AlertType.ERROR);
 				alert.setHeaderText(null);
 				alert.setContentText("Inserisci tutti i dati");
 				alert.showAndWait();
 			} else {
-				titolo.toLowerCase();
+				tipo.toLowerCase();
 
 				if(update == false) {
-					dataBase.insertTable("Notizia", titolo, link, null);
+					dataBase.insertTable("Feed", tipo, link, null);
 				}
 				else {
-					dataBase.alterRow("Notizia", notiziaId, titolo, link, null);
+					dataBase.alterRow("Feed", feedId, tipo, link, null);
 				}
 
-				txtTitolo.setText(null);
+				txtTipo.setText(null);
 				txtLink.setText(null);
 			}
 		}
 		else if(event.getSource() == btnCancella) {
-			txtTitolo.setText(null);
+			txtTipo.setText(null);
 			txtLink.setText(null);
 		}
 	}
@@ -69,13 +70,13 @@ public class AddNotiziaController implements Initializable {
 		this.update = b;
 	}
 
-	void setTextField(int id, String titolo, String link) {
-		notiziaId = id;
-		txtTitolo.setText(titolo);
+	void setTextField(int id, String tipo, String link) {
+		feedId = id;
+		txtTipo.setText(tipo);
 		txtLink.setText(link);
 	}
 
 	void setId(int id) {
-		this.notiziaId = id;
+		this.feedId = id;
 	}
 }
