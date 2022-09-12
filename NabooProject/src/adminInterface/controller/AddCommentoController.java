@@ -37,6 +37,10 @@ public class AddCommentoController implements Initializable {
 	private boolean update = false;
 	private int commentoId;
 
+	/*
+	 * Metodo initialize in cui vengono riempite le ComboBox degli disponibili sia in UtenteTable
+	 * e sia in NotiziaTable.
+	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		try {
@@ -55,6 +59,10 @@ public class AddCommentoController implements Initializable {
 		}
 	}
 
+	/*
+	 * Metodo setDatabase che permette l'aggiunta o la modifica dei record all'interno 
+	 * del database correlato.
+	 */
 	@FXML
 	private void setDatabase(MouseEvent event) throws HeadlessException, SQLException {
 		if(event.getSource() == btnSalva)
@@ -90,22 +98,38 @@ public class AddCommentoController implements Initializable {
 		}
 	}
 	
+	/*
+	 * Metodo alertAdd che specifica una finestra di messaggio qualora non siano rispettati
+	 * i vincoli di inserimento. 
+	 */
 	public void alertAdd() {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.setHeaderText("Aggiunta eseguita correttamente!");
 		alert.showAndWait();
 	}
 	
+	/*
+	 * Metodo alertModify che specifica una finestra di messaggio qualora non siano rispettati
+	 * i vincoli di inserimento.
+	 */
 	public void alertModify() {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.setHeaderText("Modifica eseguita correttamente!");
 		alert.showAndWait();
 	}
 
+	/*
+	 * Metodo setUpdate che setta la variabile boolean qualora si tratti di un'operazione
+	 * di modifica piuttosto che di aggiunta.
+	 */
 	void setUpdate(boolean b) {
 		this.update = b;
 	}
 
+	/*
+	 * Metodo setTextField che riprende i parametri visualizzati nella riga appartenente alla TableView
+	 * per indirizzarli nella visualizzazione del FXML apposito.
+	 */
 	void setTextField(int id, String recensione, int utenteId, int notiziaId) {
 		commentoId = id;
 		txtRecensione.setText(recensione);
@@ -113,6 +137,10 @@ public class AddCommentoController implements Initializable {
 		cmbIdNotizia.setValue(String.valueOf(notiziaId));
 	}
 
+	/*
+	 * Setta la variabile id del classe determinata, a scopo di avanzare la richiesta di una possibile
+	 * modifica.
+	 */
 	void setId(int id) {
 		this.commentoId = id;
 	}

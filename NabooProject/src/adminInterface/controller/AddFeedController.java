@@ -1,6 +1,5 @@
 package adminInterface.controller;
 
-
 import java.awt.HeadlessException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -34,6 +33,10 @@ public class AddFeedController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {}
 
+	/*
+	 * Metodo setDatabase che permette l'aggiunta o la modifica dei record all'interno 
+	 * del database correlato.
+	 */
 	@FXML
 	private void setDatabase(MouseEvent event) throws HeadlessException, SQLException {
 		if(event.getSource() == btnSalva)
@@ -68,28 +71,48 @@ public class AddFeedController implements Initializable {
 		}
 	}
 	
+	/*
+	 * Metodo alertAdd che specifica una finestra di messaggio qualora non siano rispettati
+	 * i vincoli di inserimento.
+	 */
 	public void alertAdd() {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.setHeaderText("Aggiunta eseguita correttamente!");
 		alert.showAndWait();
 	}
 	
+	/*
+	 * Metodo alertModify che specifica una finestra di messaggio qualora non siano rispettati
+	 * i vincoli di inserimento.
+	 */
 	public void alertModify() {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.setHeaderText("Modifica eseguita correttamente!");
 		alert.showAndWait();
 	}
 
+	/*
+	 * Metodo setUpdate che setta la variabile boolean qualora si tratti di un'operazione
+	 * di modifica piuttosto che di aggiunta.
+	 */
 	void setUpdate(boolean b) {
 		this.update = b;
 	}
 
+	/*
+	 * Metodo setTextField che riprende i parametri visualizzati nella riga appartenente alla TableView
+	 * per indirizzarli nella visualizzazione del FXML apposito.
+	 */
 	void setTextField(int id, String tipo, String link) {
 		feedId = id;
 		txtTipo.setText(tipo);
 		txtLink.setText(link);
 	}
 
+	/*
+	 * Setta la variabile id del classe determinata, a scopo di avanzare la richiesta di una possibile
+	 * modifica.
+	 */
 	void setId(int id) {
 		this.feedId = id;
 	}

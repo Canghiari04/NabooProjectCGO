@@ -142,7 +142,7 @@ public class SampleController implements Initializable {
 	@FXML
 	private TableColumn<CommentoTable, String> cl_utenteIdCommento;
 	@FXML
-	private TableColumn<CommentoTable, Boolean> cl_notiziaIdCommento;
+	private TableColumn<CommentoTable, String> cl_notiziaIdCommento;
 	@FXML
 	private TableColumn<CommentoTable, String> cl_actionCommento;
 	
@@ -170,6 +170,10 @@ public class SampleController implements Initializable {
 	@FXML
 	private Button btnLogout;
 
+	/*
+	 * Metodo initialize che rende le differenti righe delle tabelle modificabili e che permette il riempimento 
+	 * dei differenti record all'interno delle TableView.
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {	
 		changeToEditable();
@@ -190,6 +194,9 @@ public class SampleController implements Initializable {
 		btnRefreshNotizia.toFront();
 	}
 	
+	/*
+	 * Metodo clearAll che elimina tutti i differenti oggetti contenuti nelle ObservableList
+	 */
 	public void clearAll() {
 		oblistNotizia.clear();
 		oblistUtente.clear();
@@ -204,6 +211,10 @@ public class SampleController implements Initializable {
 		tblNotizia.setEditable(true);
 	}
 
+	/*
+	 * Metodo handleClicks che differisce in base ai bottoni cliccati, rendendo visibile o meno, specifiche TableView,
+	 * Button e TextField, oltre alla funzione logout, cambia scene nei confronti del file FXML Login. 
+	 */
 	@FXML
 	private void handleClicks(ActionEvent event) throws IOException {
 		if(event.getSource() == btnNotizia){
@@ -305,60 +316,60 @@ public class SampleController implements Initializable {
 	private void load(String object, Connection conn) {
 		switch(object)
 		{
-		case ("Notizia"):
-		cl_idNotizia.setCellValueFactory(new PropertyValueFactory<>("id"));
-		cl_titoloNotizia.setCellValueFactory(new PropertyValueFactory<>("Titolo"));
-		cl_linkNotizia.setCellValueFactory(new PropertyValueFactory<>("Link"));
-
-		setCallbackNotizia(conn);
-		break;
-
-		case ("Utente"):
-		cl_idUtente.setCellValueFactory(new PropertyValueFactory<>("id"));
-		cl_nicknameUtente.setCellValueFactory(new PropertyValueFactory<>("Nickname"));
-		cl_passwordUtente.setCellValueFactory(new PropertyValueFactory<>("Password"));
-		cl_subscriptionUtente.setCellValueFactory(new PropertyValueFactory<>("Subscription"));
-
-		setCallbackUtente(conn);
-		break;
-
-		case ("Commento"):
-		cl_idCommento.setCellValueFactory(new PropertyValueFactory<>("id"));
-		cl_recensioneCommento.setCellValueFactory(new PropertyValueFactory<>("Recensione"));
-		cl_utenteIdCommento.setCellValueFactory(new PropertyValueFactory<>("UtenteId"));
-		cl_notiziaIdCommento.setCellValueFactory(new PropertyValueFactory<>("NotiziaId"));
-
-		setCallbackCommento(conn);
-		break;
-
-		case ("Feed"):
-		cl_idFeed.setCellValueFactory(new PropertyValueFactory<>("id"));
-		cl_tipoFeed.setCellValueFactory(new PropertyValueFactory<>("Tipo"));
-		cl_linkFeed.setCellValueFactory(new PropertyValueFactory<>("Link"));
-
-		setCallbackFeed(conn);
-		break;
+			case ("Notizia"):
+			cl_idNotizia.setCellValueFactory(new PropertyValueFactory<>("id"));
+			cl_titoloNotizia.setCellValueFactory(new PropertyValueFactory<>("Titolo"));
+			cl_linkNotizia.setCellValueFactory(new PropertyValueFactory<>("Link"));
+	
+			setCallbackNotizia(conn);
+			break;
+	
+			case ("Utente"):
+			cl_idUtente.setCellValueFactory(new PropertyValueFactory<>("id"));
+			cl_nicknameUtente.setCellValueFactory(new PropertyValueFactory<>("Nickname"));
+			cl_passwordUtente.setCellValueFactory(new PropertyValueFactory<>("Password"));
+			cl_subscriptionUtente.setCellValueFactory(new PropertyValueFactory<>("Subscription"));
+	
+			setCallbackUtente(conn);
+			break;
+	
+			case ("Commento"):
+			cl_idCommento.setCellValueFactory(new PropertyValueFactory<>("id"));
+			cl_recensioneCommento.setCellValueFactory(new PropertyValueFactory<>("Recensione"));
+			cl_utenteIdCommento.setCellValueFactory(new PropertyValueFactory<>("UtenteId"));
+			cl_notiziaIdCommento.setCellValueFactory(new PropertyValueFactory<>("NotiziaId"));
+	
+			setCallbackCommento(conn);
+			break;
+	
+			case ("Feed"):
+			cl_idFeed.setCellValueFactory(new PropertyValueFactory<>("id"));
+			cl_tipoFeed.setCellValueFactory(new PropertyValueFactory<>("Tipo"));
+			cl_linkFeed.setCellValueFactory(new PropertyValueFactory<>("Link"));
+	
+			setCallbackFeed(conn);
+			break;
 		}
 	}
 	
 	@FXML
 	private void getAddView(MouseEvent event) throws IOException {
-		Parent parent = null;
+		Parent root = null;
 
 		if(event.getSource() == btnAddNotizia) {
-			parent = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/AddNotizia.fxml"));
+			root = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/AddNotizia.fxml"));
 		}
 		else if(event.getSource() == btnAddUtente) {
-			parent = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/AddUtente.fxml"));
+			root = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/AddUtente.fxml"));
 		}
 		else if(event.getSource() == btnAddCommento) {
-			parent = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/AddCommento.fxml"));
+			root = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/AddCommento.fxml"));
 		}
 		else if(event.getSource() == btnAddFeed) {
-			parent = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/AddFeed.fxml"));
+			root = FXMLLoader.load(getClass().getResource("/adminInterface/fxml/AddFeed.fxml"));
 		}
 
-		Scene scene = new Scene(parent);
+		Scene scene = new Scene(root);
 		Stage stage = new Stage();
 		stage.setScene(scene);
 		stage.show();
@@ -489,7 +500,11 @@ public class SampleController implements Initializable {
 		tblFeed.setItems(sorted);
 	}  
 
-	private void setCallbackNotizia(Connection conn) { // Generics
+	/*
+	 * Metodi setCallback che inseriscono nelle apposite colonne "Action" due icone, dove una specifica la possibilita' di modificare un
+	 * record mentre la seconda permette l'eliminazione.
+	 */
+	private void setCallbackNotizia(Connection conn) {
 		Callback<TableColumn<NotiziaTable, String>, TableCell<NotiziaTable, String>> cellFoctory = (TableColumn<NotiziaTable, String> param) -> {
 			final TableCell<NotiziaTable, String> cell = new TableCell<NotiziaTable, String>() {
 				@Override
@@ -819,12 +834,19 @@ public class SampleController implements Initializable {
 		tblFeed.setItems(oblistFeed);
 	}
 	
+	/*
+	 * Metodo alertEliminate che specifica una finestra di messaggio qualora sia stato eliminato un record di una determinata TableView.
+	 */
 	public void alertEliminate() {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.setHeaderText("Eliminazione eseguita correttamente!");
 		alert.showAndWait();
 	}
 
+	/*
+	 * Metodi refresh che specifica il rinnovo dei record all'interno delle TableView qualora sia stata avanzata la richiesta di 
+	 * aggiunta, modifica e eliminazione di dati.
+	 */
 	@FXML
 	private void refreshTableNotizia() throws SQLException {
 		oblistNotizia.clear();
@@ -885,6 +907,9 @@ public class SampleController implements Initializable {
 		}	
 	}
 
+	/*
+	 * Metodo closeButtonClicked che permette la chiusura e l'arresto dell'applicazione
+	 */
 	@FXML
 	private void closeButtonClicked(MouseEvent event) {
 		if(event.getSource() == btnClose) {

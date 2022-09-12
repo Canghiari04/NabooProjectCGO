@@ -1,9 +1,9 @@
 package botTelegram;
 
-public class Client extends Utente {
+public class User extends Utente {
 	private String sub;
 
-	public Client(String nickname, String password, String sub) {
+	public User(String nickname, String password, String sub) {
 		super(nickname, password);
 		this.sub = sub;
 	}

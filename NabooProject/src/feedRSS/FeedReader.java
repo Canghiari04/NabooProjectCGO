@@ -25,22 +25,23 @@ public class FeedReader
 {	
 	private boolean feedBack = false;
 		
-	private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	private final MyDataBase dataBase = new MyDataBase();
-	private static FeedFetcher fetcher = new HttpURLFeedFetcher();
-	private static List<Notizia> notizie = new ArrayList<Notizia>();
-	private static List<SyndFeed> feeds= new ArrayList<SyndFeed>();
+	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	private MyDataBase dataBase = new MyDataBase();
+	private FeedFetcher fetcher = new HttpURLFeedFetcher();
 	
+	private List<Notizia> news = new ArrayList<Notizia>();
+	private List<SyndFeed> feeds= new ArrayList<SyndFeed>();
+	
+	/*
+	 * Metodo run che permette il riempimento del file .json tramite l'utilizzo del feed RSS, delle notizie specificate dall'utente in base
+	 * alla propria preferenza, qualora il campo prescelto non sia contenuto nella tabella Feed, verra' ricercato attraverso tale parametro 
+	 * all'interno di tutti i titoli, appartenenti a notizie di un feed RSS dato di default nel caso in cui si verificasse tale condizione.
+	 */
 	public void run(String search, int userId) throws SQLException, IllegalArgumentException, IOException, FeedException, FetcherException, HeadlessException {
 		clearAll();		
 		feedBack = false;
 		
 		switch (search) {	
-			case "ultimaOra":
-				feeds.add(fetcher.retrieveFeed(new URL("https://www.ansa.it/sito/ansait_rss.xml")));
-				feedBack = true;
-				break;
-	
 			case "personalizzata":
 				feeds = dataBase.getFeeds(userId, feeds, fetcher);
 				feedBack = true;
@@ -69,41 +70,45 @@ public class FeedReader
 
 					if(title.contains(search))
 					{
-						notizie.add(n);
+						news.add(n);
 					}
 				}
 				else {
-					notizie.add(n);
+					news.add(n);
 				}
 			}
 		}
 
-		shuffle(notizie);
+		shuffle(news);
 
 		PrintWriter writer = new PrintWriter(new FileWriter("GsonImport.json"), true);
-		gson.toJson(notizie, writer);
+		gson.toJson(news, writer);
 
 		writer.close();	
 	}
 	
 	/*
-	 * Metodo shuffle utilizzato per randomizzare le notizie all'interno del file Gson 
+	 * Metodo shuffle utilizzato per randomizzare le notizie all'interno del file .json. 
 	 */
-	public static<T> void shuffle(List<T> list) {
+	public void shuffle(List<Notizia> news) {
         Random random = new Random();
 
-        for (int i = list.size() - 1; i >= 1; i--)
+        for (int i = news.size() - 1; i >= 1; i--)
         {
             int j = random.nextInt(i + 1);
 
-            T obj = list.get(i);
-            list.set(i, list.get(j));
-            list.set(j, obj);
+            Notizia obj = news.get(i);
+            news.set(i, news.get(j));
+            news.set(j, obj);
         }
     }	
 	
+	/*
+	 * Metodo clearAll che elimina ogni elemento contenuto negli ArrayList, prima di effettuare 
+	 * l'aggiunta delle differenti notizie.
+	 */
 	public void clearAll() {
 		feeds.clear();
-		notizie.clear();
+		news.clear();
 	}
 }

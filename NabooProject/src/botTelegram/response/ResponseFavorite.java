@@ -1,9 +1,7 @@
-package botTelegram;
+package botTelegram.response;
 
 import static java.lang.Math.toIntExact;
 
-import java.awt.HeadlessException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,71 +11,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import dataBase.MyDataBase;
+public class ResponseFavorite {
+	private String emojiiNext = "🔜", emojiiBack = "🔙", emojiiComment = "📝", emojiiViewComment = "📋";
 
-public class Response {
-	private String emojiiNext = "🔜", emojiiBack = "🔙";
-	private static MyDataBase dataBase = new MyDataBase();
-	
-	public SendMessage setRegistrationResponse(Update update, SendMessage response) {
-		SendMessage registrationResponse = new SendMessage();
-		long chatId = update.getMessage().getChatId();
-
-		registrationResponse.setChatId(chatId);		
-		registrationResponse.setText("Un ultimo passo, quale tipologia di abbonamento preferisci");
-		
-		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-		List<InlineKeyboardButton> rowInline = new ArrayList<>();
-
-		InlineKeyboardButton premiumBtn = new InlineKeyboardButton();
-		premiumBtn.setText("Premium");
-		premiumBtn.setCallbackData("PREMIUM");
-
-		InlineKeyboardButton baseBtn = new InlineKeyboardButton();
-		baseBtn.setText("Base");
-		baseBtn.setCallbackData("BASE");
-
-		rowInline.add(premiumBtn);
-		rowInline.add(baseBtn);
-		rowsInline.add(rowInline);
-
-		markupInline.setKeyboard(rowsInline);
-		registrationResponse.setReplyMarkup(markupInline);
-
-		return registrationResponse;
-	}
-	
-	public SendMessage setModifyResponse(Update update, SendMessage response) {
-		SendMessage modifyResponse = new SendMessage();
-		long chatId = update.getMessage().getChatId();
-
-		modifyResponse.setChatId(chatId);		
-		modifyResponse.setText("Un ultimo passo, quale tipologia di abbonamento preferisci");
-		
-		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-		List<InlineKeyboardButton> rowInline = new ArrayList<>();
-
-		InlineKeyboardButton premiumBtn = new InlineKeyboardButton();
-		premiumBtn.setText("Premium");
-		premiumBtn.setCallbackData("MODIFYPREMIUM");
-
-		InlineKeyboardButton baseBtn = new InlineKeyboardButton();
-		baseBtn.setText("Base");
-		baseBtn.setCallbackData("MODIFYBASE");
-
-		rowInline.add(premiumBtn);
-		rowInline.add(baseBtn);
-		rowsInline.add(rowInline);
-
-		markupInline.setKeyboard(rowsInline);
-		modifyResponse.setReplyMarkup(markupInline);
-
-		return modifyResponse;
-	}
-	
-	public SendMessage setResponse(Update update, String titolo, String link) {
+	public SendMessage setResponseFav(Update update, String titolo, String link) {
 		SendMessage response = new SendMessage();
 		long chatId = update.getMessage().getChatId();
 
@@ -88,18 +25,18 @@ public class Response {
 		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
 		List<InlineKeyboardButton> rowInline = new ArrayList<>();
 		List<InlineKeyboardButton> rowInlineComment = new ArrayList<>();
-
+		
 		InlineKeyboardButton nextBtn = new InlineKeyboardButton();
 		nextBtn.setText("Next " + emojiiNext);
-		nextBtn.setCallbackData("NEXT");
+		nextBtn.setCallbackData("NEXTFAV");
 
 		InlineKeyboardButton commentBtn = new InlineKeyboardButton();
-		commentBtn.setText(" Commento ");
-		commentBtn.setCallbackData("COMMENT");
+		commentBtn.setText(emojiiComment + " Commento ");
+		commentBtn.setCallbackData("COMMENTFAV");
 
 		InlineKeyboardButton viewCommentBtn = new InlineKeyboardButton();
-		viewCommentBtn.setText(" Visualizza commenti ");
-		viewCommentBtn.setCallbackData("VIEW");
+		viewCommentBtn.setText(" Visualizza commenti " + emojiiViewComment);
+		viewCommentBtn.setCallbackData("VIEWFAV");
 
 		rowInline.add(nextBtn);
 		rowInlineComment.add(commentBtn);
@@ -112,8 +49,8 @@ public class Response {
 
 		return response;
 	}
-
-	public SendMessage setResponseAlone(Update update, String titolo, String link) {
+	
+	public SendMessage setResponseAloneFav(Update update, String titolo, String link) {
 		SendMessage response = new SendMessage();
 		long chatId = update.getMessage().getChatId();
 
@@ -125,12 +62,12 @@ public class Response {
 		List<InlineKeyboardButton> rowInlineComment = new ArrayList<>();
 
 		InlineKeyboardButton commentBtn = new InlineKeyboardButton();
-		commentBtn.setText(" Commento ");
-		commentBtn.setCallbackData("COMMENT");
+		commentBtn.setText(emojiiComment + " Commento ");
+		commentBtn.setCallbackData("COMMENTFAV");
 
 		InlineKeyboardButton viewCommentBtn = new InlineKeyboardButton();
-		viewCommentBtn.setText(" Visualizza commenti ");
-		viewCommentBtn.setCallbackData("VIEW");
+		viewCommentBtn.setText(" Visualizza commenti " + emojiiViewComment);
+		viewCommentBtn.setCallbackData("VIEWFAV");
 
 		rowInlineComment.add(commentBtn);
 		rowInlineComment.add(viewCommentBtn);
@@ -142,7 +79,7 @@ public class Response {
 		return response;
 	}
 	
-	public EditMessageText setNewResponse(Update update, String titolo, String link) {
+	public EditMessageText setNewResponseFav(Update update, String titolo, String link) {
 		EditMessageText newResponse = new EditMessageText();
 		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
 
@@ -161,18 +98,18 @@ public class Response {
 		InlineKeyboardButton nextBtn = new InlineKeyboardButton();
 		InlineKeyboardButton commentBtn = new InlineKeyboardButton();
 
-		previousBtn.setCallbackData("PREVIOUS");
+		previousBtn.setCallbackData("PREVIOUSFAV");
 		previousBtn.setText(emojiiBack + " Back");
 
-		nextBtn.setCallbackData("NEXT");
+		nextBtn.setCallbackData("NEXTFAV");
 		nextBtn.setText("Next " + emojiiNext);
 
-		commentBtn.setText(" Commento ");
-		commentBtn.setCallbackData("COMMENT");
+		commentBtn.setText(emojiiComment + " Commento ");
+		commentBtn.setCallbackData("COMMENTFAV");
 
 		InlineKeyboardButton viewCommentBtn = new InlineKeyboardButton();
-		viewCommentBtn.setText(" Visualizza commenti ");
-		viewCommentBtn.setCallbackData("VIEW");
+		viewCommentBtn.setText(" Visualizza commenti " + emojiiViewComment);
+		viewCommentBtn.setCallbackData("VIEWFAV");
 
 		rowInline.add(previousBtn);
 		rowInline.add(nextBtn);
@@ -187,7 +124,7 @@ public class Response {
 		return newResponse;
 	}
 	
-	public EditMessageText setNewResponsePrevious(Update update, String titolo, String link) {
+	public EditMessageText setNewResponsePreviousFav(Update update, String titolo, String link) {
 		EditMessageText newResponse = new EditMessageText();
 		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
 
@@ -204,15 +141,15 @@ public class Response {
 
 		InlineKeyboardButton nextBtn = new InlineKeyboardButton();
 		nextBtn.setText("Next " + emojiiNext);
-		nextBtn.setCallbackData("NEXT");
+		nextBtn.setCallbackData("NEXTFAV");
 
 		InlineKeyboardButton commentBtn = new InlineKeyboardButton();
-		commentBtn.setText(" Commento ");
-		commentBtn.setCallbackData("COMMENT");
+		commentBtn.setText(emojiiComment + " Commento ");
+		commentBtn.setCallbackData("COMMENTFAV");
 
 		InlineKeyboardButton viewCommentBtn = new InlineKeyboardButton();
-		viewCommentBtn.setText(" Visualizza commenti ");
-		viewCommentBtn.setCallbackData("VIEW");
+		viewCommentBtn.setText(" Visualizza commenti " + emojiiViewComment);
+		viewCommentBtn.setCallbackData("VIEWFAV");
 
 		rowInline.add(nextBtn);
 		rowInlineComment.add(commentBtn);
@@ -226,7 +163,7 @@ public class Response {
 		return newResponse;
 	}
 	
-	public EditMessageText setNewResponseNext(Update update, String titolo, String link) {
+	public EditMessageText setNewResponseNextFav(Update update, String titolo, String link) {
 		EditMessageText newResponse = new EditMessageText();
 		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
 
@@ -240,18 +177,18 @@ public class Response {
 		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
 		List<InlineKeyboardButton> rowInline = new ArrayList<>();
 		List<InlineKeyboardButton> rowInlineComment = new ArrayList<>();
-
+		
 		InlineKeyboardButton previousBtn = new InlineKeyboardButton();
 		previousBtn.setText(emojiiBack + " Back");
-		previousBtn.setCallbackData("PREVIOUS");
+		previousBtn.setCallbackData("PREVIOUSFAV");
 
 		InlineKeyboardButton commentBtn = new InlineKeyboardButton();
-		commentBtn.setText(" Commento ");
-		commentBtn.setCallbackData("COMMENT");
+		commentBtn.setText(emojiiComment + " Commento ");
+		commentBtn.setCallbackData("COMMENTFAV");
 
 		InlineKeyboardButton viewCommentBtn = new InlineKeyboardButton();
-		viewCommentBtn.setText(" Visualizza commenti ");
-		viewCommentBtn.setCallbackData("VIEW");
+		viewCommentBtn.setText(" Visualizza commenti " + emojiiViewComment);
+		viewCommentBtn.setCallbackData("VIEWFAV");
 
 		rowInline.add(previousBtn);
 		rowInlineComment.add(commentBtn);
@@ -263,34 +200,5 @@ public class Response {
 		newResponse.setReplyMarkup(markupInline);
 
 		return newResponse;
-	}
-		
-	public SendMessage setFeedDataResponse(Update update, SendMessage response, String tabUtente, String idUtente, String nickName, String password) throws HeadlessException, SQLException {
-		SendMessage feedResponse = new SendMessage();
-		long chatId = update.getMessage().getChatId();
-
-		feedResponse.setChatId(chatId);		
-		feedResponse = dataBase.getFeedUser(response, tabUtente, idUtente, nickName, password);
-		
-		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-		List<InlineKeyboardButton> rowInline = new ArrayList<>();
-
-		InlineKeyboardButton addBtn = new InlineKeyboardButton();
-		addBtn.setText("Aggiungi");
-		addBtn.setCallbackData("ADD");
-
-		InlineKeyboardButton eliminateBtn = new InlineKeyboardButton();
-		eliminateBtn.setText("Elimina");
-		eliminateBtn.setCallbackData("ELIMINATE");
-
-		rowInline.add(addBtn);
-		rowInline.add(eliminateBtn);
-		rowsInline.add(rowInline);
-
-		markupInline.setKeyboard(rowsInline);
-		feedResponse.setReplyMarkup(markupInline);
-
-		return feedResponse;
 	}
 }

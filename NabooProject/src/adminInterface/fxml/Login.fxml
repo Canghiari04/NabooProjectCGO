@@ -11,60 +11,64 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="780.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminInterface.controller.LoginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="600.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminInterface.controller.LoginController">
    <children>
-      <Pane layoutX="392.0" layoutY="49.0" prefHeight="385.0" prefWidth="340.0" style="-fx-background-color: #d3d3d3 #d3d3d3;">
+      <Pane prefHeight="59.0" prefWidth="600.0" style="-fx-background-color: #FF4040;">
          <children>
-            <Label layoutX="87.0" layoutY="73.0" text="Naboo">
+            <Label layoutX="24.0" layoutY="9.0" text="NabooCGN">
                <font>
-                  <Font name="Futura Medium" size="36.0" />
+                  <Font name="Futura Medium" size="30.0" />
                </font>
             </Label>
-            <Label layoutX="166.0" layoutY="105.0" text="CGN">
-               <font>
-                  <Font name="Futura Medium" size="36.0" />
-               </font>
-            </Label>
-            <ImageView fitHeight="180.0" fitWidth="180.0" layoutX="82.0" layoutY="133.0" pickOnBounds="true" preserveRatio="true">
+            <Button fx:id="btnClose" layoutX="552.0" layoutY="16.0" mnemonicParsing="false" onMouseClicked="#closeButtonClicked" prefHeight="30.0" prefWidth="30.0" stylesheets="@../../css/styleButton.css">
+               <graphic>
+                  <FontAwesomeIconView glyphName="CLOSE" size="20" text="" wrappingWidth="16.214285850524902">
+                     <font>
+                        <Font name="Futura Medium" size="36.0" />
+                     </font>
+                  </FontAwesomeIconView>
+               </graphic>
+            </Button>
+            <ImageView fitHeight="109.0" fitWidth="107.0" layoutX="203.0" layoutY="-23.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../images/naboo.png" />
                </image>
             </ImageView>
          </children></Pane>
-      <PasswordField fx:id="txtPassword" layoutX="107.0" layoutY="295.0" prefHeight="26.0" prefWidth="179.0" stylesheets="@../../css/styleText.css">
+      <PasswordField fx:id="txtPassword" layoutX="213.0" layoutY="313.0" prefHeight="26.0" prefWidth="179.0" stylesheets="@../../css/styleText.css">
          <font>
             <Font name="Futura Medium" size="13.0" />
          </font></PasswordField>
-      <Pane layoutX="107.0" layoutY="320.0" prefHeight="4.0" prefWidth="179.0" style="-fx-background-color: #FF4040;" />
-      <Label layoutX="107.0" layoutY="275.0" prefHeight="23.0" prefWidth="107.0" text="Password">
+      <Pane layoutX="213.0" layoutY="338.0" prefHeight="4.0" prefWidth="179.0" style="-fx-background-color: #FF4040;" />
+      <Label layoutX="213.0" layoutY="293.0" prefHeight="23.0" prefWidth="107.0" text="Password">
          <font>
             <Font name="Futura Medium" size="16.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="76.0" layoutY="69.0" prefHeight="17.0" prefWidth="236.0" text="Sign In.">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="182.0" layoutY="105.0" prefHeight="17.0" prefWidth="236.0" text="Sign In.">
          <font>
             <Font name="Futura Medium" size="44.0" />
          </font>
       </Label>
-      <TextField fx:id="txtNickname" layoutX="107.0" layoutY="208.0" prefHeight="26.0" prefWidth="179.0" stylesheets="@../../css/styleText.css">
+      <TextField fx:id="txtNickname" layoutX="213.0" layoutY="226.0" prefHeight="26.0" prefWidth="179.0" stylesheets="@../../css/styleText.css">
          <font>
             <Font name="Futura Medium" size="13.0" />
          </font>
       </TextField>
-      <Pane layoutX="105.0" layoutY="234.0" prefHeight="4.0" prefWidth="179.0" style="-fx-background-color: #FF4040;" />
-      <Label layoutX="108.0" layoutY="189.0" prefHeight="23.0" prefWidth="107.0" text="Nickname">
+      <Pane layoutX="211.0" layoutY="252.0" prefHeight="4.0" prefWidth="179.0" style="-fx-background-color: #FF4040;" />
+      <Label layoutX="214.0" layoutY="207.0" prefHeight="23.0" prefWidth="107.0" text="Nickname">
          <font>
             <Font name="Futura Medium" size="16.0" />
          </font>
       </Label>
-      <Label fx:id="lblErroreNickname" alignment="CENTER" contentDisplay="CENTER" layoutX="176.0" layoutY="181.0" prefHeight="17.0" prefWidth="18.0" textFill="#c92a2a" />
-      <Label fx:id="lblErrorePassword" alignment="CENTER" contentDisplay="CENTER" layoutX="175.0" layoutY="266.0" prefHeight="17.0" prefWidth="18.0" textFill="#c92a2a" />
-      <Label fx:id="lblErroreLogin" alignment="CENTER" contentDisplay="CENTER" layoutX="104.0" layoutY="151.0" prefHeight="17.0" prefWidth="179.0">
+      <Label fx:id="lblErroreNickname" alignment="CENTER" contentDisplay="CENTER" layoutX="282.0" layoutY="199.0" prefHeight="17.0" prefWidth="18.0" textFill="#c92a2a" />
+      <Label fx:id="lblErrorePassword" alignment="CENTER" contentDisplay="CENTER" layoutX="281.0" layoutY="284.0" prefHeight="17.0" prefWidth="18.0" textFill="#c92a2a" />
+      <Label fx:id="lblErroreLogin" alignment="CENTER" contentDisplay="CENTER" layoutX="210.0" layoutY="173.0" prefHeight="17.0" prefWidth="179.0">
          <font>
             <Font name="Futura Medium" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="btnLogin" layoutX="101.0" layoutY="368.0" mnemonicParsing="false" onMouseClicked="#loginClicked" prefHeight="27.0" prefWidth="86.0" stylesheets="@../../css/styleButton.css" text="Sign In">
+      <Button fx:id="btnLogin" layoutX="207.0" layoutY="386.0" mnemonicParsing="false" onMouseClicked="#loginClicked" prefHeight="27.0" prefWidth="86.0" stylesheets="@../../css/styleButton.css" text="Sign In">
          <font>
             <Font name="Futura Medium" size="14.0" />
          </font>
@@ -72,7 +76,7 @@
             <FontAwesomeIconView glyphName="SIGN_IN" />
          </graphic>
       </Button>
-      <Button fx:id="btnCancella" layoutX="198.0" layoutY="368.0" mnemonicParsing="false" onMouseClicked="#deleteClicked" stylesheets="@../../css/styleButton.css" text="Cancella">
+      <Button fx:id="btnCancella" layoutX="304.0" layoutY="386.0" mnemonicParsing="false" onMouseClicked="#deleteClicked" stylesheets="@../../css/styleButton.css" text="Cancella">
          <font>
             <Font name="Futura Medium" size="14.0" />
          </font>
@@ -80,14 +84,10 @@
             <FontAwesomeIconView glyphName="CLOSE" />
          </graphic>
       </Button>
-      <Button fx:id="btnClose" layoutX="742.0" layoutY="7.0" mnemonicParsing="false" onMouseClicked="#closeButtonClicked" prefHeight="30.0" prefWidth="30.0" stylesheets="@../../css/styleButton.css">
-         <graphic>
-            <FontAwesomeIconView glyphName="CLOSE" size="20" text="" wrappingWidth="16.214285850524902">
-               <font>
-                  <Font name="Futura Medium" size="36.0" />
-               </font>
-            </FontAwesomeIconView>
-         </graphic>
-      </Button>
+      <ImageView fitHeight="427.0" fitWidth="453.0" layoutX="389.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/logo.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

@@ -22,7 +22,7 @@ public class Main extends Application {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
-        
+         
         launch(args);
     }
 

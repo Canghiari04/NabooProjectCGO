@@ -50,6 +50,10 @@ public class LoginController implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) { }
 	
+	/*
+	 * Metodo loginClicked che permette l'accesso alla manipolazione della concretezza dei dati
+	 * appartenenti alle differenti tabelle del database.
+	 */
 	@FXML 
 	private void loginClicked(MouseEvent event) throws IOException, HeadlessException, SQLException {
 		lblErroreNickname.setText(" ");
@@ -93,6 +97,10 @@ public class LoginController implements Initializable{
 		}
 	}
 	
+	/*
+	 * Metodo closeButtonClicked che permette la chiusura e l'arresto della parte applicativa
+	 * sia dell'amministratore e sia dell'utente.
+	 */
 	@FXML
 	private void closeButtonClicked(MouseEvent event) {
 		if(event.getSource() == btnClose) {
@@ -100,6 +108,10 @@ public class LoginController implements Initializable{
 		}
 	}
 	
+	/*
+	 * Metodo deleteClicked che elimina tutto cio' che e' stato scritto all'interno delle specifiche
+	 * TextField appartenenti al file FXML.
+	 */
 	@FXML 
 	private void deleteClicked(MouseEvent event) {
 		txtNickname.clear();
