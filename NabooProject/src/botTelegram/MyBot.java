@@ -389,9 +389,9 @@ public class MyBot extends TelegramLongPollingBot
 					response.setText("Inserisci le nuove credenziali");
 					modify = true;
 				}
-				else {
-					response.setText(emojiiNoEntry + " Attenzione credenziali non corrette! " + emojiiNoEntry);
-				}
+			}
+			else {
+				response.setText(emojiiNoEntry + " Attenzione credenziali non corrette! " + emojiiNoEntry);
 			}
 		}
 		else {
@@ -405,12 +405,14 @@ public class MyBot extends TelegramLongPollingBot
 	 */
 	public void modifyRow(SendMessage response, String sub) throws HeadlessException, SQLException, TelegramApiException {
 		dataBase.alterRow(tabUser, userId, nickname, password, sub);
+		subscription = dataBase.getSubscription(tabUser, nickname, password);
+		modify = false;
 		response.setText(emojiiWellDone + " Modifica eseguita! " + emojiiWellDone);
 		execute(response);
 	}
 	
 	/*
-	 * MetodorReadSearch che permette di visualizzare le differenti notizie
+	 * Metodo readSearch che permette di visualizzare le differenti notizie
 	 * a seconda di quale preferenza sia stata espressa.
 	 */
 	public void readSearch(SendMessage response, Update update) throws HeadlessException, IllegalArgumentException, SQLException, TelegramApiException, IOException, FeedException, FetcherException {	
@@ -466,7 +468,7 @@ public class MyBot extends TelegramLongPollingBot
 					addFavoriteNews(newResponseFav, title, link); // Aggiunta della notizia nella sezione preferenza di lettura.
 					break;
 					
-				default: // Default case che sorge qualora la richiesta di lettura sia relativa ad un preciso argomento, non presente tra i feed RSS.
+				default: // Default case che sorge qualora la richiesta di lettura sia relativa ad un preciso argomento, presente tra i feed RSS.
 					long chatFeedId = update.getCallbackQuery().getMessage().getChatId();
 					SendMessage responseFeed = new SendMessage();
 					responseFeed.setChatId(chatFeedId);
@@ -478,15 +480,20 @@ public class MyBot extends TelegramLongPollingBot
 					Gson g = new GsonBuilder().setPrettyPrinting().create();
 					arrayNews = g.fromJson(new FileReader("GsonImport.json"), Notizia[].class);
 					
-					j = 0;
-					title = arrayNews[j].getTitolo();
-					link = arrayNews[j].getLink();
-					responseFeed = resNews.setResponseCallBack(update, title, link);
+					if(arrayNews.length == 0) {
+						responseFeed.setText("Non hai alcuna preferenza tra le tue feed, utilizza /modificafeed, per una lettura piu' piacevole");
+					}
+					else {
+						j = 0;
+						title = arrayNews[j].getTitolo();
+						link = arrayNews[j].getLink();
+						responseFeed = resNews.setResponseCallBack(update, title, link);
+					}
 					execute(responseFeed);
 					break;
 			}
 		} 
-		else {
+		else { // Ramo "else", richiamato qualora sia espressa una richiesta ben determinata e precisa.
 			String search = update.getMessage().getText(); // Stringa che contiene la preferenza espressa dall'utente.
 			search.toLowerCase();
 			FeedReader reader = new FeedReader();
@@ -518,7 +525,7 @@ public class MyBot extends TelegramLongPollingBot
 	/*
 	 * Metodo comment che permette di aggiungere commenti nei confronti delle 
 	 * differenti notizie caricate precedentemente, attraverso l'utilizzo 
-	 * principale dei Callback.
+	 * principale dei CallbackData.
 	 */
 	public void comment(SendMessage response, Update update) throws HeadlessException, SQLException, TelegramApiException {
 		if (!dataBase.contains(tabNews, title, link)) {
@@ -583,27 +590,6 @@ public class MyBot extends TelegramLongPollingBot
 	}
 	
 	/*
-	 * Metodo addFavoriteNews che permette l'aggiunta di una preferenza nei
-	 * confronti di una notizia letta.
-	 */
-	public void addFavoriteNews(SendMessage response, String title, String link) throws HeadlessException, SQLException, TelegramApiException {
-		if (!dataBase.contains(tabNews, title, link)) {
-			dataBase.insertTable(tabNews, title, link, null); // Inserimento dell'oggetto Notizia all'interno della tabella, qualora non sia gia' presente.
-		}
-	
-		int newsId = dataBase.getId(tabNews, IdNews, title, link);
-		String strUtente = Integer.toString(userId);
-		String strNotizia = Integer.toString(newsId);
-		if (!dataBase.contains(tabNewsFavorite, strUtente, strNotizia)) { // Controllo che permette l'inserimento della propria recensione o la modifica della stessa, sempre relativa ad una specifica notizia.
-			dataBase.insertTable(tabNewsFavorite, strUtente, strNotizia, null);
-		}
-		else {
-			response.setText("Notizia gia' tra i preferiti");
-		}
-		execute(response);
-	}
-	
-	/*
 	 * Metodo viewFavorite che permette la visualizzazione delle notizie che possiedono una preferenza,
 	 * espressa dall'utente che abbia effettuato l'accesso.
 	 */
@@ -652,6 +638,30 @@ public class MyBot extends TelegramLongPollingBot
 					newResponseViewComment.setChatId(chatViewId);
 					function("/visualizzacommenti", newResponseViewComment, update);
 					break;
+					
+				case "ELIMINATEFAV":
+					dataBase.deleteTable(tabNewsFavorite, dataBase.getId(tabNews, IdNews, title, link));
+					
+					arrayNews = dataBase.getNewsFav(userId);	
+					int length = arrayNews.length;
+
+					EditMessageText  newResponseEliminate = new EditMessageText(); // Utilizzo dell'EditMessageText per rendere la lettura delle notizie fluida, senza interromperla.
+					if(length > 0) { // Controllo che la struttura dati non sia vuota, in caso verra' visualizzato il messaggio di errore.
+						title = arrayNews[j].getTitolo();
+						link = arrayNews[j].getLink();
+								
+						if(length == 1) {
+							newResponseEliminate = resFavorite.setResponseAloneFavEdit(update, title, link); // Stampa della notizia, che non permette la navigazione poiche' unica.
+						}
+						else {
+							newResponseEliminate = resFavorite.setResponseFavEdit(update, title, link); // Stampa di multiple notizie, gestite con i CallbackData.
+						}
+					}
+					else {
+						newResponseEliminate = resFavorite.setBlockResponseFav(update);
+					}
+					execute(newResponseEliminate);
+					break;
 			}
 		} 
 		else {
@@ -671,21 +681,42 @@ public class MyBot extends TelegramLongPollingBot
 				}
 			}
 			else {
-				response.setText(emojiiNoEntry + " Non e' presenta alcuna notizia tra i tuoi preferiti " + emojiiNoEntry);
+				response.setText(emojiiNoEntry + " Non e' presente alcuna notizia tra i tuoi preferiti " + emojiiNoEntry);
 			}
 		}		
 		execute(response); 
 	}
+     
+     /*
+ 	 * Metodo addFavoriteNews che permette l'aggiunta di una preferenza nei
+ 	 * confronti di una notizia letta.
+ 	 */
+ 	public void addFavoriteNews(SendMessage response, String title, String link) throws HeadlessException, SQLException, TelegramApiException {
+ 		if (!dataBase.contains(tabNews, title, link)) {
+ 			dataBase.insertTable(tabNews, title, link, null); // Inserimento dell'oggetto Notizia all'interno della tabella, qualora non sia gia' presente.
+ 		}
+ 	
+ 		int newsId = dataBase.getId(tabNews, IdNews, title, link);
+ 		String strUtente = Integer.toString(userId);
+ 		String strNotizia = Integer.toString(newsId);
+ 		if (!dataBase.contains(tabNewsFavorite, strUtente, strNotizia)) { // Controllo che permette l'inserimento della propria recensione o la modifica della stessa, sempre relativa ad una specifica notizia.
+ 			dataBase.insertTable(tabNewsFavorite, strUtente, strNotizia, null);
+ 			response.setText("Notizia aggiunta alle preferenze!");
+ 		}
+ 		else {
+ 			response.setText("Notizia gia' tra i preferiti");
+ 		}
+ 		execute(response);
+ 	}
 
 	/*
 	 * Metodo changeFeed che permette di modificare la propria feed personalizzata,
-	 * ossia di leggere notizie che riguardano solo argomenti preferiti
+	 * ossia di leggere notizie che riguardano solo argomenti che abbiano una preferenza.
 	 */
 	public void changeFeed(SendMessage response, Update update) throws HeadlessException, IllegalArgumentException, SQLException, TelegramApiException, IOException, FeedException, FetcherException {		 		
 		if(update.hasCallbackQuery()) {
 			String callData = update.getCallbackQuery().getData();
 			long chatId = update.getCallbackQuery().getMessage().getChatId();
-				
 			switch (callData) {
 				case "ADD":
 					SendMessage newResponseAdd = new SendMessage();
@@ -706,7 +737,7 @@ public class MyBot extends TelegramLongPollingBot
 	}
 	
 	/*
-	 * Metodo addFeed che permette l'inserimento di feed all'interno delle proprie preferenze
+	 * Metodo addFeed che permette l'inserimento di feed all'interno delle proprie preferenze.
 	 */
 	public void addFeed(SendMessage response, Update update) throws HeadlessException, SQLException, TelegramApiException {
 		String str = update.getMessage().getText();
@@ -719,7 +750,7 @@ public class MyBot extends TelegramLongPollingBot
 	}
 	
 	/*
-	 * Metodo eliminateFeed che permette l'eliminazione di feed all'interno delle proprie preferenze
+	 * Metodo eliminateFeed che permette l'eliminazione di feed all'interno delle proprie preferenze.
 	 */
 	public void eliminateFeed(SendMessage response, Update update) throws HeadlessException, SQLException, TelegramApiException {
 		String str = update.getMessage().getText();

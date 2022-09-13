@@ -86,7 +86,7 @@ public class MyDataBase
 				query = "INSERT INTO " + table + " VALUES (null, '" + firstInput + "', '" + secondInput + "')";
 				break;
 		}
-		preparedStmt = conn.prepareStatement(query); // TODO: cercare a cosa serve concretamente
+		preparedStmt = conn.prepareStatement(query);
 		preparedStmt.execute();
 			
 		conn.close();
@@ -120,6 +120,10 @@ public class MyDataBase
 				newPreparedStmt = conn.prepareStatement(queryComment);
 				newPreparedStmt.execute();
 				break;
+				
+			case "NotiziaPreferita":
+				query = "DELETE FROM " + table + " WHERE NotiziaId = '" + Id + "'";
+				break;
 	
 			case "Commento":
 				query = "DELETE FROM " + table + " WHERE CommentoId = '" + Id + "'";
@@ -129,7 +133,7 @@ public class MyDataBase
 				query = "DELETE FROM " + table + " WHERE FeedId = '" + Id + "'";
 				break;
 		}
-		preparedStmt = conn.prepareStatement(query); // TODO: cercare a cosa serve concretamente
+		preparedStmt = conn.prepareStatement(query); 
 		preparedStmt.execute();
 			
 		conn.close();
@@ -162,7 +166,7 @@ public class MyDataBase
 				query = "UPDATE " + table + " SET  Tipo = '" + firstInput + "', Link = '" + secondInput + "' WHERE FeedId = '" + Id + "';";
 				break;
 		}
-		preparedStmt = conn.prepareStatement(query); // TODO: cercare a cosa serve concretamente
+		preparedStmt = conn.prepareStatement(query);
 		preparedStmt.execute();
 			
 		conn.close();

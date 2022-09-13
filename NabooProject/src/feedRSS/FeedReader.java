@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -37,7 +39,7 @@ public class FeedReader
 	 * alla propria preferenza, qualora il campo prescelto non sia contenuto nella tabella Feed, verra' ricercato attraverso tale parametro 
 	 * all'interno di tutti i titoli, appartenenti a notizie di un feed RSS dato di default nel caso in cui si verificasse tale condizione.
 	 */
-	public void run(String search, int userId) throws SQLException, IllegalArgumentException, IOException, FeedException, FetcherException, HeadlessException {
+	public void run(String search, int userId) throws SQLException, IllegalArgumentException, IOException, FeedException, FetcherException, HeadlessException, TelegramApiException {
 		clearAll();		
 		feedBack = false;
 		
