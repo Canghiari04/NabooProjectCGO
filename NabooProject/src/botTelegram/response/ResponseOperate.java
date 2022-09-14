@@ -13,14 +13,82 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import dataBase.MyDataBase;
 
 public class ResponseOperate {
-	private String emojiiPlus = "➕", emojiiLess = "➖";
+	private String emojiiPlus = "➕", emojiiLess = "➖", emojiHint = "💡", emojiiJournal = "📰";
+	private String emojiOne = "1️⃣", emojiTwo = "2️⃣", emojiThree = "3️⃣", emojiFour = "4️⃣", emojiFive = "5️⃣";
 	private MyDataBase dataBase = new MyDataBase();
 	
 	/*
-	 * Metodi setResponse che returnano un specifico SendMessage, piuttosto che EditTextMessage, nei riguardi dell'azione
-	 * che porta alla lettura di multiple notizie, a discapito dell'evento che riporti un unico risultato, oltre alla 
-	 * registrazione e modifica delle proprie credenziali.
+	 * Metodi setResponse che ritornano un specifico SendMessage, piuttosto che EditTextMessage, nei riguardi di azioni
+	 * che portano all'utilizzo delle funzionalita' principali, differenziando messaggi di errore, suggerimenti o di buona riuscita.
 	 */
+	public SendMessage setResponseStart(Update update) {
+		SendMessage newResponse = new SendMessage();
+		long chatId = update.getMessage().getChatId();
+		newResponse.setChatId(chatId);		
+
+		newResponse.setText(emojiiJournal + " BENVENUTO NEL BOT NABOO " + emojiiJournal 
+				+ "\nQuesto bot ti permette di leggere notizie divise per categorie.\n"
+				+ "Per poter utilizzare il bot devi essere registrato:\n"
+				+ "Se è la prima volta che utilizzi il bot digita /registrazione.\n"
+				+ "Se hai già effettuato la registrazione allora digita /accedi.\n"
+				+ "In seguito all’accesso, digitando /legginotizie, potrai scegliere tra le varie categorie e scorrere tra le notizie ad esse correlate.\n"
+				+ "Inoltre potrai aggiungere preferenze, commentare e visualizzare recensioni di altri utenti tramite gli appositi i comandi.\n"
+				+ "Infine tramite i comandi /visualizzapreferiti e /visualizzacommenti, potrai visualizzare corrispettivamente le notizie che abbiano una preferenza e le tue recensioni rilasciate.\n"
+				+ "\n"
+				+ "(Progetto sviluppato da Matteo Canghiari, Gioele Garuti, Ossama Nadifi, studenti della facoltà di Informatica per il Management dell’Università di Bologna)");	
+		return newResponse;
+	}
+	
+	public String setResponseWriteCredentials() {
+		String newResponse = " ";	
+		newResponse = (emojiHint + " SUGGERIMENTO:\n" + "Le credenziali devono essere scritte nella forma \"username\" spazio \"password\".");	
+		return newResponse;
+	}
+	
+	public SendMessage setSuggestionAccess(Update update) {
+		SendMessage responseSuggestion = new SendMessage();
+		long chatId = update.getMessage().getChatId();
+		responseSuggestion.setChatId(chatId);		
+
+		responseSuggestion.setText(emojiHint + " SUGGERIMENTO:\n"
+				+ "Hai gia' effettuato l'accesso.\n"
+				+ emojiOne + " Digita /legginotizie per leggere le notizie disponibili.\n"
+				+ emojiTwo + " Digita /visualizzapreferiti per visualizzare le notizie che abbiano una preferenza.\n"
+				+ emojiThree + " Digita /visualizzacommenti per visualizzare i commenti che hai rilasciato.\n"
+				+ "(funzione disponibile solo per gli account PREMIUM)\n"
+				+ emojiFour + " Digita /modificafeed per stabilire le tue preferenza di lettura.\n"
+				+ "(funzione disponibile solo per gli account PREMIUM)");
+		return responseSuggestion;
+	}
+	
+	public SendMessage setSuggestionFunction(Update update) {
+		SendMessage responseSuggestion = new SendMessage();
+		long chatId = update.getMessage().getChatId();
+		responseSuggestion.setChatId(chatId);		
+		responseSuggestion.setText(emojiHint + " SUGGERIMENTO:\n"
+				+ "Non hai ancora effettuato l'accesso.\n"
+				+ emojiOne + " Digita /registrazione per registrarti per la prima volta\n"
+				+ emojiTwo + " Digita /accedi se hai già effettuato la registazione\n\n"
+				+ "Per accedere alle funzionalita' del bot NABOO:\n"
+				+ emojiThree + " Digita /visualizzapreferiti per visualizzare le notizie che abbiano una preferenza.\n"
+				+ emojiFour + " Digita /visualizzacommenti per visualizzare i commenti che hai rilasciato.\n"
+				+ "(funzione disponibile solo per gli account PREMIUM)\n"
+				+ emojiFive + " Digita /modificafeed per stabilire le tue preferenza di lettura.\n"
+				+ "(funzione disponibile solo per gli account PREMIUM)");
+		return responseSuggestion;
+	}
+	
+	public SendMessage setSuggestionChangeFunction(Update update) {
+		SendMessage responseSuggestion = new SendMessage();
+		long chatId = update.getMessage().getChatId();
+		responseSuggestion.setChatId(chatId);		
+		responseSuggestion.setText(emojiHint + " SUGGERIMENTO:\n"
+				+ "Per sbloccare questa funzionalità l'account deve essere di tipo PREMIUM.\n"
+				+ emojiOne + " Digita /modifica per modificare la tua registazione al bot e scegliere le funzionalità PREMIUM.");
+		return responseSuggestion;
+		
+	}
+	
 	public SendMessage setRegistrationResponse(Update update) {
 		SendMessage registrationResponse = new SendMessage();
 		long chatId = update.getMessage().getChatId();
@@ -53,7 +121,7 @@ public class ResponseOperate {
 		SendMessage modifyResponse = new SendMessage();
 		long chatId = update.getMessage().getChatId();
 		modifyResponse.setChatId(chatId);		
-		modifyResponse.setText("Un ultimo passo, quale tipologia di abbonamento preferisci");
+		modifyResponse.setText("Un ultimo passo, quale tipologia di abbonamento preferisci:");
 		
 		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
 		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
@@ -81,7 +149,7 @@ public class ResponseOperate {
 		SendMessage feedResponse = new SendMessage();
 		long chatId = update.getMessage().getChatId();
 		feedResponse.setChatId(chatId);		
-		feedResponse.setText("Inserisci il termine da ricercare.\n\nQui sotto sono riportate le disponibili categorie\n");
+		feedResponse.setText("Inserisci il termine da ricercare.\n\nOppure qui sotto sono riportate le categorie disponibili:\n");
 		
 		ArrayList<String> arrayFeed = dataBase.getFeedsTot();
 
@@ -116,7 +184,7 @@ public class ResponseOperate {
 		SendMessage feedResponse = new SendMessage();
 		long chatId = update.getMessage().getChatId();
 		feedResponse.setChatId(chatId);		
-		feedResponse.setText("Inserisci il termine da ricercare.\n\nQui sotto sono riportate le disponibili categorie\n");
+		feedResponse.setText("Inserisci il termine da ricercare.\n\nOppure qui sotto sono riportate le categorie disponibili:\n");
 		
 		ArrayList<String> arrayFeed = dataBase.getFeedsTot();
 

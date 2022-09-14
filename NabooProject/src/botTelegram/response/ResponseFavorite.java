@@ -14,6 +14,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 public class ResponseFavorite {
 	private String emojiiNext = "🔜", emojiiBack = "🔙", emojiiComment = "📝", emojiiViewComment = "📋", emojiiEliminate = "❌", emojiiNoEntry = "⛔️";
 
+	/*
+	 * Metodi setResponse che ritornano un specifico SendMessage, piuttosto che EditTextMessage, 
+	 * nei riguardi dell'azione che porta alla lettura di multiple notizie, a discapito dell'evento 
+	 * che riporti un unico risultato, differenziando messaggi di errore, suggerimenti o di buona riuscita.
+	 */
 	public SendMessage setResponseFav(Update update, String titolo, String link) {
 		SendMessage response = new SendMessage();
 		long chatId = update.getMessage().getChatId();
@@ -323,7 +328,7 @@ public class ResponseFavorite {
 	
 	public EditMessageText setBlockResponseFav(Update update) {
 		EditMessageText newResponse = new EditMessageText();
-		newResponse.setText(emojiiNoEntry + " Non e' presente alcuna notizia tra i tuoi preferiti " + emojiiNoEntry);
+		newResponse.setText(emojiiNoEntry + " ERRORE:\n" + "Non e' presente alcuna notizia tra i tuoi preferiti");
 
 		long chatId = update.getCallbackQuery().getMessage().getChatId();
 		newResponse.setChatId(chatId);

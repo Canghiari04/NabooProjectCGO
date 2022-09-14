@@ -97,7 +97,7 @@ public class MyDataBase
 	 * Introdotte due variabili in input per scelta organizzativa, dato che
 	 * principalmente ogni tabella prevedono due colonne significative.
 	 */
-	public void deleteTable(String table, int Id) throws SQLException, HeadlessException {
+	public void deleteTable(String table, int idFirst) throws SQLException, HeadlessException {
 		Connection conn = connectionDB();
 		PreparedStatement preparedStmt = null, newPreparedStmt = null;
 
@@ -106,36 +106,46 @@ public class MyDataBase
 
 		switch (table) {
 			case "Utente":
-				query = "DELETE FROM " + table + " WHERE UtenteId = '" + Id + "'";
-				queryComment = "DELETE FROM Commento WHERE UtenteId = '" + Id + "'";
+				query = "DELETE FROM " + table + " WHERE UtenteId = '" + idFirst + "'";
+				queryComment = "DELETE FROM Commento WHERE UtenteId = '" + idFirst + "'";
 				
 				newPreparedStmt = conn.prepareStatement(queryComment);
 				newPreparedStmt.execute();
 				break;
 	
 			case "Notizia":
-				query = "DELETE FROM " + table + " WHERE NotiziaId = '" + Id + "'";
-				queryComment = "DELETE FROM Commento WHERE NotiziaId = '" + Id + "'";
+				query = "DELETE FROM " + table + " WHERE NotiziaId = '" + idFirst + "'";
+				queryComment = "DELETE FROM Commento WHERE NotiziaId = '" + idFirst + "'";
 				
 				newPreparedStmt = conn.prepareStatement(queryComment);
 				newPreparedStmt.execute();
 				break;
-				
-			case "NotiziaPreferita":
-				query = "DELETE FROM " + table + " WHERE NotiziaId = '" + Id + "'";
-				break;
 	
 			case "Commento":
-				query = "DELETE FROM " + table + " WHERE CommentoId = '" + Id + "'";
+				query = "DELETE FROM " + table + " WHERE CommentoId = '" + idFirst + "'";
 				break;
 				
 			case "Feed":
-				query = "DELETE FROM " + table + " WHERE FeedId = '" + Id + "'";
+				query = "DELETE FROM " + table + " WHERE FeedId = '" + idFirst + "'";
 				break;
 		}
 		preparedStmt = conn.prepareStatement(query); 
 		preparedStmt.execute();
 			
+		conn.close();
+	}
+	
+	public void deleteTableFav(String table, int idFirst, int idSecond) throws SQLException {
+		Connection conn = connectionDB();
+		PreparedStatement preparedStmt = null;
+
+		String query = "";
+
+		query = "DELETE FROM " + table + " WHERE UtenteId = '" + idFirst + "' AND NotiziaId = '" + idSecond + "';";
+
+		preparedStmt = conn.prepareStatement(query); 
+		preparedStmt.execute();
+		
 		conn.close();
 	}
 
@@ -218,6 +228,7 @@ public class MyDataBase
 	/*
 	 * Metodo getId che restituisce Id del record, in base a quale sia la tabella
 	 * specificata come parametro.
+	 * 
 	 */
 	public int getId(String table, String tableId, String firstInput, String secondInput) throws SQLException, HeadlessException {
 		Connection conn = connectionDB();
@@ -452,6 +463,9 @@ public class MyDataBase
 		int value = 0;
 		int userId = getId(tabUser, idUser, nickName, password);
 		
+		feedTot.clear();
+		feedUser.clear();
+		
 		String query = "SELECT FeedId FROM UtenteFeed WHERE UtenteId = '" + userId + "';", allQuery = "SELECT Tipo FROM Feed;", newQuery = " ";
 		String str = " ";
 
@@ -460,7 +474,7 @@ public class MyDataBase
 		st = conn.createStatement();
 		newSt = conn.createStatement();
 		rs = st.executeQuery(query);
-			
+					
 		while (rs.next()) { // Tramite tale ciclo concatenato, vengono aggiunti tutti i feed RSS associati all'utente che abbia effettuato l'accesso.
 			value = rs.getInt("FeedId");
 				

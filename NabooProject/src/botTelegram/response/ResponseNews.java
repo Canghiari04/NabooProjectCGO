@@ -15,9 +15,9 @@ public class ResponseNews {
 	private String emojiiNext = "🔜", emojiiBack = "🔙", emojiiStar = "⭐️", emojiiComment = "📝", emojiiViewComment = "📋";
 
 	/*
-	 * Metodi setResponse che returnano un specifico SendMessage, piuttosto che EditTextMessage, nei riguardi dell'azione
-	 * che porta alla lettura di multiple notizie, a discapito dell'evento che riporti un unico risultato, oltre alla 
-	 * registrazione e modifica delle proprie credenziali.
+	 * Metodi setResponse che ritornano un specifico SendMessage, piuttosto che EditTextMessage, 
+	 * nei riguardi dell'azione che porta alla lettura di multiple notizie, a discapito dell'evento 
+	 * che riporti un unico risultato, differenziando messaggi di errore, suggerimenti o di buona riuscita.
 	 */
 	public SendMessage setResponse(Update update, String titolo, String link) {
 		SendMessage response = new SendMessage();
