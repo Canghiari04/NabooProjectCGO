@@ -62,7 +62,10 @@
             <Insets left="30.0" />
          </padding>
       </Label>
-      <TextField fx:id="txtRecensione" layoutX="201.0" layoutY="136.0" prefHeight="26.0" prefWidth="146.0" stylesheets="@../../css/styleText.css" />
+      <TextField fx:id="txtRecensione" layoutX="201.0" layoutY="136.0" prefHeight="26.0" prefWidth="146.0" stylesheets="@../../css/styleText.css">
+         <font>
+            <Font name="Futura Medium" size="14.0" />
+         </font></TextField>
       <Button fx:id="btnSalva" layoutX="64.0" layoutY="298.0" mnemonicParsing="false" onMouseClicked="#setDatabase" prefHeight="26.0" prefWidth="93.0" stylesheets="@../../css/styleButton.css" text="Salva">
          <font>
             <Font name="Futura Medium" size="14.0" />

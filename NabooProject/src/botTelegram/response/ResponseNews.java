@@ -150,7 +150,7 @@ public class ResponseNews {
 		return newResponse;
 	}
 
-	public EditMessageText setNewResponsePrevious(Update update, String titolo, String link) {
+	public EditMessageText setNewResponseNext(Update update, String titolo, String link) {
 		EditMessageText newResponse = new EditMessageText();
 		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
 
@@ -196,7 +196,7 @@ public class ResponseNews {
 		return newResponse;
 	}
 	
-	public EditMessageText setNewResponseNext(Update update, String titolo, String link) {
+	public EditMessageText setNewResponsePrevious(Update update, String titolo, String link) {
 		EditMessageText newResponse = new EditMessageText();
 		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
 

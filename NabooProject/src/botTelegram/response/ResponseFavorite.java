@@ -19,7 +19,7 @@ public class ResponseFavorite {
 	 * nei riguardi dell'azione che porta alla lettura di multiple notizie, a discapito dell'evento 
 	 * che riporti un unico risultato, differenziando messaggi di errore, suggerimenti o di buona riuscita.
 	 */
-	public SendMessage setResponseFav(Update update, String titolo, String link) {
+	public SendMessage setResponseNextFav(Update update, String titolo, String link) {
 		SendMessage response = new SendMessage();
 		long chatId = update.getMessage().getChatId();
 
@@ -149,7 +149,7 @@ public class ResponseFavorite {
 		return newResponse;
 	}
 	
-	public EditMessageText setNewResponsePreviousFav(Update update, String titolo, String link) {
+	public EditMessageText setNewResponseNextFav(Update update, String titolo, String link) {
 		EditMessageText newResponse = new EditMessageText();
 		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
 
@@ -195,7 +195,7 @@ public class ResponseFavorite {
 		return newResponse;
 	}
 	
-	public EditMessageText setNewResponseNextFav(Update update, String titolo, String link) {
+	public EditMessageText setNewResponsePreviousFav(Update update, String titolo, String link) {
 		EditMessageText newResponse = new EditMessageText();
 		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
 
@@ -241,52 +241,6 @@ public class ResponseFavorite {
 		return newResponse;
 	}
 	
-	public EditMessageText setResponseFavEdit(Update update, String titolo, String link) {
-		EditMessageText newResponse = new EditMessageText();
-		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");
-
-		long chatId = update.getCallbackQuery().getMessage().getChatId();
-		newResponse.setChatId(chatId);
-
-		long messageId = update.getCallbackQuery().getMessage().getMessageId();
-		newResponse.setMessageId(toIntExact(messageId));
-
-		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-		List<InlineKeyboardButton> rowInline = new ArrayList<>();
-		List<InlineKeyboardButton> rowInlineComment = new ArrayList<>();
-		List<InlineKeyboardButton> rowInlineEliminate = new ArrayList<>();
-		
-		InlineKeyboardButton nextBtn = new InlineKeyboardButton();
-		nextBtn.setText("Next " + emojiiNext);
-		nextBtn.setCallbackData("NEXTFAV");
-
-		InlineKeyboardButton commentBtn = new InlineKeyboardButton();
-		commentBtn.setText(emojiiComment + " Commento ");
-		commentBtn.setCallbackData("COMMENTFAV");
-
-		InlineKeyboardButton viewCommentBtn = new InlineKeyboardButton();
-		viewCommentBtn.setText(" Visualizza commenti " + emojiiViewComment);
-		viewCommentBtn.setCallbackData("VIEWFAV");
-		
-		InlineKeyboardButton eliminateBtn = new InlineKeyboardButton();
-		eliminateBtn.setText(emojiiEliminate + " Elimina preferenza " + emojiiEliminate);
-		eliminateBtn.setCallbackData("ELIMINATEFAV");
-
-		rowInline.add(nextBtn);
-		rowInlineComment.add(commentBtn);
-		rowInlineComment.add(viewCommentBtn);
-		rowInlineEliminate.add(eliminateBtn);
-		rowsInline.add(rowInline);
-		rowsInline.add(rowInlineComment);
-		rowsInline.add(rowInlineEliminate);
-
-		markupInline.setKeyboard(rowsInline);
-		newResponse.setReplyMarkup(markupInline);
-
-		return newResponse;
-	}
-
 	public EditMessageText setResponseAloneFavEdit(Update update, String titolo, String link) {
 		EditMessageText newResponse = new EditMessageText();
 		newResponse.setText("Titolo: " + titolo + "\n" + "\nLink: " + link + "\n\nPreview notizia: \n");

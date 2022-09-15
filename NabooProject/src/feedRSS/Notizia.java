@@ -16,4 +16,8 @@ public class Notizia {
 	public String getLink() {
 		return link;
 	}
+	
+	public String toString() {
+		return titolo;
+	}
 }

@@ -560,7 +560,7 @@ public class MyBot extends TelegramLongPollingBot {
 				link = arrayNews[j].getLink();
 				EditMessageText newResponseNext = new EditMessageText();
 				if (j >= (arrayNews.length - 1)) { // Verifico se si tratti della prima notizia della lista, in maniera tale da non permettere la navigazione di notizie precedenti, data la loro mancanza.
-					newResponseNext = resNews.setNewResponseNext(update, title, link);
+					newResponseNext = resNews.setNewResponsePrevious(update, title, link);
 				} 
 				else {
 					newResponseNext = resNews.setNewResponse(update, title, link);
@@ -574,7 +574,7 @@ public class MyBot extends TelegramLongPollingBot {
 				link = arrayNews[j].getLink();
 				EditMessageText newResponsePrevious = new EditMessageText();
 				if (j <= 0) {  // Verifico se si tratti dell'ultima notizia della lista, in maniera tale da non permettere la navigazione di notizie successive, data la loro mancanza.
-					newResponsePrevious = resNews.setNewResponsePrevious(update, title, link);
+					newResponsePrevious = resNews.setNewResponseNext(update, title, link);
 				} 
 				else {
 					newResponsePrevious = resNews.setNewResponse(update, title, link);
@@ -616,7 +616,7 @@ public class MyBot extends TelegramLongPollingBot {
 				arrayNews = g.fromJson(new FileReader("GsonImport.json"), Notizia[].class);
 
 				if(arrayNews.length == 0) {
-					responseFeed.setText( emojiiHint + "SUGGERIMENTO:\n Non hai alcuna preferenza tra le tue feed, utilizza /modificafeed, per una lettura piu' piacevole");
+					responseFeed.setText( emojiiHint + "SUGGERIMENTO:\n Non hai alcuna preferenza tra le tue feed, utilizza /modificafeed, per una lettura piu' piacevole.");
 				}
 				else {
 					j = 0;
@@ -651,7 +651,7 @@ public class MyBot extends TelegramLongPollingBot {
 				}
 			}
 			else {
-				response.setText(emojiiNoEntry + " ERRORE:\n" + "Spiacenti non abbiamo nessuna risorsa in grado di soddisfare la richiesta");
+				response.setText(emojiiNoEntry + " ERRORE:\n" + "Spiacenti non abbiamo nessuna risorsa in grado di soddisfare la richiesta.");
 			}
 		}		
 		execute(response); 
@@ -755,7 +755,7 @@ public class MyBot extends TelegramLongPollingBot {
 				link = arrayNews[j].getLink();
 				EditMessageText newResponseNext = new EditMessageText();
 				if (j >= (arrayNews.length - 1)) { // Verifico se si tratti della prima notizia della lista, in maniera tale da non permettere la navigazione di notizie precedenti, data la loro mancanza.
-					newResponseNext = resFavorite.setNewResponseNextFav(update, title, link);
+					newResponseNext = resFavorite.setNewResponsePreviousFav(update, title, link);
 				} 
 				else {
 					newResponseNext = resFavorite.setNewResponseFav(update, title, link);
@@ -769,7 +769,7 @@ public class MyBot extends TelegramLongPollingBot {
 				link = arrayNews[j].getLink();	
 				EditMessageText newResponsePrevious = new EditMessageText();
 				if (j <= 0) {  // Verifico se si tratti dell'ultima notizia della lista, in maniera tale da non permettere la navigazione di notizie successive, data la loro mancanza.
-					newResponsePrevious = resFavorite.setNewResponsePreviousFav(update, title, link);
+					newResponsePrevious = resFavorite.setNewResponseNextFav(update, title, link);
 				} 
 				else {
 					newResponsePrevious = resFavorite.setNewResponseFav(update, title, link);
@@ -801,12 +801,15 @@ public class MyBot extends TelegramLongPollingBot {
 				if(length > 0) { // Controllo che la struttura dati non sia vuota, in caso verra' visualizzato il messaggio di ERRORE:.
 					title = arrayNews[j].getTitolo();
 					link = arrayNews[j].getLink();
-
+					
 					if(length == 1) {
 						newResponseEliminate = resFavorite.setResponseAloneFavEdit(update, title, link); // Stampa della notizia, che non permette la navigazione poiche' unica.
 					}
+					else if(j >= (arrayNews.length - 1)) {
+						newResponseEliminate = resFavorite.setNewResponsePreviousFav(update, title, link); // Stampa di multiple notizie, gestite con i CallbackData.
+					}
 					else {
-						newResponseEliminate = resFavorite.setResponseFavEdit(update, title, link); // Stampa di multiple notizie, gestite con i CallbackData.
+						newResponseEliminate = resFavorite.setNewResponseNextFav(update, title, link); // Stampa di multiple notizie, gestite con i CallbackData.
 					}
 				}
 				else {
@@ -829,7 +832,7 @@ public class MyBot extends TelegramLongPollingBot {
 					response = resFavorite.setResponseAloneFav(update, title, link); // Stampa della notizia, che non permette la navigazione poiche' unica.
 				}
 				else {
-					response = resFavorite.setResponseFav(update, title, link); // Stampa di multiple notizie, gestite con i CallbackData.
+					response = resFavorite.setResponseNextFav(update, title, link); // Stampa di multiple notizie, gestite con i CallbackData.
 				}
 			}
 			else {
