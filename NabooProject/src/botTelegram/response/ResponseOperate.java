@@ -35,7 +35,7 @@ public class ResponseOperate {
 				+ "Inoltre potrai aggiungere preferenze, commentare e visualizzare recensioni di altri utenti tramite gli appositi i comandi.\n"
 				+ "Infine tramite i comandi /visualizzapreferiti e /visualizzacommenti, potrai visualizzare corrispettivamente le notizie che abbiano una preferenza e le tue recensioni rilasciate.\n"
 				+ "\n"
-				+ "(Progetto sviluppato da Matteo Canghiari, Gioele Garuti, Ossama Nadifi, studenti della facoltà di Informatica per il Management dell’Università di Bologna)");	
+				+ "(Progetto sviluppato da Matteo Canghiari, Ossama Nadifi, studenti della facoltà di Informatica per il Management dell’Università di Bologna)");	
 		return newResponse;
 	}
 	
