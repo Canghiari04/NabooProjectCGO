@@ -1,3 +1,3 @@
 # NabooProjectCGO
 
-Progetto per il corso di Programmazione (Anno accademico 2021/2022)
+Progetto per il corso di Programmazione (78789) Anno accademico (2021/2022)
